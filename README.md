@@ -1,0 +1,1 @@
+# isc-inventory-front
