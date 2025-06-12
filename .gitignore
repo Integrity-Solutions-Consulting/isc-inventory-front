@@ -1,33 +1,42 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-bun.lockb
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
 
-.million
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
 
-node_modules
-dist
-dist-ssr
-*.local
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
-# Editor directories and files
+# Visual Studio Code
 .vscode/*
-# !.vscode/extensions.json
-.idea
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-routeTree.gen.ts
-# Million Lint
-.million
-.million/*
-.million/store.json
+Thumbs.db
