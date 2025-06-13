@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +14,9 @@ import { UserResponseDTO } from '../../../../core/models/ResponseDTO/UserRespons
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatCardModule } from '@angular/material/card';
+import { LoadingService } from '../../../../core/services/modals/loading/loading.service';
+import { finalize } from 'rxjs';
+import { getSpanishPaginatorIntl } from '../../../../core/functions/mat-paginator-intl-es';
 
 @Component({
   selector: 'app-user',
@@ -28,7 +31,13 @@ import { MatCardModule } from '@angular/material/card';
     FormsModule,
     CommonModule,
     LayoutModule,
-    MatCardModule
+    MatCardModule,
+  ],
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useFactory: getSpanishPaginatorIntl,
+    },
   ],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
@@ -50,28 +59,43 @@ export class UserComponent implements OnInit {
 
   isSmallScreen: boolean = false;
 
-  constructor(private userService: UserService,private breakpointObserver: BreakpointObserver) {}
+  constructor(
+    private userService: UserService,
+    private breakpointObserver: BreakpointObserver,
+    private loading: LoadingService
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
-    this.breakpointObserver.observe([Breakpoints.Handset, '(max-width: 920px)']).subscribe(result => {
-      this.isSmallScreen = result.matches;
-    });
+    this.breakpointObserver
+      .observe([Breakpoints.Handset, '(max-width: 920px)'])
+      .subscribe((result) => {
+        this.isSmallScreen = result.matches;
+      });
   }
 
   loadUsers(): void {
-    // Simulación: reemplazar con llamada real al backend
-    this.userService.getAll().subscribe({
-      next: (response) => {
-        this.dataSource.data = response.data;
-        this.totalUsers = this.dataSource.data.length;
-        console.log(this.dataSource.data);
-      },
-      error: (err) => {
-        console.error('Error loading users', err);
-      },
-    });
-    this.dataSource.paginator = this.paginator;
+    this.loading.show(); // Show loading spinner
+    this.userService
+      .getAll()
+      .pipe(
+        finalize(() => this.loading.hide()) // Siempre se ejecuta al final
+      )
+      .subscribe({
+        next: (response) => {
+          this.dataSource.data = response.data;
+          this.totalUsers = this.dataSource.data.length;
+          this.dataSource.paginator = this.paginator;
+          console.log(this.dataSource.data);
+        },
+        error: (err) => {
+          console.error('Error loading users', err);
+          this.loading.hide(); // Hide loading spinner on error
+        },
+        complete: () => {
+          this.loading.hide(); // Hide loading spinner on complete
+        },
+      });
   }
 
   getRoleNames(user: any): string {

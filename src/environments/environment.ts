@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8081/api/v1'
+  apiBaseUrl: 'https://isc-inventory-back.onrender.com/api/v1'
 };
