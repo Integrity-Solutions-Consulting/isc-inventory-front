@@ -19,6 +19,7 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
 import { AuthService } from '../../services/auth.service';
 import { ErrorResponseDTO } from '../../../../core/models/ResponseDTO/ErrorResponseDTO';
 import { SessionService } from '../../../../core/services/session/session.service';
+import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
 
 @Component({
   selector: 'app-login',
@@ -45,7 +46,8 @@ export class LoginComponent implements OnInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private session: SessionService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private modalDialogService: ModalDialogService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -64,8 +66,7 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           this.loading.hide();
-          console.log(error);
-          this.onError('Error', error.error.message);
+          this.modalDialogService.open('error', 'Error', error.error.message);
         },
         complete: () => {
           this.loading.hide();
@@ -81,13 +82,4 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/auth/forgot-password']);
   }
 
-  onError(_title: string, _message: string) {
-    this.dialog.open(MessageDialogComponent, {
-      data: {
-        type: 'error',
-        title: _title,
-        message: _message,
-      },
-    });
-  }
 }

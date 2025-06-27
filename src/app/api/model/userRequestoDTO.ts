@@ -8,14 +8,12 @@
  * Do not edit the class manually.
  */
 
-
-export interface UserRequestoDTO { 
-    username: string;
-    email: string;
-    firstNames: string;
-    employeeId: number;
-    rolesId: Set<number>;
-    privilegesId?: Set<number>;
-    menusId?: Set<number>;
+export interface UserRequestoDTO {
+  username: string;
+  email: string;
+  firstNames: string;
+  employeeId: number;
+  rolesId: number[];
+  privilegesId?: number[];
+  menusId?: number[];
 }
-
