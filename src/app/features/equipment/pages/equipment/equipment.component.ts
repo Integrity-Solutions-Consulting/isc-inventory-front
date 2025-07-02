@@ -111,7 +111,15 @@ export class EquipmentComponent implements OnInit {
       null,
       (result: EquipmentDetailResponseDTO) => {
         if (result) {
-          console.log(result);
+          this.dataSource.data = this.dataSource.data.map(item => {
+          if (item.categoryId === result.categoryId) {
+            return {
+              ...item,
+              categoryStock: result.categoryStock
+            };
+          }
+          return item;
+        });
           this.dataSource.data = [...this.dataSource.data, result];
           this.modalDialogService.open(
             'success',
