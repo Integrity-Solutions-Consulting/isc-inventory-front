@@ -10,6 +10,12 @@ import { RouterModule } from '@angular/router';
 })
 export class AuthComponent implements OnInit {
 
+   images: string[] = [
+    'assets/image1.jpg',
+    'assets/image2.jpg',
+    'assets/image3.jpg',
+  ];
+
   constructor() { }
 
   ngOnInit() {

@@ -97,7 +97,7 @@
         (click)="onSubmit()"
         [disabled]="isSubmitting || roleForm.invalid"
       >
-        Crear Rol
+       {{entityId!= 0 ? "Actualizar Rol": " Crear Rol" }}
       </button>
     </div>
   </div>

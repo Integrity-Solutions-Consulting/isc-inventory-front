@@ -23,11 +23,15 @@ import { EmployeeTableResponseDTO } from '../../../../core/models/ResponseDTO/ad
 import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentDetailResponseDTO';
 import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentFormComponent } from '../../components/equipmentForm/equipmentForm.component';
+import { EquipmentAssignmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentAssignmentDetailResponseDTO';
+import { AssaingmentService } from '../../services/assaignment/assaingment.service';
+import { EquipmentAssignmentFormComponent } from '../../components/equipmentAssignmentForm/equipmentAssignmentForm.component';
+
 
 @Component({
-  selector: 'app-equipment',
-  standalone: true,
-  imports: [
+  selector: 'app-equipmentAssignment',
+  standalone:true,
+   imports: [
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,
@@ -39,23 +43,21 @@ import { EquipmentFormComponent } from '../../components/equipmentForm/equipment
     LayoutModule,
     MatCardModule,
   ],
-  templateUrl: './equipment.component.html',
-  styleUrls: ['./equipment.component.css'],
+  templateUrl: './equipmentAssignment.component.html',
+  styleUrls: ['./equipmentAssignment.component.css']
 })
-export class EquipmentComponent implements OnInit {
-  searchTerm: string = '';
+export class EquipmentAssignmentComponent implements OnInit {
+ searchTerm: string = '';
   displayedColumns: string[] = [
-    'name',
-    'identificacion_equipo',
-    'estado',
-    'condicion',
-    'stock',
-    'buyDate',
-    'invoice',
-    'ubicacion',
-    'actions',
+    'employee',
+    'equipment',
+    'company',
+    'assignmentDate',
+    'returnDate',
+    'status',
+    'actions'
   ];
-  dataSource = new MatTableDataSource<EquipmentDetailResponseDTO>();
+  dataSource = new MatTableDataSource<EquipmentAssignmentDetailResponseDTO>();
   total = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -68,7 +70,7 @@ export class EquipmentComponent implements OnInit {
     private formService: FormService,
     private modalDialogService: ModalDialogService,
     private warningService: WarningService,
-    private equipmentService: EquipmentService
+    private equipmentAssingmentService: AssaingmentService
   ) {}
 
   ngOnInit(): void {
@@ -82,8 +84,8 @@ export class EquipmentComponent implements OnInit {
 
   loadTable(): void {
     this.loading.show(); // Show loading spinner
-    this.equipmentService
-      .getTable()
+    this.equipmentAssingmentService
+      .getAll()
       .pipe(
         finalize(() => this.loading.hide()) // Siempre se ejecuta al final
       )
@@ -105,11 +107,11 @@ export class EquipmentComponent implements OnInit {
 
   create(): void {
     this.formService.open(
-      'Nuevo Equipo',
+      'Nueva Asignación',
       'add',
-      EquipmentFormComponent,
+      EquipmentAssignmentFormComponent,
       null,
-      (result: EquipmentDetailResponseDTO) => {
+      (result: EquipmentAssignmentDetailResponseDTO) => {
         if (result) {
           console.log(result);
           this.dataSource.data = [...this.dataSource.data, result];
@@ -131,40 +133,11 @@ export class EquipmentComponent implements OnInit {
     );
   }
 
-  edit(user: EquipmentDetailResponseDTO): void {
-    this.formService.open(
-      'Editar Rol',
-      'edit',
-      EquipmentFormComponent,
-      user,
-      (result: EquipmentDetailResponseDTO) => {
-        if (result) {
-          const index = this.dataSource.data.findIndex(
-            (u) => u.id === result.id
-          );
-          if (index !== -1) {
-            this.dataSource.data[index] = result;
-            this.dataSource.data = [...this.dataSource.data]; // Reasignar para que se actualice la tabla
-          }
-          this.modalDialogService.open(
-            'success',
-            'Equipo actualizado',
-            'El equipo fue actualizado correctamente.'
-          );
-        }
-      },
-      (error) => {
-        console.error('Error al editar el rol', error);
-        this.modalDialogService.open(
-          'error',
-          'Error al editar',
-          'No se pudo actualizar el empleado.'
-        );
-      }
-    );
+  return(equipment: EquipmentAssignmentDetailResponseDTO){
+    
   }
 
-  warningDelete(entity: EquipmentDetailResponseDTO) {
+  warningDelete(entity: EquipmentAssignmentDetailResponseDTO) {
     this.warningService.open(
       'Confirmar eliminación',
       '¿Estás seguro que deseas eliminar este elemento? Esta acción no se puede deshacer.',
@@ -174,9 +147,9 @@ export class EquipmentComponent implements OnInit {
     );
   }
 
-  delete(entity: EquipmentDetailResponseDTO): void {
+  delete(entity: EquipmentAssignmentDetailResponseDTO): void {
     this.loading.show();
-    this.equipmentService.delete(entity.id).subscribe({
+    this.equipmentAssingmentService.delete(entity.id).subscribe({
       next: (resp) => {
         const index = this.dataSource.data.findIndex((u) => u.id === entity.id);
         if (index !== -1) {

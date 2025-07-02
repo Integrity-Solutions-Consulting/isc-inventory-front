@@ -55,7 +55,7 @@ export class EquipmentService {
     }
   
     public active(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {
-      return this.httpClient.put<ResponseDTO<MessageResponseDTO[]>>(
+      return this.httpClient.patch<ResponseDTO<MessageResponseDTO[]>>(
         `${this.apiUrl}/activate/${id}`,
         null
       );

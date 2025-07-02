@@ -1,4 +1,4 @@
-import { EquipmentCharacteristicResponseDTO } from "./EquipmentCharacteristicResponseDTO";
+import { EquipmentCharacteristicResponseDTO } from './EquipmentCharacteristicResponseDTO';
 
 export interface EquipmentDetailResponseDTO {
   id: number;
@@ -6,6 +6,9 @@ export interface EquipmentDetailResponseDTO {
 
   equipmentStatusId: number;
   equipmentStatusName: string;
+
+  equipmentConditionId: number;
+  equipmentConditionName: string;
 
   categoryId: number;
   categoryName: string;
