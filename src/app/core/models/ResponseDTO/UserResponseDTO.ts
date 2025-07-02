@@ -1,3 +1,4 @@
+import { MenuResponseDTO } from "./MenuResponseDTO";
 import { PrivilegeResponseDTO } from "./PrivilegeResponseDTO";
 import { RolesResponseDTO } from "./RolesResponseDTO";
 
@@ -13,5 +14,6 @@ export interface UserResponseDTO {
     suspended?: boolean;
     roles?: Set<RolesResponseDTO>;
     privileges?: Set<PrivilegeResponseDTO>;
+    menus?: Set<MenuResponseDTO>;
     loggedIn?: boolean;
 }

@@ -37,6 +37,14 @@ h3{
   font-family: var(--font-subtitle) !important;
 }
 
+.text-muted {
+  color: var(--itg-text-muted);
+  font-size: 0.875rem;
+}
+
+.sub-info {
+  font-weight: bold;
+}
 
 body,
 p,
@@ -46,13 +54,14 @@ span,
 .mat-caption,
 .mat-subheading-2,
 .mat-subheading-1,
+.mat-mdc-form-field,
 .mat-mdc-header-cell,
 .mat-mdc-cell,      /* título principal en mat-card */
 .mat-mdc-card-subtitle,    /* subtítulo en mat-card */
 .mat-mdc-card-content p,   /* párrafos dentro del contenido */
 .mat-mdc-card-content span /* spans dentro del contenido */ {
   font-family: var(--font-body) !important;
-  font-weight: 400 !important;
+  font-weight: 400;
   font-size: 0.8rem !important; /* tamaño base */
 }
 .mat-mdc-card-title {
@@ -76,6 +85,11 @@ span,
 .mat-mdc-cell mat-icon {
   font-size: 18px !important;
   color: var(--itg-text-muted) !important; /* o el color que prefieras */
+}
+
+button[mat-icon-button]:disabled mat-icon {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .itg-primary-btn {
@@ -117,6 +131,7 @@ span,
   color: var(--itg-text-muted);
   h3{
     margin-bottom: 0;
+    color: var(--itg-primary);
   }
 }
 
@@ -191,4 +206,36 @@ mat-card-actions {
   display: flex;
   justify-content: flex-end;
   padding: 8px 16px;
+}
+
+
+/*ajuste para el input*/
+.mat-mdc-form-field-infix{
+  padding: 0 !important;
+  height: 40px !important;
+  min-height: unset !important;
+  display: flex;
+}
+
+.mat-mdc-select{
+  display:flex !important
+}
+
+/*modales*/
+.mdc-dialog--open .mat-mdc-dialog-surface{
+  background-color: white !important;
+}
+.cdk-overlay-pane.mat-mdc-dialog-panel{
+  max-width: 60rem !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mat-mdc-notch-piece {
+  border-color: #C0D5DE !important;
+}
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--invalid .mat-mdc-notch-piece{
+  border-color: var(--mdc-outlined-text-field-error-outline-color, var(--mat-app-error)) !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mat-mdc-notch-piece{
+  border-color: var(--mdc-outlined-text-field-focus-outline-color, var(--mat-app-primary)) !important;
 }

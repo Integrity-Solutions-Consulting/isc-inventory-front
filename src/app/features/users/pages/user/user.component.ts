@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorIntl,
+  PageEvent,
+} from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +21,10 @@ import { MatCardModule } from '@angular/material/card';
 import { LoadingService } from '../../../../core/services/modals/loading/loading.service';
 import { finalize } from 'rxjs';
 import { getSpanishPaginatorIntl } from '../../../../core/functions/mat-paginator-intl-es';
+import { UserFormComponent } from '../../components/userForm/userForm.component';
+import { FormService } from '../../../../core/services/modals/form/form.service';
+import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
+import { WarningService } from '../../../../core/services/modals/warning/warning.service';
 
 @Component({
   selector: 'app-user',
@@ -32,12 +40,6 @@ import { getSpanishPaginatorIntl } from '../../../../core/functions/mat-paginato
     CommonModule,
     LayoutModule,
     MatCardModule,
-  ],
-  providers: [
-    {
-      provide: MatPaginatorIntl,
-      useFactory: getSpanishPaginatorIntl,
-    },
   ],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
@@ -62,7 +64,10 @@ export class UserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private breakpointObserver: BreakpointObserver,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private formService: FormService,
+    private modalDialogService: ModalDialogService,
+    private warningService: WarningService
   ) {}
 
   ngOnInit(): void {
@@ -86,7 +91,6 @@ export class UserComponent implements OnInit {
           this.dataSource.data = response.data;
           this.totalUsers = this.dataSource.data.length;
           this.dataSource.paginator = this.paginator;
-          console.log(this.dataSource.data);
         },
         error: (err) => {
           console.error('Error loading users', err);
@@ -108,19 +112,106 @@ export class UserComponent implements OnInit {
   }
 
   createUser(): void {
-    console.log('Crear nuevo usuario');
+    this.formService.open(
+      'Nuevo Usuario',
+      'person_add',
+      UserFormComponent,
+      null,
+      (result: UserResponseDTO) => {
+        if (result) {
+          console.log(result);
+          this.dataSource.data = [...this.dataSource.data, result];
+          this.modalDialogService.open(
+            'success',
+            'Usuario creado',
+            'El usuario fue registrado correctamente.'
+          );
+        }
+      },
+      (error) => {
+        console.error('Ocurrió un error al guardar', error);
+        this.modalDialogService.open(
+          'error',
+          'Error al guardar',
+          'Ocurrió un error al guardar el usuario.'
+        );
+      }
+    );
   }
 
   viewUser(user: any): void {
     console.log('Ver usuario:', user);
   }
 
-  editUser(user: any): void {
-    console.log('Editar usuario:', user);
+  editUser(user: UserResponseDTO): void {
+    this.formService.open(
+      'Editar Usuario',
+      'edit',
+      UserFormComponent,
+      user,
+      (result: UserResponseDTO) => {
+        if (result) {
+          const index = this.dataSource.data.findIndex(
+            (u) => u.id === result.id
+          );
+          if (index !== -1) {
+            this.dataSource.data[index] = result;
+            this.dataSource.data = [...this.dataSource.data]; // Reasignar para que se actualice la tabla
+          }
+          this.modalDialogService.open(
+            'success',
+            'Usuario actualizado',
+            'El usuario fue actualizado correctamente.'
+          );
+        }
+      },
+      (error) => {
+        console.error('Error al editar el usuario', error);
+        this.modalDialogService.open(
+          'error',
+          'Error al editar',
+          'No se pudo actualizar el usuario.'
+        );
+      }
+    );
   }
 
-  deleteUser(user: any): void {
-    console.log('Eliminar usuario:', user);
+  warningDelete(user: UserResponseDTO) {
+    this.warningService.open(
+      'Confirmar eliminación',
+      '¿Estás seguro que deseas eliminar este elemento? Esta acción no se puede deshacer.',
+      () => {
+        this.deleteUser(user);
+      }
+    );
+  }
+
+  deleteUser(user: UserResponseDTO): void {
+    this.loading.show();
+    this.userService.delete(user.id).subscribe({
+      next: (resp) => {
+        const index = this.dataSource.data.findIndex((u) => u.id === user.id);
+        if (index !== -1) {
+          this.dataSource.data[index].active = false;
+          this.dataSource.data = [...this.dataSource.data];
+        }
+        this.loading.hide();
+        this.modalDialogService.open(
+          'success',
+          'Usuario Desactivado',
+          'El usuario fue desactivado correctamente.'
+        );
+      },
+      error: (error) => {
+        this.loading.hide();
+        this.modalDialogService.open(
+          'error',
+          'Error',
+          error.error.message
+        );
+         
+      },
+    });
   }
 
   onPageChange(event: PageEvent): void {

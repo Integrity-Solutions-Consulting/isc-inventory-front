@@ -6,6 +6,8 @@ import {
   MessageResponseDTO,
   PasswordChangeRequestDTO,
   TokenResponseDTO,
+  UserRequestoDTO,
+  UserResponseDTO,
 } from '../../../api';
 import { HttpClient } from '@angular/common/http';
 import { UserLoginResponseDTO } from '../../../core/models/ResponseDTO/UserLoginResponseDTO';
@@ -15,7 +17,7 @@ import { ResponseDTO } from '../../../core/models/ResponseDTO/ResponseDTO';
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = environment.apiBaseUrl;
+  private baseUrl = environment.authBaseUrl;
 
   private loginUrl = `${this.baseUrl}/auth/login`;
   private registerUrl = `${this.baseUrl}/auth/register`;
@@ -32,6 +34,17 @@ export class AuthService {
       loginRequest
     );
   }
+
+  
+  public register(
+    userRequest: UserRequestoDTO
+  ): Observable<ResponseDTO<UserResponseDTO>> {
+    return this.httpClient.post<ResponseDTO<UserResponseDTO>>(
+      this.registerUrl,
+      userRequest
+    );
+  }
+
 
   public generateTokenForgotPassword(
     email: string

@@ -1,28 +1,29 @@
-.user-panel-container {
+.panel-container {
   padding: 1rem;
   background-color: white;
+  border-radius: 1rem;
 }
 
-.user-toolbar {
+.toolbar {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  height: 48px; /* o la altura que tenga tu toolbar */
+  height: 40px; /* o la altura que tenga tu toolbar */
   margin-bottom: 2rem;
 }
 
-.user-toolbar mat-form-field {
+.toolbar mat-form-field {
   height: 100%;       /* Ocupa toda la altura del contenedor */
   margin: 0;          /* Elimina márgenes que alteren la altura */
   width: 25rem;
 }
 
-.user-toolbar mat-form-field .mat-form-field-wrapper {
+.toolbar mat-form-field .mat-form-field-wrapper {
   height: 100%;       /* Ajusta el wrapper interno */
   padding-bottom: 0;  /* Evita espacio extra debajo */
 }
 
-.user-toolbar mat-form-field input.mat-input-element {
+.toolbar mat-form-field input.mat-input-element {
   height: 100%;       /* Input ocupa toda la altura disponible */
   padding: 0 12px;    /* Ajusta padding para que quede cómodo */
   box-sizing: border-box;
@@ -54,4 +55,16 @@ button.mat-flat-button {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+::ng-deep mat-form-field.search-input .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.mat-mdc-form-field{
+  justify-content: center !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper.search-input {
+  flex: none !important;
 }
