@@ -134,7 +134,19 @@ export class EquipmentAssignmentComponent implements OnInit {
   }
 
   return(equipment: EquipmentAssignmentDetailResponseDTO){
-    
+    this.equipmentAssingmentService.revoke(equipment.id).subscribe({
+      next: (resp)=>{
+        equipment = resp.data;
+        this.modalDialogService.open(
+            'success',
+            'Devolución realizada',
+            'El equipo fue registrado correctamente.'
+          );
+      },
+      error: (error)=>{
+
+      },
+    })
   }
 
   warningDelete(entity: EquipmentAssignmentDetailResponseDTO) {
