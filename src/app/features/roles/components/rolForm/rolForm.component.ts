@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   MenuResponseDTO,
   PrivilegeResponseDTO,
@@ -10,6 +10,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
+  FormControl 
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -23,7 +24,8 @@ import { PrivilegeService } from '../../../privilege/services/privilege.service'
 import { RoleService } from '../../services/role.service';
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject, takeUntil} from 'rxjs';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { FlattenedMenu } from '../../../../core/models/ResponseDTO/authentication/FlattenedMenu';
 
 @Component({
@@ -40,14 +42,24 @@ import { FlattenedMenu } from '../../../../core/models/ResponseDTO/authenticatio
     ReactiveFormsModule,
     MatSelectModule,
     MatProgressSpinner,
+    NgxMatSelectSearchModule
   ],
   templateUrl: './rolForm.component.html',
   styleUrls: ['./rolForm.component.scss'],
 })
-export class RolFormComponent implements OnInit {
+export class RolFormComponent implements OnInit, OnDestroy {
   applications: any[] = [];
+
   privileges: PrivilegeResponseDTO[] = [];
+  privilegeFilterCtrl = new FormControl();
+  filteredPrivileges: PrivilegeResponseDTO[] = [];
+
+  
   menus: MenuResponseDTO[] = [];
+  menuFilterCtrl = new FormControl();
+  filteredFlattenedMenus: FlattenedMenu[] = [];
+
+
   flattenedMenus: FlattenedMenu[] = [];
 
   loading: boolean = true;
@@ -56,6 +68,9 @@ export class RolFormComponent implements OnInit {
   roleForm!: FormGroup;
   entityId: number = 0;
 
+  private _onDestroy = new Subject<void>();
+
+
   constructor(
     private fb: FormBuilder,
     private menuService: MenuService,
@@ -63,6 +78,10 @@ export class RolFormComponent implements OnInit {
     private roleService: RoleService,
     private formService: FormService
   ) {}
+  
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+    this._onDestroy.complete();  }
 
   ngOnInit() {
     this.initForm();
@@ -72,8 +91,19 @@ export class RolFormComponent implements OnInit {
     }).subscribe({
       next: (resp) => {
         this.menus = resp.menus.data;
+        this.menuFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterMenus());
+
         this.flattenedMenus = this.flattenMenus(this.menus);
+        this.filteredFlattenedMenus = this.flattenedMenus.slice();
+
         this.privileges = resp.privileges.data;
+        this.filteredPrivileges = this.privileges.slice();
+        this.privilegeFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterPrivileges());
+
       },
       error: (err) => {
         console.error('Error al cargar datos:', err);
@@ -84,6 +114,21 @@ export class RolFormComponent implements OnInit {
       },
     });
   }
+
+  filterPrivileges() {
+    const search = this.privilegeFilterCtrl.value?.toLowerCase() || '';
+    this.filteredPrivileges = this.privileges.filter(p =>
+      p.key?.toLowerCase().includes(search)
+    );
+  }
+
+  filterMenus() {
+    const search = this.menuFilterCtrl.value?.toLowerCase() || '';
+    this.filteredFlattenedMenus = this.flattenedMenus.filter(m =>
+      m.label.toLowerCase().includes(search)
+    );
+  }
+
 
   loadData() {
     const entityToEdit = this.formService.modalDataValue;

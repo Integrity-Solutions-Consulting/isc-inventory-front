@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -17,7 +18,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject, takeUntil } from 'rxjs';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ComponentTypeResponseDTO } from '../../../../core/models/ResponseDTO/inventory/ComponentTypeResponseDTO';
 import { CompanyResponseDTO } from '../../../../core/models/ResponseDTO/inventory/CompanyResponseDTO';
 import { ConditionResponseDTO } from '../../../../core/models/ResponseDTO/inventory/ConditionResponseDTO';
@@ -45,21 +47,36 @@ import { EquipmentService } from '../../services/equipment/equipment.service';
     MatSelectModule,
     MatProgressSpinner,
     MatSlideToggleModule,
+    NgxMatSelectSearchModule,
+
   ],
   templateUrl: './equipmentForm.component.html',
   styleUrls: ['./equipmentForm.component.css'],
 })
 export class EquipmentFormComponent implements OnInit {
   categories: EquipmentCategoryResponseDTO[] = [];
+  categoryFilterCtrl = new FormControl();
+  filteredCategories: EquipmentCategoryResponseDTO[] = [];
+
   companies: CompanyResponseDTO[] = [];
+  companyFilterCtrl = new FormControl();
+  filteredCompanies: CompanyResponseDTO[] = [];
+  
   components: ComponentTypeResponseDTO[] = [];
+  componentFilterCtrl = new FormControl();
+  filteredComponents: ComponentTypeResponseDTO[] = [];
+  
   conditions: ConditionResponseDTO[] = [];
+  conditionFilterCtrl = new FormControl();
+  filteredConditions: ConditionResponseDTO[] = [];
 
   isSubmitting = false;
   loading = true;
 
   equipmentForm!: FormGroup;
   entityId: number = 0;
+
+  private _onDestroy = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -81,9 +98,29 @@ export class EquipmentFormComponent implements OnInit {
     }).subscribe({
       next: (resp) => {
         this.categories = resp.categories.data;
+        this.filteredCategories = [...this.categories];
+        this.categoryFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterCategories());
+
         this.conditions = resp.conditions.data;
+        this.filteredConditions = [...this.conditions];
+        this.conditionFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterConditions());
+        
         this.components = resp.components.data;
+        this.filteredComponents = [...this.components];
+        this.componentFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterComponents());
+        
         this.companies = resp.companies.data;
+        this.filteredCompanies = [...this.companies];
+        this.companyFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterCompanies());      
+
       },
       error: (err) => {
         console.error('Error al cargar datos:', err);
@@ -94,6 +131,40 @@ export class EquipmentFormComponent implements OnInit {
       },
     });
   }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  filterConditions() {
+  const search = this.conditionFilterCtrl.value?.toLowerCase() || '';
+  this.filteredConditions = this.conditions.filter(c =>
+    c.conditionType.toLowerCase().includes(search)
+  );
+}
+
+filterCompanies() {
+  const search = this.companyFilterCtrl.value?.toLowerCase() || '';
+  this.filteredCompanies = this.companies.filter(c =>
+    c.name.toLowerCase().includes(search)
+  );
+}
+
+filterCategories() {
+  const search = this.categoryFilterCtrl.value?.toLowerCase() || '';
+  this.filteredCategories = this.categories.filter(c =>
+    c.name.toLowerCase().includes(search)
+  );
+}
+
+filterComponents() {
+  const search = this.componentFilterCtrl.value?.toLowerCase() || '';
+  this.filteredComponents = this.components.filter(c =>
+    c.description.toLowerCase().includes(search)
+  );
+}
+
 
   initForm() {
     this.equipmentForm = this.fb.group({

@@ -121,9 +121,19 @@ label {
   background-color: #bdbdbd !important;
 }
 
-
 .required-asterisk {
   color: red;
   font-weight: bold;
   margin-left: 2px;
+}
+
+.select-with-search .mat-select-trigger {
+  padding: 0;
+}
+ 
+.select-search-header {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  font-size: 14px;
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,11 +13,14 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
+  FormControl 
 } from '@angular/forms';
 import { EmployeeCatalogResponseDTO } from '../../../../core/models/ResponseDTO/administration/EmployeeCatalogResponseDTO';
 
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
 import { EmployeeService } from '../../../employees/services/employee.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { MenuService } from '../../../menu/services/menu.service';
 import { PrivilegeService } from '../../../privilege/services/privilege.service';
 import { RoleService } from '../../../roles/services/role.service';
@@ -43,22 +46,36 @@ import { UserRequestoDTO } from '../../../../core/models/RequestDTO/UserRequestD
     ReactiveFormsModule,
     MatSelectModule,
     MatProgressSpinner,
+    NgxMatSelectSearchModule
   ],
   templateUrl: './userForm.component.html',
   styleUrls: ['./userForm.component.scss'],
 })
-export class UserFormComponent implements OnInit {
-  employees: EmployeeCatalogResponseDTO[] = [];
-  menus: MenuResponseDTO[] = [];
-  privileges: PrivilegeResponseDTO[] = [];
-  roles: RolesResponseDTO[] = [];
+export class UserFormComponent implements OnInit, OnDestroy {
   selectedEmployee: EmployeeCatalogResponseDTO | null = null;
+  employees: EmployeeCatalogResponseDTO[] = [];
+  employeeFilterCtrl = new FormControl();
+  filteredEmployees: any[] = [];
+
+  menus: MenuResponseDTO[] = [];
+  menuFilterCtrl = new FormControl();
+  filteredMenus: any[] = [];
+
+  privileges: PrivilegeResponseDTO[] = [];
+  privilegeFilterCtrl = new FormControl();
+  filteredPrivileges: any[] = [];
+  
+  roles: RolesResponseDTO[] = [];
+  roleFilterCtrl = new FormControl();
+  filteredRoles: any[] = [];
 
   loading: boolean = true;
   isSubmitting = false;
 
   userForm!: FormGroup;
   userId: number = 0;
+
+  private _onDestroy = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -81,9 +98,31 @@ export class UserFormComponent implements OnInit {
     }).subscribe({
       next: (resp) => {
         this.employees = resp.employees.data;
+        this.filteredEmployees = this.employees.slice();
+        this.employeeFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => {
+            this.filterEmployees();
+          });
+
         this.menus = resp.menus.data;
+        this.filteredMenus = this.menus.slice();
+        this.menuFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterMenus());
+
         this.privileges = resp.privileges.data;
+        this.filteredPrivileges = this.privileges.slice();
+        this.privilegeFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterPrivileges());
+        
         this.roles = resp.roles.data;
+        this.filteredRoles = this.roles.slice();
+        this.roleFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterRoles());
+
       },
       error: (err) => {
         console.error('Error al cargar datos:', err);
@@ -93,6 +132,40 @@ export class UserFormComponent implements OnInit {
         this.loadData();
       },
     });
+  }
+
+  filterEmployees() {
+    const search = this.employeeFilterCtrl.value?.toLowerCase() || '';
+    this.filteredEmployees = this.employees.filter(emp =>
+      (`${emp.fullName} ${emp.identification}`.toLowerCase().includes(search))
+    );
+  }
+
+  filterRoles() {
+    const search = this.roleFilterCtrl.value?.toLowerCase() || '';
+    this.filteredRoles = this.roles.filter(role =>
+      role.name.toLowerCase().includes(search)
+    );
+  }
+
+  filterPrivileges() {
+    const search = this.privilegeFilterCtrl.value?.toLowerCase() || '';
+    this.filteredPrivileges = this.privileges.filter(p =>
+      p.key.toLowerCase().includes(search)
+    );
+  }
+
+  filterMenus() {
+    const search = this.menuFilterCtrl.value?.toLowerCase() || '';
+    this.filteredMenus = this.menus.filter(m =>
+      m.label?.toLowerCase().includes(search)
+    );
+  }
+
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 
   initForm(): void {
