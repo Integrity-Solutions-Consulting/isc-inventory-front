@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .user-panel-container {
   padding: 1rem;
   background-color: white;
@@ -12,17 +13,42 @@
 }
 
 .user-toolbar mat-form-field {
+=======
+.panel-container {
+  padding: 1rem;
+  background-color: white;
+  border-radius: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 40px; /* o la altura que tenga tu toolbar */
+  margin-bottom: 2rem;
+}
+
+.toolbar mat-form-field {
+>>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
   height: 100%;       /* Ocupa toda la altura del contenedor */
   margin: 0;          /* Elimina márgenes que alteren la altura */
   width: 25rem;
 }
 
+<<<<<<< HEAD
 .user-toolbar mat-form-field .mat-form-field-wrapper {
+=======
+.toolbar mat-form-field .mat-form-field-wrapper {
+>>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
   height: 100%;       /* Ajusta el wrapper interno */
   padding-bottom: 0;  /* Evita espacio extra debajo */
 }
 
+<<<<<<< HEAD
 .user-toolbar mat-form-field input.mat-input-element {
+=======
+.toolbar mat-form-field input.mat-input-element {
+>>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
   height: 100%;       /* Input ocupa toda la altura disponible */
   padding: 0 12px;    /* Ajusta padding para que quede cómodo */
   box-sizing: border-box;
@@ -54,4 +80,19 @@ button.mat-flat-button {
   display: flex;
   align-items: center;
   gap: 4px;
+<<<<<<< HEAD
+=======
+}
+
+::ng-deep mat-form-field.search-input .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.mat-mdc-form-field{
+  justify-content: center !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper.search-input {
+  flex: none !important;
+>>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
 }

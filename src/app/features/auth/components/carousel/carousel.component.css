@@ -57,17 +57,18 @@
   transform: scale(1.1);
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .carousel-container {
     max-width: 100%;
-    height: 280px;
+    height: 240px;
     margin-bottom: 15px;
   }
 
   .carousel-indicators {
-    bottom: 15px;
+    bottom: 12px;
     padding: 6px 12px;
+    gap: 8px;
   }
 
   .indicator {
@@ -75,3 +76,26 @@
     height: 8px;
   }
 }
+
+@media (max-width: 480px) {
+  .carousel-container {
+    height: 200px;
+    border-radius: 10px;
+  }
+
+  .carousel-image {
+    border-radius: 10px;
+  }
+
+  .carousel-indicators {
+    bottom: 10px;
+    padding: 5px 10px;
+    gap: 6px;
+  }
+
+  .indicator {
+    width: 7px;
+    height: 7px;
+  }
+}
+
