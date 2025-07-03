@@ -1,28 +1,9 @@
-<<<<<<< HEAD
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { CarouselComponent } from './../../components/carousel/carousel.component'
-
-=======
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-<<<<<<< HEAD
-  imports: [
-    RouterModule,
-    CommonModule,
-    CarouselComponent
-  ],
-  templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
-})
-export class AuthComponent {}
-=======
   imports: [RouterModule],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
@@ -41,4 +22,3 @@ export class AuthComponent implements OnInit {
   }
 
 }
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73

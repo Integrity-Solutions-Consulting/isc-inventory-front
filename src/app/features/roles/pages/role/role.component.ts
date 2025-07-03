@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-import { Component, OnInit } from '@angular/core';
-
-@Component({
-  selector: 'app-role',
-  standalone:true,
-  templateUrl: './role.component.html',
-  styleUrls: ['./role.component.css']
-})
-export class RoleComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-=======
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -188,7 +171,7 @@ export class RoleComponent implements OnInit {
         }
       );
     }
-  
+
     delete(entity: RolesResponseDTO): void {
       this.loading.show();
       this.roleService.delete(entity.id).subscribe({
@@ -228,5 +211,4 @@ export class RoleComponent implements OnInit {
     // Implementa lógica real para buscar desde backend si es necesario
     console.log('Buscando:', this.searchTerm);
   }
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
 }

@@ -1,12 +1,3 @@
-<<<<<<< HEAD
- <div class="section-title">
- <h3>Usuarios</h3>
- <p>Gestion de usuarios con acceso al portal</p>
- </div>
-
-<div class="user-panel-container">
-  <div class="user-toolbar">
-=======
 <div class="section-title">
   <h3>Usuarios</h3>
   <p>Gestion de usuarios con acceso al portal</p>
@@ -14,7 +5,6 @@
 
 <div class="panel-container">
   <div class="toolbar">
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
     <mat-form-field appearance="outline" class="search-input">
       <input
         matInput
@@ -22,17 +12,10 @@
         placeholder="Buscar por nombres o email"
         (keyup.enter)="searchUsers()"
       />
-<<<<<<< HEAD
-    </mat-form-field>
-    <button mat-icon-button color="primary" (click)="searchUsers()">
-      <mat-icon>search</mat-icon>
-    </button>
-=======
       <button mat-icon-button matPrefix (click)="searchUsers()" tabindex="-1">
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
     <span class="spacer"></span>
     <button mat-flat-button (click)="createUser()">
       <mat-icon>person_add</mat-icon>
@@ -92,13 +75,8 @@
           <button mat-icon-button (click)="editUser(user)">
             <mat-icon>edit</mat-icon>
           </button>
-<<<<<<< HEAD
-          <button mat-icon-button (click)="deleteUser(user)">
-            <mat-icon>delete</mat-icon>
-=======
           <button mat-icon-button (click)="warningDelete(user)" [disabled]="!user.active">
             <mat-icon [class.inactive-icon]="!user.active">delete</mat-icon>
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
           </button>
         </td>
       </ng-container>
@@ -109,44 +87,6 @@
   </div>
   }@else {
   <div class="card-container">
-<<<<<<< HEAD
-  <mat-card *ngFor="let user of dataSource.data" class="user-card">
-    <mat-card-title>{{ user.firstNames }}</mat-card-title>
-
-    <mat-card-content>
-      <p>{{ user.email }}</p>
-      <p>
-        <span
-          class="status-dot"
-          [ngClass]="user.active ? 'dot-active' : 'dot-inactive'"
-        ></span>
-        {{ user.active ? "Activo" : "Inactivo" }}
-      </p>
-      <p>
-        <span
-          class="status-dot"
-          [ngClass]="!user.suspended ? 'dot-active' : 'dot-inactive'"
-        ></span>
-        {{ user.suspended ? "Suspendido" : "Habilitado" }}
-      </p>
-      <p>Roles: {{ getRoleNames(user) }}</p>
-    </mat-card-content>
-
-    <!-- Acciones -->
-    <mat-card-actions align="end">
-      <button mat-icon-button (click)="viewUser(user)">
-        <mat-icon>visibility</mat-icon>
-      </button>
-      <button mat-icon-button (click)="editUser(user)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button (click)="deleteUser(user)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</div>
-=======
     <ng-container *ngIf="dataSource.connect() | async as users">
       <mat-card *ngFor="let user of users" class="user-card">
         <mat-card-title>{{ user.firstNames }}</mat-card-title>
@@ -183,7 +123,6 @@
       </mat-card>
     </ng-container>
   </div>
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
 
   }
 

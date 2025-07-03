@@ -76,3 +76,16 @@ button.mat-flat-button {
   width: 20rem;
   display: inline-block;
 }
+
+.status-container{
+  padding: 0 5px;
+  border-radius: 1rem;
+}
+
+.active{
+  background-color: rgb(169, 237, 169);
+  color: #4caf50;
+  font-weight: bold !important;
+}
+
+

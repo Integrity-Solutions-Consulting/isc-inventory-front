@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-import { Component, OnInit } from '@angular/core';
-
-@Component({
-  selector: 'app-employee',
-  standalone:true,
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.css']
-})
-export class EmployeeComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-=======
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -271,5 +254,4 @@ export class EmployeeComponent implements OnInit, AfterViewInit {
     // Implementa lógica real para buscar desde backend si es necesario
     console.log('Buscando:', this.searchTerm);
   }
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
 }

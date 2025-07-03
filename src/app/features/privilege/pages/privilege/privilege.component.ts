@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-import { Component, OnInit } from '@angular/core';
-
-@Component({
-  selector: 'app-privilege',
-  standalone:true,
-  templateUrl: './privilege.component.html',
-  styleUrls: ['./privilege.component.css']
-})
-export class PrivilegeComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-=======
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -214,5 +197,4 @@ export class PrivilegeComponent implements OnInit {
     console.log('Página cambiada:', event);
     // Implementar lógica si los datos vienen paginados desde el servidor
   }
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
 }

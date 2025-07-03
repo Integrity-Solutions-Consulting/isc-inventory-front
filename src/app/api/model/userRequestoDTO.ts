@@ -8,19 +8,6 @@
  * Do not edit the class manually.
  */
 
-<<<<<<< HEAD
-
-export interface UserRequestoDTO { 
-    username: string;
-    email: string;
-    firstNames: string;
-    employeeId: number;
-    rolesId: Set<number>;
-    privilegesId?: Set<number>;
-    menusId?: Set<number>;
-}
-
-=======
 export interface UserRequestoDTO {
   username: string;
   email: string;
@@ -30,4 +17,3 @@ export interface UserRequestoDTO {
   privilegesId?: number[];
   menusId?: number[];
 }
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73

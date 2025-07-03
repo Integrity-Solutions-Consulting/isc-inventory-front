@@ -1,14 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-<<<<<<< HEAD
-import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
-=======
 import {
   MatPaginator,
   MatPaginatorIntl,
   PageEvent,
 } from '@angular/material/paginator';
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,13 +21,10 @@ import { MatCardModule } from '@angular/material/card';
 import { LoadingService } from '../../../../core/services/modals/loading/loading.service';
 import { finalize } from 'rxjs';
 import { getSpanishPaginatorIntl } from '../../../../core/functions/mat-paginator-intl-es';
-<<<<<<< HEAD
-=======
 import { UserFormComponent } from '../../components/userForm/userForm.component';
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
 import { WarningService } from '../../../../core/services/modals/warning/warning.service';
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
 
 @Component({
   selector: 'app-user',
@@ -48,15 +41,6 @@ import { WarningService } from '../../../../core/services/modals/warning/warning
     LayoutModule,
     MatCardModule,
   ],
-<<<<<<< HEAD
-  providers: [
-    {
-      provide: MatPaginatorIntl,
-      useFactory: getSpanishPaginatorIntl,
-    },
-  ],
-=======
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
 })
@@ -80,14 +64,10 @@ export class UserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private breakpointObserver: BreakpointObserver,
-<<<<<<< HEAD
-    private loading: LoadingService
-=======
     private loading: LoadingService,
     private formService: FormService,
     private modalDialogService: ModalDialogService,
     private warningService: WarningService
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
   ) {}
 
   ngOnInit(): void {
@@ -111,10 +91,6 @@ export class UserComponent implements OnInit {
           this.dataSource.data = response.data;
           this.totalUsers = this.dataSource.data.length;
           this.dataSource.paginator = this.paginator;
-<<<<<<< HEAD
-          console.log(this.dataSource.data);
-=======
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
         },
         error: (err) => {
           console.error('Error loading users', err);
@@ -136,9 +112,6 @@ export class UserComponent implements OnInit {
   }
 
   createUser(): void {
-<<<<<<< HEAD
-    console.log('Crear nuevo usuario');
-=======
     this.formService.open(
       'Nuevo Usuario',
       'person_add',
@@ -164,21 +137,12 @@ export class UserComponent implements OnInit {
         );
       }
     );
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
   }
 
   viewUser(user: any): void {
     console.log('Ver usuario:', user);
   }
 
-<<<<<<< HEAD
-  editUser(user: any): void {
-    console.log('Editar usuario:', user);
-  }
-
-  deleteUser(user: any): void {
-    console.log('Eliminar usuario:', user);
-=======
   editUser(user: UserResponseDTO): void {
     this.formService.open(
       'Editar Usuario',
@@ -245,10 +209,9 @@ export class UserComponent implements OnInit {
           'Error',
           error.error.message
         );
-         
+
       },
     });
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
   }
 
   onPageChange(event: PageEvent): void {

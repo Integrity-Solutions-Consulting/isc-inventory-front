@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-import { Component, OnInit } from '@angular/core';
-
-@Component({
-  selector: 'app-equipment',
-  standalone:true,
-  templateUrl: './equipment.component.html',
-  styleUrls: ['./equipment.component.css']
-})
-export class EquipmentComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-=======
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -231,5 +214,4 @@ export class EquipmentComponent implements OnInit {
     // Implementa lógica real para buscar desde backend si es necesario
     console.log('Buscando:', this.searchTerm);
   }
->>>>>>> 2dafe857f2557c49466b120dd49569973c1cfb73
 }
