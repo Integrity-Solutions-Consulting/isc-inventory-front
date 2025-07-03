@@ -33,12 +33,6 @@ export class AuthComponent implements OnInit {
     { url: 'assets/riesgo.jpeg', alt: 'Imagen 3' }
   ];
 
-   images: string[] = [
-    'assets/image1.jpg',
-    'assets/image2.jpg',
-    'assets/image3.jpg',
-  ];
-
   constructor() { }
   
   startAutoPlay() {

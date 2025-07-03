@@ -19,13 +19,17 @@
         >
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="condition" required>
-            <mat-option
-              *ngFor="let condition of conditions"
-              [value]="condition.id"
-            >
-              {{ condition.conditionType }}
-            </mat-option>
-          </mat-select>
+        <ngx-mat-select-search
+          [formControl]="conditionFilterCtrl"
+          placeholderLabel="Buscar condición..."
+          noEntriesFoundLabel="No se encontraron resultados">
+        </ngx-mat-select-search>
+
+        <mat-option *ngFor="let condition of filteredConditions" [value]="condition.id">
+          {{ condition.conditionType }}
+        </mat-option>
+      </mat-select>
+
           <mat-error
             *ngIf="equipmentForm.get('condition')?.hasError('required')"
           >
@@ -39,10 +43,17 @@
         <label>Empresa <span class="required-asterisk">*</span></label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="company" required>
-            <mat-option *ngFor="let company of companies" [value]="company.id">
-              {{ company.name }}
-            </mat-option>
-          </mat-select>
+        <ngx-mat-select-search
+          [formControl]="companyFilterCtrl"
+          placeholderLabel="Buscar empresa..."
+          noEntriesFoundLabel="No se encontraron empresas">
+        </ngx-mat-select-search>
+
+        <mat-option *ngFor="let company of filteredCompanies" [value]="company.id">
+          {{ company.name }}
+        </mat-option>
+      </mat-select>
+
           <mat-error *ngIf="equipmentForm.get('company')?.hasError('required')">
             La empresa es obligatoria
           </mat-error>
@@ -64,15 +75,10 @@
 
     <!-- Categoría -->
     <div class="form-row">
-      <div
-        class="form-field"
-        *ngIf="
-          equipmentForm.get('isCreatingNewCategory')?.value;
-          else selectCategory
-        "
-      >
-        <label
-          >Nombre de la nueva categoría
+      <div class="form-field"
+        *ngIf="equipmentForm.get('isCreatingNewCategory')?.value;
+          else selectCategory">
+        <label>Nombre de la nueva categoría
           <span class="required-asterisk">*</span></label
         >
         <mat-form-field appearance="outline" class="w-100">
@@ -92,13 +98,17 @@
           >
           <mat-form-field appearance="outline" class="w-100">
             <mat-select formControlName="categoryId">
-              <mat-option
-                *ngFor="let category of categories"
-                [value]="category.id"
-              >
-                {{ category.name }}
-              </mat-option>
-            </mat-select>
+            <ngx-mat-select-search
+              [formControl]="categoryFilterCtrl"
+              placeholderLabel="Buscar categoría..."
+              noEntriesFoundLabel="No se encontraron categorías">
+            </ngx-mat-select-search>
+
+            <mat-option *ngFor="let category of filteredCategories" [value]="category.id">
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+
             <mat-error
               *ngIf="equipmentForm.get('categoryId')?.hasError('required')"
             >
@@ -151,10 +161,17 @@
           <label>Componente <span class="required-asterisk">*</span></label>
           <mat-form-field appearance="outline" class="w-100">
             <mat-select formControlName="component" required>
-              <mat-option *ngFor="let comp of components" [value]="comp.id">
-                {{ comp.description }}
-              </mat-option>
-            </mat-select>
+          <ngx-mat-select-search
+            [formControl]="componentFilterCtrl"
+            placeholderLabel="Buscar componente..."
+            noEntriesFoundLabel="No se encontraron componentes">
+          </ngx-mat-select-search>
+
+          <mat-option *ngFor="let comp of filteredComponents" [value]="comp.id">
+            {{ comp.description }}
+          </mat-option>
+        </mat-select>
+
             <mat-error
               *ngIf="equipmentForm.get('categoryName')?.hasError('required')"
             >

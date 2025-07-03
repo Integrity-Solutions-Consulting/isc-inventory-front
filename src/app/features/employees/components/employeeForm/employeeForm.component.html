@@ -44,12 +44,16 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idIdentificationType">
-            <mat-option
-              *ngFor="let type of identificationTypes"
-              [value]="type.id"
-              >{{ type.description }}</mat-option
-            >
-          </mat-select>
+        <ngx-mat-select-search
+          [formControl]="identificationTypeFilterCtrl"
+          placeholderLabel="Buscar tipo..."
+          noEntriesFoundLabel="Sin resultados">
+        </ngx-mat-select-search>
+
+        <mat-option *ngFor="let type of filteredIdentificationTypes" [value]="type.id">
+          {{ type.description }}
+        </mat-option>
+      </mat-select>
           <mat-error
             *ngIf="entityForm.get('idIdentificationType')?.hasError('required')"
           >
@@ -119,10 +123,16 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idGender">
-            <mat-option *ngFor="let gender of genders" [value]="gender.id">{{
-              gender.description
-            }}</mat-option>
+          <ngx-mat-select-search
+            [formControl]="genderFilterCtrl"
+            placeholderLabel="Buscar tipo..."
+            noEntriesFoundLabel="Sin resultados">
+          </ngx-mat-select-search>
+          <mat-option *ngFor="let gender of filteredGenders" [value]="gender.id">
+            {{ gender.description }}
+          </mat-option>
           </mat-select>
+
           <mat-error *ngIf="entityForm.get('idGender')?.hasError('required')">
             Seleccione un género
           </mat-error>
@@ -137,12 +147,16 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idPosition">
-            <mat-option
-              *ngFor="let position of positions"
-              [value]="position.id"
-              >{{ position.name }}</mat-option
-            >
+          <ngx-mat-select-search
+            [formControl]="positionFilterCtrl"
+            placeholderLabel="Buscar tipo..."
+            noEntriesFoundLabel="Sin resultados">
+          </ngx-mat-select-search>
+          <mat-option *ngFor="let position of filteredPositions" [value]="position.id">
+            {{ position.name }}
+          </mat-option>
           </mat-select>
+
           <mat-error *ngIf="entityForm.get('idPosition')?.hasError('required')">
             Seleccione una posición
           </mat-error>
@@ -155,9 +169,14 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idWorkMode">
-            <mat-option *ngFor="let mode of workModes" [value]="mode.id">{{
-              mode.name
-            }}</mat-option>
+          <ngx-mat-select-search
+            [formControl]="workModeFilterCtrl"
+            placeholderLabel="Buscar tipo..."
+            noEntriesFoundLabel="Sin resultados">
+          </ngx-mat-select-search>
+          <mat-option *ngFor="let mode of filteredWorkModes" [value]="mode.id">
+            {{ mode.name }}
+          </mat-option>
           </mat-select>
           <mat-error *ngIf="entityForm.get('idWorkMode')?.hasError('required')">
             Seleccione un modo de trabajo
@@ -173,11 +192,14 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idNationality">
-            <mat-option
-              *ngFor="let nationality of nationalities"
-              [value]="nationality.id"
-              >{{ nationality.description }}</mat-option
-            >
+          <ngx-mat-select-search
+            [formControl]="nationalityFilterCtrl"
+            placeholderLabel="Buscar tipo..."
+            noEntriesFoundLabel="Sin resultados">
+          </ngx-mat-select-search>
+          <mat-option *ngFor="let nationality of filteredNationalities" [value]="nationality.id">
+            {{ nationality.description }}
+          </mat-option>
           </mat-select>
           <mat-error
             *ngIf="entityForm.get('idNationality')?.hasError('required')"
