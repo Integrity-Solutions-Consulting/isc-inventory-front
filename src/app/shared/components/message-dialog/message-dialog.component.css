@@ -1,0 +1,10 @@
+.dialog-content {
+  text-align: center;
+  padding: 2rem;
+}
+mat-icon.success {
+  color: green;
+}
+mat-icon.error {
+  color: red;
+}

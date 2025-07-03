@@ -1,0 +1,54 @@
+.container {
+  display: flex;
+  height: 100vh; /* altura completa de la ventana */
+}
+
+.left-pane, .right-pane {
+  flex: 1; /* cada uno ocupa la mitad */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-pane {
+  background-color: var(--itg-bg); /* ejemplo de fondo */
+}
+
+.right-pane {
+  background-color: var(--itg-primary); /* ejemplo de fondo */
+  color: var(--itg-bg);
+  flex-direction: column;
+  text-align: center;
+}
+
+.right-pane .content img {
+  max-width: 80%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.content{
+  padding: 2rem 1rem;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content h2 {
+  margin: 1rem 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.content p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0.9;
+}
+
+
+
+

@@ -1,0 +1,51 @@
+:host {
+  width: 85%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Opcional: para que el botón quede con un poco más de espacio arriba */
+button[type="submit"] {
+  align-self: center;
+  width: 100%;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 20px;
+
+  .auth-logo {
+    width: 10rem;
+    margin-bottom: 10px;
+  }
+
+  .auth-title {
+    font-size: 2rem;
+    margin: 0;
+    color: var(--itg-text);
+    text-align: start;
+  }
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -10px;
+  margin-bottom: 20px;
+
+  .forgot-password-btn {
+    background: none;
+    border: none;
+    color: #1C4D8C;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
