@@ -1,9 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  MatPaginator,
-  PageEvent,
-} from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +22,8 @@ import { WarningService } from '../../../../core/services/modals/warning/warning
 import { EmployeeTableResponseDTO } from '../../../../core/models/ResponseDTO/administration/EmployeeTableResponseDTO';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeFormComponent } from '../../components/employeeForm/employeeForm.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+
 
 @Component({
   selector: 'app-employee',
@@ -40,12 +39,13 @@ import { EmployeeFormComponent } from '../../components/employeeForm/employeeFor
     CommonModule,
     LayoutModule,
     MatCardModule,
+    MatSortModule
   ],
   providers: [],
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.css'],
 })
-export class EmployeeComponent implements OnInit {
+export class EmployeeComponent implements OnInit, AfterViewInit {
   searchTerm: string = '';
   displayedColumns: string[] = [
     'employee',
@@ -61,6 +61,7 @@ export class EmployeeComponent implements OnInit {
   total = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   isSmallScreen: boolean = false;
 
@@ -82,27 +83,67 @@ export class EmployeeComponent implements OnInit {
       });
   }
 
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'employee':
+          return `${item.firstName} ${item.lastName}`.toLowerCase();
+        case 'contractDate':
+        case 'contractEndDate':
+          return item[property] || '';
+        default:
+          return (item as any)[property] ?? '';
+      }
+    };
+  }
+
   loadTable(): void {
     this.loading.show(); // Show loading spinner
-    this.employeeService
-      .getTable()
-      .pipe(
-        finalize(() => this.loading.hide()) // Siempre se ejecuta al final
-      )
-      .subscribe({
-        next: (response) => {
-          this.dataSource.data = response.data;
-          this.total = this.dataSource.data.length;
-          this.dataSource.paginator = this.paginator;
-        },
-        error: (err) => {
-          console.error('Error loading table', err);
-          this.loading.hide(); // Hide loading spinner on error
-        },
-        complete: () => {
-          this.loading.hide(); // Hide loading spinner on complete
-        },
-      });
+    this.employeeService.getTable().subscribe({
+      next: (response) => {
+        this.dataSource.data = response.data;
+        this.total = this.dataSource.data.length;
+        this.dataSource.paginator = this.paginator;
+      },
+      error: (err) => {
+        console.error('Error loading table', err);
+        this.loading.hide(); // Hide loading spinner on error
+      },
+      complete: () => {
+        this.loading.hide(); // Hide loading spinner on complete
+        this.dataSource.filterPredicate = (data, filter) => {
+          const term = filter.trim().toLowerCase();
+
+          const fullName = `${data.firstName} ${data.lastName}`.toLowerCase();
+          const phone = data.phone?.toLowerCase() || '';
+          const email = data.email?.toLowerCase() || '';
+          const identification = data.identification?.toLowerCase() || '';
+          const identificationType =
+            data.identificationType?.toLowerCase() || '';
+          const position = data.position?.toLowerCase() || '';
+          const contractDate = data.contractDate
+            ? new Date(data.contractDate).toLocaleDateString('es-ES')
+            : '';
+          const contractEndDate = data.contractEndDate
+            ? new Date(data.contractEndDate).toLocaleDateString('es-ES')
+            : '';
+
+          return (
+            fullName.includes(term) ||
+            phone.includes(term) ||
+            email.includes(term) ||
+            identification.includes(term) ||
+            identificationType.includes(term) ||
+            position.includes(term) ||
+            contractDate.includes(term) ||
+            contractEndDate.includes(term)
+          );
+        };
+      },
+    });
   }
 
   create(): void {
@@ -197,6 +238,11 @@ export class EmployeeComponent implements OnInit {
         this.modalDialogService.open('error', 'Error', error.error.message);
       },
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   onPageChange(event: PageEvent): void {

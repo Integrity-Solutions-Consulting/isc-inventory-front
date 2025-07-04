@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -19,19 +19,15 @@ import { FormService } from '../../../../core/services/modals/form/form.service'
 
 import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
 import { WarningService } from '../../../../core/services/modals/warning/warning.service';
-import { EmployeeTableResponseDTO } from '../../../../core/models/ResponseDTO/administration/EmployeeTableResponseDTO';
-import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentDetailResponseDTO';
-import { EquipmentService } from '../../services/equipment/equipment.service';
-import { EquipmentFormComponent } from '../../components/equipmentForm/equipmentForm.component';
 import { EquipmentAssignmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentAssignmentDetailResponseDTO';
 import { AssaingmentService } from '../../services/assaignment/assaingment.service';
 import { EquipmentAssignmentFormComponent } from '../../components/equipmentAssignmentForm/equipmentAssignmentForm.component';
-
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-equipmentAssignment',
-  standalone:true,
-   imports: [
+  standalone: true,
+  imports: [
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,
@@ -42,12 +38,13 @@ import { EquipmentAssignmentFormComponent } from '../../components/equipmentAssi
     CommonModule,
     LayoutModule,
     MatCardModule,
+    MatSortModule,
   ],
   templateUrl: './equipmentAssignment.component.html',
-  styleUrls: ['./equipmentAssignment.component.css']
+  styleUrls: ['./equipmentAssignment.component.css'],
 })
-export class EquipmentAssignmentComponent implements OnInit {
- searchTerm: string = '';
+export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
+  searchTerm: string = '';
   displayedColumns: string[] = [
     'employee',
     'equipment',
@@ -55,12 +52,13 @@ export class EquipmentAssignmentComponent implements OnInit {
     'assignmentDate',
     'returnDate',
     'status',
-    'actions'
+    'actions',
   ];
   dataSource = new MatTableDataSource<EquipmentAssignmentDetailResponseDTO>();
   total = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   isSmallScreen: boolean = false;
 
@@ -82,27 +80,52 @@ export class EquipmentAssignmentComponent implements OnInit {
       });
   }
 
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'employee':
+          return item.employee?.fullName || '';
+        case 'equipment':
+          return item.equipment?.model || '';
+        case 'company':
+          return item.company?.name || '';
+        case 'assignmentDate':
+          return item.assignmentDate || '';
+        case 'returnDate':
+          return item.returnDate || '';
+        default:
+          return (item as any)[property];
+      }
+    };
+  }
+
   loadTable(): void {
     this.loading.show(); // Show loading spinner
-    this.equipmentAssingmentService
-      .getAll()
-      .pipe(
-        finalize(() => this.loading.hide()) // Siempre se ejecuta al final
-      )
-      .subscribe({
-        next: (response) => {
-          this.dataSource.data = response.data;
-          this.total = this.dataSource.data.length;
-          this.dataSource.paginator = this.paginator;
-        },
-        error: (err) => {
-          console.error('Error loading table', err);
-          this.loading.hide(); // Hide loading spinner on error
-        },
-        complete: () => {
-          this.loading.hide(); // Hide loading spinner on complete
-        },
-      });
+    this.equipmentAssingmentService.getAll().subscribe({
+      next: (response) => {
+        this.dataSource.data = response.data;
+        this.total = this.dataSource.data.length;
+        this.dataSource.paginator = this.paginator;
+      },
+      error: (err) => {
+        console.error('Error loading table', err);
+        this.loading.hide(); // Hide loading spinner on error
+      },
+      complete: () => {
+        this.loading.hide(); // Hide loading spinner on complete
+        this.dataSource.filterPredicate = (data, filter) => {
+          const term = filter.trim().toLowerCase();
+          return (
+            data.employee?.fullName?.toLowerCase().includes(term) ||
+            data.equipment?.category?.toLowerCase().includes(term) ||
+            data.equipment?.model?.toLowerCase().includes(term) ||
+            data.equipment?.brand?.toLowerCase().includes(term) ||
+            data.company?.name?.toLowerCase().includes(term)
+          );
+        };
+      },
+    });
   }
 
   create(): void {
@@ -133,8 +156,26 @@ export class EquipmentAssignmentComponent implements OnInit {
     );
   }
 
-  return(equipment: EquipmentAssignmentDetailResponseDTO){
-    
+  return(equipment: EquipmentAssignmentDetailResponseDTO) {
+    this.loading.show();
+    this.equipmentAssingmentService.revoke(equipment.id).subscribe({
+      next: (resp) => {
+        this.loading.hide();
+        const index = this.dataSource.data.findIndex(
+          (u) => u.id === resp.data.id
+        );
+        if (index !== -1) {
+          this.dataSource.data[index] = resp.data;
+          this.dataSource.data = [...this.dataSource.data]; // Reasignar para que se actualice la tabla
+        }
+        this.modalDialogService.open(
+          'success',
+          'Devolución realizada',
+          'El equipo fue registrado correctamente.'
+        );
+      },
+      error: (error) => {},
+    });
   }
 
   warningDelete(entity: EquipmentAssignmentDetailResponseDTO) {
@@ -168,6 +209,11 @@ export class EquipmentAssignmentComponent implements OnInit {
         this.modalDialogService.open('error', 'Error', error.error.message);
       },
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   onPageChange(event: PageEvent): void {

@@ -15,14 +15,28 @@ export const dashboard_routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'inventory-control', component: HomeComponent },
       { path: 'equipment-assignment', component: EquipmentAssignmentComponent },
-      { path: 'equipment', component: EquipmentComponent },
+      {
+        path: 'equipment',
+        children: [
+          { path: '', component: EquipmentComponent },
+          {
+            path: 'detail',
+            loadComponent: () =>
+              import(
+                '../../equipment/pages/equipmentDetail/equipmentDetail.component'
+              ).then((m) => m.EquipmentDetailComponent),
+          },
+        ],
+      },
       { path: 'employees', component: EmployeeComponent },
       { path: 'clients', component: CustomerComponent },
-            {
-          path: 'setting',
-          loadChildren: () =>
-            import('../../setting/routes/setting.routing').then((m) => m.setting_routes),
-        },
+      {
+        path: 'setting',
+        loadChildren: () =>
+          import('../../setting/routes/setting.routing').then(
+            (m) => m.setting_routes
+          ),
+      },
     ],
   },
 ];

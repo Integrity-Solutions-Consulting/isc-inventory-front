@@ -9,9 +9,8 @@
     <mat-form-field appearance="outline" class="search-input">
       <input
         matInput
-        [(ngModel)]="searchTerm"
         placeholder="Buscar por empleado o equipo"
-        (keyup.enter)="search()"
+        (keyup)="applyFilter($event)"
       />
       <button mat-icon-button matPrefix (click)="search()" tabindex="-1">
         <mat-icon>search</mat-icon>
@@ -28,11 +27,15 @@
   @if (!isSmallScreen) {
   <div class="custom-table-wrapper">
     <div class="table-scroll-wrapper">
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
-
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="mat-elevation-z1"
+        matSort
+      >
         <!-- Empleado -->
         <ng-container matColumnDef="employee">
-          <th mat-header-cell *matHeaderCellDef>Empleado</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Empleado</th>
           <td mat-cell *matCellDef="let item">
             {{ item.employee.fullName }}
           </td>
@@ -40,17 +43,21 @@
 
         <!-- Equipo -->
         <ng-container matColumnDef="equipment">
-          <th mat-header-cell *matHeaderCellDef>Equipo</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Equipo</th>
           <td mat-cell *matCellDef="let item">
             <strong>{{ item.equipment.category }}</strong>
-            <div class="text-muted">{{ item.equipment.brand }} {{ item.equipment.model }}</div>
-            <div class="text-muted">{{ item.equipment.serialNumber }} / {{ item.equipment.itemCode }}</div>
+            <div class="text-muted">
+              {{ item.equipment.brand }} {{ item.equipment.model }}
+            </div>
+            <div class="text-muted">
+              {{ item.equipment.serialNumber }} / {{ item.equipment.itemCode }}
+            </div>
           </td>
         </ng-container>
 
         <!-- Empresa -->
         <ng-container matColumnDef="company">
-          <th mat-header-cell *matHeaderCellDef>Empresa</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
           <td mat-cell *matCellDef="let item">
             {{ item.company.name }}
           </td>
@@ -58,29 +65,37 @@
 
         <!-- Fecha de Asignación -->
         <ng-container matColumnDef="assignmentDate">
-          <th mat-header-cell *matHeaderCellDef>Fecha Asignación</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Fecha Asignación
+          </th>
           <td mat-cell *matCellDef="let item">
-            {{ item.assignmentDate | date : 'dd/MM/yyyy' }}
+            {{ item.assignmentDate | date : "dd/MM/yyyy" }}
           </td>
         </ng-container>
 
         <!-- Fecha de Devolución -->
         <ng-container matColumnDef="returnDate">
-          <th mat-header-cell *matHeaderCellDef>Fecha Devolución</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Fecha Devolución
+          </th>
           <td mat-cell *matCellDef="let item">
-            {{ item.returnDate ? (item.returnDate | date : 'dd/MM/yyyy') : 'En uso' }}
+            {{
+              item.returnDate
+                ? (item.returnDate | date : "dd/MM/yyyy")
+                : "En uso"
+            }}
           </td>
         </ng-container>
 
         <!-- Estado -->
         <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
           <td mat-cell *matCellDef="let item">
             <span
               class="status-dot"
               [ngClass]="item.status ? 'dot-active' : 'dot-inactive'"
             ></span>
-            {{ item.status ? 'Activo' : 'Finalizado' }}
+            {{ item.status ? "Activo" : "Finalizado" }}
           </td>
         </ng-container>
 
@@ -88,8 +103,12 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let item">
-            <button mat-icon-button>
-               <mat-icon>undo</mat-icon>
+            <button
+              mat-icon-button
+              (click)="return(item)"
+              [disabled]="!item.status || item.returnDate"
+            >
+              <mat-icon>undo</mat-icon>
             </button>
             <button
               mat-icon-button
@@ -117,29 +136,49 @@
           {{ item.employee.fullName }}
         </mat-card-title>
         <mat-card-content>
-          <div><strong>Equipo:</strong> {{ item.equipment.category }} ({{ item.equipment.brand }} {{ item.equipment.model }})</div>
+          <div>
+            <strong>Equipo:</strong> {{ item.equipment.category }} ({{
+              item.equipment.brand
+            }}
+            {{ item.equipment.model }})
+          </div>
           <div><strong>Serie:</strong> {{ item.equipment.serialNumber }}</div>
           <div><strong>Código:</strong> {{ item.equipment.itemCode }}</div>
           <div><strong>Empresa:</strong> {{ item.company.name }}</div>
-          <div><strong>Asignado:</strong> {{ item.assignmentDate | date: 'dd/MM/yyyy' }}</div>
-          <div><strong>Devuelto:</strong> {{ item.returnDate ? (item.returnDate | date: 'dd/MM/yyyy') : 'No devuelto' }}</div>
+          <div>
+            <strong>Asignado:</strong>
+            {{ item.assignmentDate | date : "dd/MM/yyyy" }}
+          </div>
+          <div>
+            <strong>Devuelto:</strong>
+            {{
+              item.returnDate
+                ? (item.returnDate | date : "dd/MM/yyyy")
+                : "No devuelto"
+            }}
+          </div>
           <div>
             <strong>Estado:</strong>
             <span [ngClass]="item.status ? 'dot-active' : 'dot-inactive'">
-              {{ item.status ? 'Activo' : 'Finalizado' }}
+              {{ item.status ? "Activo" : "Finalizado" }}
             </span>
           </div>
         </mat-card-content>
         <mat-card-actions align="end">
-          <button mat-icon-button>
-            <mat-icon>visibility</mat-icon>
-          </button>
-          <button mat-icon-button>
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button (click)="warningDelete(item)" [disabled]="!item.status">
-            <mat-icon>delete</mat-icon>
-          </button>
+          <button
+              mat-icon-button
+              (click)="return(item)"
+              [disabled]="!item.status || item.returnDate"
+            >
+              <mat-icon>undo</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              (click)="warningDelete(item)"
+              [disabled]="!item.status"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
         </mat-card-actions>
       </mat-card>
     </ng-container>

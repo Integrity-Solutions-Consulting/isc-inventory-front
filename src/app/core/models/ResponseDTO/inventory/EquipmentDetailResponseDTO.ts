@@ -3,6 +3,7 @@ import { EquipmentCharacteristicResponseDTO } from './EquipmentCharacteristicRes
 export interface EquipmentDetailResponseDTO {
   id: number;
   invoice: number | null;
+  warranty: number | null;
 
   equipmentStatusId: number;
   equipmentStatusName: string;
@@ -27,4 +28,6 @@ export interface EquipmentDetailResponseDTO {
   status: boolean;
   creationDate: string; // ISO format from backend
   modificationDate: string;
+
+  imageUrl:string | null;
 }

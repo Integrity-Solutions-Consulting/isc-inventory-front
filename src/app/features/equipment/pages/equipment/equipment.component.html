@@ -32,7 +32,9 @@
           <th mat-header-cell *matHeaderCellDef>Equipo</th>
           <td mat-cell *matCellDef="let item">
             <strong>{{ item.categoryName }}</strong>
-            <div class="text-muted sub-info">{{ item.brand }} {{ item.model }}</div>
+            <div class="text-muted sub-info">
+              {{ item.brand }} {{ item.model }}
+            </div>
             <div>
               <span
                 class="status-dot"
@@ -49,21 +51,25 @@
           <td mat-cell *matCellDef="let item">
             <span
               class="status-dot"
-              [ngClass]="item.equipmentStatusName ? 'dot-active' : 'dot-inactive'"
+              [ngClass]="
+                item.equipmentStatusName ? 'dot-active' : 'dot-inactive'
+              "
             ></span>
-            {{ item.equipmentStatusName}}
+            {{ item.equipmentStatusName }}
           </td>
         </ng-container>
 
-         <!-- Condicion -->
+        <!-- Condicion -->
         <ng-container matColumnDef="condicion">
           <th mat-header-cell *matHeaderCellDef>Condición</th>
           <td mat-cell *matCellDef="let item">
             <span
               class="status-dot"
-              [ngClass]="item.equipmentConditionName ? 'dot-active' : 'dot-inactive'"
+              [ngClass]="
+                item.equipmentConditionName ? 'dot-active' : 'dot-inactive'
+              "
             ></span>
-            {{ item.equipmentConditionName}}
+            {{ item.equipmentConditionName }}
           </td>
         </ng-container>
 
@@ -112,19 +118,44 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let item" class="actions-cell">
-            <button mat-icon-button>
-              <mat-icon>visibility</mat-icon>
-            </button>
-            <button mat-icon-button (click)="edit(item)">
-              <mat-icon>edit</mat-icon>
-            </button>
             <button
               mat-icon-button
-              [disabled]="!item.status"
-              (click)="warningDelete(item)"
+              [matMenuTriggerFor]="menu"
+              aria-label="Opciones"
             >
-              <mat-icon [class.inactive-icon]="!item.status">delete</mat-icon>
+              <mat-icon>more_vert</mat-icon>
             </button>
+
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="view(item)">
+                <mat-icon>visibility</mat-icon>
+                <span>Ver</span>
+              </button>
+              <button
+                mat-menu-item
+                (click)="edit(item)"
+                [disabled]="!item.status"
+              >
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+              </button>
+              <button
+                mat-menu-item
+                (click)="warningDelete(item)"
+                [disabled]="!item.status"
+              >
+                <mat-icon [class.inactive-icon]="!item.status">delete</mat-icon>
+                <span>Eliminar</span>
+              </button>
+              <button
+                mat-menu-item
+                (click)="sendToRepair(item)"
+                [disabled]="!item.status"
+              >
+                <mat-icon>build</mat-icon>
+                <span>Enviar a reparación</span>
+              </button>
+            </mat-menu>
           </td>
         </ng-container>
 
@@ -137,9 +168,15 @@
   <div class="card-container">
     <ng-container *ngIf="dataSource.connect() | async as items">
       <mat-card *ngFor="let item of items" class="equipment-card">
-        <mat-card-title>
-          {{ item.categoryName }}
-        </mat-card-title>
+        <!-- Header personalizado con título y menú -->
+        <div class="card-header">
+          <mat-card-title>{{ item.categoryName }}</mat-card-title>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </div>
+
+        <!-- Contenido -->
         <mat-card-content>
           <p>
             <span
@@ -158,30 +195,41 @@
             <div>
               <strong>Factura:</strong> {{ item.invoice || "No asignada" }}
             </div>
-            <div>
-              <strong>Creado:</strong>
-              {{ item.creationDate }}
-            </div>
+            <div><strong>Creado:</strong> {{ item.creationDate }}</div>
           </div>
         </mat-card-content>
-        <mat-card-actions align="end">
-          <button mat-icon-button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
             <mat-icon>visibility</mat-icon>
+            <span>Ver</span>
           </button>
-          <button mat-icon-button (click)="edit(item)">
+          <button mat-menu-item (click)="edit(item)" [disabled]="!item.status">
             <mat-icon>edit</mat-icon>
+            <span>Editar</span>
           </button>
           <button
-            mat-icon-button
+            mat-menu-item
+            (click)="sendToRepair(item)"
             [disabled]="!item.status"
-            (click)="warningDelete(item)"
           >
-            <mat-icon [class.inactive-icon]="!item.status">delete</mat-icon>
+            <mat-icon>build</mat-icon>
+            <span>Enviar a reparación</span>
           </button>
-        </mat-card-actions>
+          <button
+            mat-menu-item
+            (click)="warningDelete(item)"
+            [disabled]="!item.status"
+          >
+            <mat-icon class="inactive-icon">delete</mat-icon>
+            <span>Eliminar</span>
+          </button>
+        </mat-menu>
       </mat-card>
+
+      <!-- Menú contextual para las acciones -->
     </ng-container>
   </div>
+
   }
 
   <mat-paginator

@@ -23,6 +23,8 @@ import { EmployeeTableResponseDTO } from '../../../../core/models/ResponseDTO/ad
 import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentDetailResponseDTO';
 import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentFormComponent } from '../../components/equipmentForm/equipmentForm.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-equipment',
@@ -38,6 +40,7 @@ import { EquipmentFormComponent } from '../../components/equipmentForm/equipment
     CommonModule,
     LayoutModule,
     MatCardModule,
+    MatMenuModule,
   ],
   templateUrl: './equipment.component.html',
   styleUrls: ['./equipment.component.css'],
@@ -68,7 +71,8 @@ export class EquipmentComponent implements OnInit {
     private formService: FormService,
     private modalDialogService: ModalDialogService,
     private warningService: WarningService,
-    private equipmentService: EquipmentService
+    private equipmentService: EquipmentService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -111,7 +115,15 @@ export class EquipmentComponent implements OnInit {
       null,
       (result: EquipmentDetailResponseDTO) => {
         if (result) {
-          console.log(result);
+          this.dataSource.data = this.dataSource.data.map((item) => {
+            if (item.categoryId === result.categoryId) {
+              return {
+                ...item,
+                categoryStock: result.categoryStock,
+              };
+            }
+            return item;
+          });
           this.dataSource.data = [...this.dataSource.data, result];
           this.modalDialogService.open(
             'success',
@@ -164,6 +176,18 @@ export class EquipmentComponent implements OnInit {
     );
   }
 
+  view(item: any) {
+    this.router.navigate(['dashboard/equipment/detail'], {
+      queryParams: { id: item.id },
+      state: { equipment: item }, // <-- Esto pasa el objeto completo
+    });
+  }
+
+  sendToRepair(item: EquipmentDetailResponseDTO): void {
+    console.log('Enviar a reparación:', item);
+    // Aquí va tu lógica
+  }
+
   warningDelete(entity: EquipmentDetailResponseDTO) {
     this.warningService.open(
       'Confirmar eliminación',
@@ -181,6 +205,16 @@ export class EquipmentComponent implements OnInit {
         const index = this.dataSource.data.findIndex((u) => u.id === entity.id);
         if (index !== -1) {
           this.dataSource.data[index].status = false;
+          this.dataSource.data[index].equipmentStatusName = 'Fuera de servicio';
+          this.dataSource.data = this.dataSource.data.map((item) => {
+            if (item.categoryId === entity.categoryId) {
+              return {
+                ...item,
+                categoryStock: entity.categoryStock - 1,
+              };
+            }
+            return item;
+          });
           this.dataSource.data = [...this.dataSource.data];
         }
         this.loading.hide();
