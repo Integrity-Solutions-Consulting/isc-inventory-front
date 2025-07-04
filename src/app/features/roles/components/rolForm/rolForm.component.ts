@@ -69,8 +69,7 @@ export class RolFormComponent implements OnInit, OnDestroy {
   entityId: number = 0;
 
   private _onDestroy = new Subject<void>();
-
-
+  
   constructor(
     private fb: FormBuilder,
     private menuService: MenuService,
