@@ -57,7 +57,6 @@ export class EquipmentComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<EquipmentDetailResponseDTO>();
   total = 0;
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   isSmallScreen: boolean = false;
@@ -214,4 +213,54 @@ export class EquipmentComponent implements OnInit {
     // Implementa lógica real para buscar desde backend si es necesario
     console.log('Buscando:', this.searchTerm);
   }
+
+  /**
+   * Retorna las clases CSS para el punto y el fondo del estado funcional del equipo de forma simplificada.
+   */
+  getStatusClasses(statusName: string | undefined): string {
+    if (!statusName) return 'dot-inactive out-of-service';
+    switch (statusName.trim().toLowerCase()) {
+      case 'disponible':
+        return 'dot-available available';
+      case 'asignado':
+        return 'dot-assigned assigned';
+      case 'en reparacion':
+        return 'dot-under-repair under-repair';
+      case 'en revision':
+        return 'dot-under-review under-review';
+      case 'falla reportada':
+        return 'dot-bug-reported bug-reported';
+      case 'reparado':
+        return 'dot-repaired repaired';
+      case 'en proceso':
+        return 'dot-in-progress in-progress';
+      case 'fuera de servicio':
+        return 'dot-out-of-service out-of-service';
+      default:
+        return 'dot-inactive out-of-service';
+    }
+  }
+
+  getConditions(statusName: string | undefined): string {
+  if (!statusName) return 'dot-inactive out-of-service';
+
+  switch (statusName.trim().toLowerCase()) {
+    case 'nuevo':
+      return 'dot-new new';
+    case 'como nuevo':
+      return 'dot-like-new like-new';
+    case 'usado':
+      return 'dot-used used';
+    case 'desgastado':
+      return 'dot-worn-out worn-out';
+    case 'falla menor':
+      return 'dot-minor-issue minor-issue';
+    case 'falla mayor':
+      return 'dot-major-issue major-issue';
+    case 'irreparable':
+      return 'dot-unrepairable unrepairable';
+    default:
+      return 'dot-inactive out-of-service';
+  }
+}
 }

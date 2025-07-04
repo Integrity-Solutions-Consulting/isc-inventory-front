@@ -83,15 +83,105 @@ button.mat-flat-button {
 }
 
 .active{
-  background-color: rgb(169, 237, 169);
-  color: #4caf50;
+  background-color: var(--status-available-bg);
+  color: var(--status-available);
   font-weight: bold !important;
 }
 
 .inactive {
-  background-color: #ec5252;   /* Rojo claro de fondo */
-  color: #e53935;              /* Rojo fuerte para el texto */
+  background-color: var(--status-out-of-service-bg);   /* Rojo claro de fondo */
+  color: var(--status-out-of-service);              /* Rojo fuerte para el texto */
   font-weight: bold !important;
 }
 
+.available
+{
+  background-color: var(--status-available-bg);
+  color: var(--status-available);
+  font-weight: bold !important;
+}
 
+.assigned
+{
+  background-color: var(--status-assigned-bg);
+  color: var(--status-assigned);
+}
+
+.under-repair
+{
+  background-color: var(--status-underway-bg);
+  color: var(--status-underway);
+}
+
+.under-review
+{
+  background-color: var(--status-under-review-bg);
+  color: var(--status-under-review);
+}
+
+.bug-reported
+{
+  background-color: var(--status-bug-reported-bg);
+  color: var(--status-bug-reported);
+}
+
+.repaired
+{
+  background-color: var(--status-repaired-bg);
+  color: var(--status-repaired);
+}
+
+.in-progress
+{
+  background-color: var(--status-progress-bg);
+  color: var(--status-progress);
+}
+
+.out-of-service
+{
+  background-color: var(--status-out-of-service-bg);
+  color: var(--status-out-of-service);
+  font-weight: bold !important;
+}
+
+.new
+{
+  background-color: var(--status-available-bg);
+  color: var(--status-available);
+  font-weight: bold !important;
+}
+
+.like-new
+{
+  background-color: var(--status-assigned-bg);
+  color: var(--status-assigned);
+  font-weight: bold !important;
+}
+
+.used
+{
+  background-color: var(--status-underway-bg);
+  color: var(--status-underway);
+  font-weight: bold !important;
+}
+
+.worn
+{
+  background-color: var(--status-underway-review-bg);
+  color: var(--status-underway-review);
+  font-weight:  bold !important;
+}
+
+.minor-fault
+{
+  background-color: var(--status-underway-review);
+  color: var(--status-underway-review-bg);
+  font-weight: bold !important;
+}
+
+.major-fault
+{
+  background-color: var(--status-underway-review);
+  color: var(--status-underway-review-bg);
+  font-weight: bold !important;
+}
