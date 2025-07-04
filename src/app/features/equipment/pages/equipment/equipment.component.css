@@ -88,4 +88,10 @@ button.mat-flat-button {
   font-weight: bold !important;
 }
 
+.inactive {
+  background-color: #ec5252;   /* Rojo claro de fondo */
+  color: #e53935;              /* Rojo fuerte para el texto */
+  font-weight: bold !important;
+}
+
 
