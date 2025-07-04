@@ -17,10 +17,6 @@
       </button>
     </mat-form-field>
     <span class="spacer"></span>
-    <button mat-flat-button color="primary" (click)="create()">
-      <mat-icon>add</mat-icon>
-      Nuevo Menú
-    </button>
   </div>
 
   @if (!isSmallScreen) {
@@ -62,12 +58,6 @@
             <button mat-icon-button>
               <mat-icon>visibility</mat-icon>
             </button>
-            <button mat-icon-button (click)="edit(menu)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button [disabled]="!menu.active" (click)="warningDelete(menu)">
-              <mat-icon [class.inactive-icon]="!menu.active">delete</mat-icon>
-            </button>
           </td>
         </ng-container>
 
@@ -94,12 +84,6 @@
             <button mat-icon-button>
               <mat-icon>visibility</mat-icon>
             </button>
-            <button mat-icon-button (click)="edit(menu)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button [disabled]="!menu.active" (click)="warningDelete(menu)">
-              <mat-icon [class.inactive-icon]="!menu.active">delete</mat-icon>
-            </button>
           </mat-card-actions>
         </mat-card>
       </ng-container>
@@ -110,6 +94,5 @@
     [length]="total"
     [pageSize]="5"
     [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event)"
   ></mat-paginator>
 </div>

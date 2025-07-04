@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layout';
 import { LoadingService } from '../../../../core/services/modals/loading/loading.service';
@@ -19,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-menu',
@@ -63,7 +64,6 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     this.loadMenus();
-
     this.breakpointObserver
       .observe([Breakpoints.Handset, '(max-width: 920px)'])
       .subscribe(result => {
@@ -93,99 +93,12 @@ export class MenuComponent implements OnInit {
           },
         });
     }
-  
-    create(): void {
-      this.formService.open(
-        'Nuevo Rol',
-        'person_add',
-        RolFormComponent,
-        null,
-        (result: RolesResponseDTO) => {
-          if (result) {
-            console.log(result);
-            this.dataSource.data = [...this.dataSource.data, result];
-            this.modalDialogService.open(
-              'success',
-              'Rol creado',
-              'El rol fue registrado correctamente.'
-            );
-          }
-        },
-        (error) => {
-          console.error('Ocurrió un error al guardar', error);
-          this.modalDialogService.open(
-            'error',
-            'Error al guardar',
-            'Ocurrió un error al guardar el rol.'
-          );
-        }
-      );
-    }
-  
-    edit(user: RolesResponseDTO): void {
-      this.formService.open(
-        'Editar Rol',
-        'edit',
-        RolFormComponent,
-        user,
-        (result: RolesResponseDTO) => {
-          if (result) {
-            const index = this.dataSource.data.findIndex(
-              (u) => u.id === result.id
-            );
-            if (index !== -1) {
-              this.dataSource.data[index] = result;
-              this.dataSource.data = [...this.dataSource.data]; // Reasignar para que se actualice la tabla
-            }
-            this.modalDialogService.open(
-              'success',
-              'Rol actualizado',
-              'El rol fue actualizado correctamente.'
-            );
-          }
-        },
-        (error) => {
-          console.error('Error al editar el rol', error);
-          this.modalDialogService.open(
-            'error',
-            'Error al editar',
-            'No se pudo actualizar el rol.'
-          );
-        }
-      );
-    }
-  
-    warningDelete(entity: RolesResponseDTO) {
-        this.warningService.open(
-          'Confirmar eliminación',
-          '¿Estás seguro que deseas eliminar este elemento? Esta acción no se puede deshacer.',
-          () => {
-            this.delete(entity);
-          }
-        );
-      }
-    
-      delete(entity: RolesResponseDTO): void {
-        this.loading.show();
-        this.roleService.delete(entity.id).subscribe({
-          next: (resp) => {
-            const index = this.dataSource.data.findIndex((u) => u.id === entity.id);
-            if (index !== -1) {
-              this.dataSource.data[index].active = false;
-              this.dataSource.data = [...this.dataSource.data];
-            }
-            this.loading.hide();
-            this.modalDialogService.open(
-              'success',
-              'Rol Desactivado',
-              'El rol fue desactivado correctamente.'
-            );
-          },
-          error: (error) => {
-            this.loading.hide();
-            this.modalDialogService.open('error', 'Error', error.error.message);
-          },
-        });
-      }
 
+    search() {
+      const term = this.searchTerm.trim().toLowerCase();
+      this.dataSource.filter = term;
+      this.dataSource.filterPredicate = (data: MenuResponseDTO, filter: string) => {
+        return data.label?.toLowerCase().includes(filter) ?? false;
+      };
+    }
 }
