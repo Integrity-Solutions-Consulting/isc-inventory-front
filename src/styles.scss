@@ -265,10 +265,15 @@ mat-card-actions {
 }
 
 .dot-inactive {
-  background-color: #d32f2fcc; /* Rojo apagado */
+  background-color: var(--status-outside-of-service); /* Rojo apagado */
 }
 
 .active {
   background-color: var(--status-available);
-  color: --status-disponible;
+  color: var(--status-repaired);
+}
+
+.inactive {
+  background-color: var(--status-outside-of-service); // rojo claro de fondo
+  color: var(--status-under-review); // texto rojo fuerte
 }

@@ -33,12 +33,12 @@
           <td mat-cell *matCellDef="let item">
             <strong>{{ item.categoryName }}</strong>
             <div class="text-muted sub-info">{{ item.brand }} {{ item.model }}</div>
-            <div class="status-container" [ngClass]="item.status  ? 'active' : ''">
+            <div class="status-container" [ngClass]="item.status  ? 'active' : 'inactive'">
               <span
                 class="status-dot"
                 [ngClass]="item.status ? 'dot-active' : 'dot-inactive'"
               ></span>
-              <span [ngClass]="item.status ? 'estado-activo' : ''">
+              <span [ngClass]="item.status ? 'estado-activo' : 'estado-inactivo'">
                 {{ item.status ? "Activo" : "Inactivo" }}
               </span>
             </div>
