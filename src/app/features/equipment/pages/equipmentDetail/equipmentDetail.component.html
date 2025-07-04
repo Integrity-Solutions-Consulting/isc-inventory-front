@@ -1,0 +1,125 @@
+<div class="equipment-detail-container" *ngIf="equipment">
+  <!-- Imagen e información básica -->
+  <div class="equipment-header">
+    <div class="equipment-image-placeholder">
+      <img
+        *ngIf="equipment.imageUrl; else noImage"
+        class="equipment-image"
+        [src]="equipment.imageUrl"
+        alt="Imagen del equipo"
+      />
+      <ng-template #noImage>
+        <!-- Placeholder SVG elegante -->
+        <svg
+          class="placeholder-svg"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 64 64"
+          fill="none"
+        >
+          <rect width="64" height="64" rx="8" fill="#ECECEC" />
+          <path
+            d="M22 24C22 20.6863 24.6863 18 28 18C31.3137 18 34 20.6863 34 24C34 27.3137 31.3137 30 28 30C24.6863 30 22 27.3137 22 24Z"
+            fill="#BDBDBD"
+          />
+          <path d="M10 50L23.5 33L36 47L44.5 36L54 50H10Z" fill="#BDBDBD" />
+        </svg>
+      </ng-template>
+    </div>
+
+    <div class="equipment-summary">
+      <h2>
+        {{ equipment.categoryName }} - {{ equipment.brand }}
+        {{ equipment.model }}
+      </h2>
+      <p><strong>Serie:</strong> {{ equipment.serialNumber }}</p>
+      <p><strong>Código:</strong> {{ equipment.itemCode }}</p>
+      <p>
+        <span
+          class="status-dot"
+          [ngClass]="equipment.status ? 'dot-active' : 'dot-inactive'"
+        ></span>
+        {{ equipment.status ? "Activo" : "Inactivo" }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Botones -->
+  <div class="itg-button-group equipment-actions">
+    <button mat-stroked-button class="itg-cancel-button" (click)="goBack()">
+      Volver
+    </button>
+    <button
+      mat-stroked-button
+      class="itg-primary-button"
+      color="primary"
+      (click)="openWarrantyForm()"
+    >
+      Añadir Garantía
+    </button>
+    <button
+      mat-stroked-button
+      class="itg-primary-button"
+      color="accent"
+      (click)="openInvoiceForm()"
+    >
+      Añadir Factura
+    </button>
+  </div>
+
+  <!-- Detalles -->
+  <mat-card class="equipment-info-card">
+    <mat-card-title>Detalles del equipo</mat-card-title>
+    <mat-card-content>
+      <div class="detail-grid">
+        <div>
+          <strong>Factura:</strong> {{ equipment.invoice || "No registrada" }}
+        </div>
+        <div>
+          <strong>Garantía:</strong>
+          {{
+            equipment.warranty ? equipment.warranty + " meses" : "No registrada"
+          }}
+        </div>
+        <div><strong>Estado:</strong> {{ equipment.equipmentStatusName }}</div>
+        <div>
+          <strong>Condición:</strong> {{ equipment.equipmentConditionName }}
+        </div>
+        <div><strong>Empresa:</strong> {{ equipment.companyName }}</div>
+        <div>
+          <strong>Stock de categoría:</strong> {{ equipment.categoryStock }}
+        </div>
+        <div>
+          <strong>Creado:</strong>
+          {{ equipment.creationDate | date : "dd/MM/yyyy" }}
+        </div>
+        <div>
+          <strong>Modificado:</strong>
+          {{ equipment.modificationDate | date : "dd/MM/yyyy" }}
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Características -->
+  <mat-card
+    class="equipment-characteristics-card"
+    *ngIf="equipment.characteristics.length"
+  >
+    <mat-card-title>Características</mat-card-title>
+    <mat-card-content>
+      <ul>
+        <li *ngFor="let char of equipment.characteristics">
+          <strong>{{ char.componentName }}:</strong> {{ char.description }}
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- En carga -->
+<ng-container *ngIf="loading">
+  <div class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando información del equipo...</p>
+  </div>
+</ng-container>

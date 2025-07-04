@@ -63,3 +63,7 @@ a.mdc-list-item.active {
   padding: 10px 16px;
   font-weight: 500;
 }
+
+.mat-expansion-panel-header-title, .mat-expansion-panel-header-description{
+  padding: 10px
+}
