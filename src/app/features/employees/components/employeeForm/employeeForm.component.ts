@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
+  
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
+  FormControl 
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -15,7 +17,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject, takeUntil } from 'rxjs';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { GenderService } from '../../../../core/services/gender/gender.service';
 import { NationalityService } from '../../../../core/services/nationality/nationality.service';
 import { IndentificationTypeService } from '../../../../core/services/indentificationType/indentificationType.service';
@@ -46,22 +49,39 @@ import moment from 'moment';
     MatSelectModule,
     MatProgressSpinner,
     MatDatepickerModule,
+    NgxMatSelectSearchModule,
   ],
   templateUrl: './employeeForm.component.html',
   styleUrls: ['./employeeForm.component.scss'],
 })
-export class EmployeeFormComponent implements OnInit {
+export class EmployeeFormComponent implements OnInit, OnDestroy {
+  identificationTypes: IdentificationTypeResponseDTO[] = ([] = []);
+  identificationTypeFilterCtrl = new FormControl();
+  filteredIdentificationTypes: IdentificationTypeResponseDTO[] = [];
+
+  genders: GenderResponseDTO[] = [];
+  genderFilterCtrl = new FormControl();
+  filteredGenders: GenderResponseDTO[] = [];
+  
+  positions: PositionResponseDTO[] = [];
+  positionFilterCtrl = new FormControl();
+  filteredPositions: PositionResponseDTO[] = [];
+  
+  workModes: WorkModeResponseDTO[] = [];
+  workModeFilterCtrl = new FormControl();
+  filteredWorkModes: WorkModeResponseDTO[] = [];
+  
+  nationalities: NationalityResponseDTO[] = [];
+  nationalityFilterCtrl = new FormControl();
+  filteredNationalities: NationalityResponseDTO[] = [];
+  
   loading: boolean = true;
   isSubmitting = false;
 
   entityForm!: FormGroup;
   entityId: number = 0;
 
-  identificationTypes: IdentificationTypeResponseDTO[] = ([] = []);
-  genders: GenderResponseDTO[] = [];
-  positions: PositionResponseDTO[] = [];
-  workModes: WorkModeResponseDTO[] = [];
-  nationalities: NationalityResponseDTO[] = [];
+  private _onDestroy = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -85,10 +105,35 @@ export class EmployeeFormComponent implements OnInit {
     }).subscribe({
       next: (resp) => {
         this.identificationTypes = resp.identificationTypes.data;
+        this.filteredIdentificationTypes = [...this.identificationTypes];
+        this.identificationTypeFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterIdentificationTypes());
+
         this.genders = resp.genders.data;
+        this.filteredGenders = [...this.genders];
+        this.genderFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterGenders());
+        
         this.positions = resp.positions.data;
+        this.filteredPositions = [...this.positions];
+        this.positionFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterPositions());
+        
         this.workModes = resp.workModes.data;
+        this.filteredWorkModes = [...this.workModes];
+        this.workModeFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterWorkModes());
+
         this.nationalities = resp.nationalities.data;
+        this.filteredNationalities = [...this.nationalities];
+        this.nationalityFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterNationalities());
+
       },
       error: (err) => {
         console.error('Error loading form data', err);
@@ -99,6 +144,47 @@ export class EmployeeFormComponent implements OnInit {
       },
     });
   }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  filterIdentificationTypes() {
+    const search = this.identificationTypeFilterCtrl.value?.toLowerCase() || '';
+    this.filteredIdentificationTypes = this.identificationTypes.filter(t =>
+      t.description.toLowerCase().includes(search)
+    );
+  }
+
+  filterGenders() {
+    const search = this.genderFilterCtrl.value?.toLowerCase() || '';
+    this.filteredGenders = this.genders.filter(g =>
+      g.description.toLowerCase().includes(search)
+    );
+  }
+
+  filterPositions() {
+    const search = this.positionFilterCtrl.value?.toLowerCase() || '';
+    this.filteredPositions = this.positions.filter(p =>
+      p.name.toLowerCase().includes(search)
+    );
+  }
+
+  filterWorkModes() {
+    const search = this.workModeFilterCtrl.value?.toLowerCase() || '';
+    this.filteredWorkModes = this.workModes.filter(m =>
+      m.name.toLowerCase().includes(search)
+    );
+  }
+
+  filterNationalities() {
+    const search = this.nationalityFilterCtrl.value?.toLowerCase() || '';
+    this.filteredNationalities = this.nationalities.filter(n =>
+      n.description.toLowerCase().includes(search)
+    );
+  }
+
 
   loadData() {
     const employeeToEdit = this.formService.modalDataValue;

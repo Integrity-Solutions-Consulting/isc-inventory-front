@@ -9,10 +9,10 @@ import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventor
 import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageResponseDTO';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EquipmentService {
- private baseUrl = environment.apiBaseUrl;
+  private baseUrl = environment.apiBaseUrl;
   private apiUrl = `${this.baseUrl}/equipment`;
 
   constructor(private httpClient: HttpClient) {}
@@ -29,36 +29,42 @@ export class EquipmentService {
     );
   }
 
-   public save(
-      entity: EquipmentRequestDTO
-    ): Observable<ResponseDTO<EquipmentDetailResponseDTO>> {
-      return this.httpClient.post<ResponseDTO<EquipmentDetailResponseDTO>>(
-        `${this.apiUrl}/save`,
-        entity
-      );
-    }
-  
-    public update(
-      entity: EquipmentRequestDTO,
-      id: number
-    ): Observable<ResponseDTO<EquipmentDetailResponseDTO[]>> {
-      return this.httpClient.put<ResponseDTO<EquipmentDetailResponseDTO[]>>(
-        `${this.apiUrl}/update/${id}`,
-        entity
-      );
-    }
-  
-    public delete(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {
-      return this.httpClient.delete<ResponseDTO<MessageResponseDTO[]>>(
-        `${this.apiUrl}/inactive/${id}`
-      );
-    }
-  
-    public active(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {
-      return this.httpClient.patch<ResponseDTO<MessageResponseDTO[]>>(
-        `${this.apiUrl}/activate/${id}`,
-        null
-      );
-    }
+  public getDetailById(id:number): Observable<ResponseDTO<EquipmentDetailResponseDTO>> {
+    return this.httpClient.get<ResponseDTO<EquipmentDetailResponseDTO>>(
+      `${this.apiUrl}/detail/{id}`
+    );
+  }
 
+
+  public save(
+    entity: EquipmentRequestDTO
+  ): Observable<ResponseDTO<EquipmentDetailResponseDTO>> {
+    return this.httpClient.post<ResponseDTO<EquipmentDetailResponseDTO>>(
+      `${this.apiUrl}/save`,
+      entity
+    );
+  }
+
+  public update(
+    entity: EquipmentRequestDTO,
+    id: number
+  ): Observable<ResponseDTO<EquipmentDetailResponseDTO[]>> {
+    return this.httpClient.put<ResponseDTO<EquipmentDetailResponseDTO[]>>(
+      `${this.apiUrl}/update/${id}`,
+      entity
+    );
+  }
+
+  public delete(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {
+    return this.httpClient.delete<ResponseDTO<MessageResponseDTO[]>>(
+      `${this.apiUrl}/inactive/${id}`
+    );
+  }
+
+  public active(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {
+    return this.httpClient.patch<ResponseDTO<MessageResponseDTO[]>>(
+      `${this.apiUrl}/activate/${id}`,
+      null
+    );
+  }
 }

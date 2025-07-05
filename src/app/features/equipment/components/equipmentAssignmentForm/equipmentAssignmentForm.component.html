@@ -17,10 +17,19 @@
         <label>Empleado <span class="required-asterisk">*</span></label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="employee" required>
-            <mat-option *ngFor="let emp of employees" [value]="emp.id">
-              {{ emp.fullName }}
-            </mat-option>
-          </mat-select>
+            <!-- Buscar-->
+            <ngx-mat-select-search 
+              [formControl]="employeeFilterCtrl"
+              placeholderLabel="Buscar empleado..."
+              noEntriesFoundLabel="No se encontraron empleados">
+            </ngx-mat-select-search>
+
+          <!-- Opciones filtradas -->
+          <mat-option *ngFor="let emp of filteredEmployees" [value]="emp.id">
+            {{ emp.fullName }}
+          </mat-option>
+        </mat-select>
+
           <mat-error
             *ngIf="assignmentForm.get('employee')?.hasError('required')"
           >
@@ -33,16 +42,22 @@
       <div class="form-field">
         <label>Equipo <span class="required-asterisk">*</span></label>
         <mat-form-field appearance="outline" class="w-100">
-          <mat-select formControlName="equipment" required>
-            <mat-option *ngFor="let eq of equipments" [value]="eq.id">
-              {{ eq.category }} - {{ eq.brand }} {{ eq.model }} ({{
-                eq.serialNumber
-              }})
-            </mat-option>
-          </mat-select>
+        <mat-select formControlName="equipment" required>
+          <!-- Buscar-->
+          <ngx-mat-select-search
+            [formControl]="equipmentFilterCtrl"
+            placeholderLabel="Buscar equipo..."
+            noEntriesFoundLabel="No se encontraron equipos">
+          </ngx-mat-select-search>
+
+          <!-- Opciones filtradas -->
+          <mat-option *ngFor="let eq of filteredEquipments" [value]="eq.id">
+            {{ eq.category }} - {{ eq.brand }} {{ eq.model }} ({{ eq.serialNumber }})
+          </mat-option>
+        </mat-select>
+
           <mat-error
-            *ngIf="assignmentForm.get('equipment')?.hasError('required')"
-          >
+            *ngIf="assignmentForm.get('equipment')?.hasError('required')">
             El equipo es obligatorio
           </mat-error>
         </mat-form-field>

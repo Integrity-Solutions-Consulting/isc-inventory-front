@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   MenuResponseDTO,
   PrivilegeResponseDTO,
@@ -20,6 +20,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MenuService } from '../../../menu/services/menu.service';
 import { PrivilegeService } from '../../../privilege/services/privilege.service';
+
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { FormControl } from '@angular/forms';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -48,20 +54,30 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     ReactiveFormsModule,
     MatSelectModule,
     MatProgressSpinner,
-    MatDatepickerModule
+    NgxMatSelectSearchModule,
+    MatDatepickerModule,
   ],
   templateUrl: './equipmentAssignmentForm.component.html',
   styleUrls: ['./equipmentAssignmentForm.component.css'],
 })
-export class EquipmentAssignmentFormComponent implements OnInit {
+export class EquipmentAssignmentFormComponent implements OnInit, OnDestroy {
   employees: EmployeeCatalogResponseDTO[] = [];
+  filteredEmployees: EmployeeCatalogResponseDTO[] = []; // 🔍 lista filtrada
+  employeeFilter: string = ''; // 🔍 texto del filtro
+  employeeFilterCtrl: FormControl = new FormControl(); // 🔍
+
   equipments: EquipmentResponseDTO[] = [];
+  equipmentFilterCtrl: FormControl = new FormControl(); // 🔍 Filtro de equipo
+  filteredEquipments: EquipmentResponseDTO[] = []; 
 
   loading: boolean = true;
   isSubmitting = false;
 
   assignmentForm!: FormGroup;
   entityId: number = 0;
+
+ 
+  private _onDestroy = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -79,7 +95,19 @@ export class EquipmentAssignmentFormComponent implements OnInit {
     }).subscribe({
       next: (resp) => {
         this.employees = resp.employees.data;
+        this.filteredEmployees = [...this.employees];
+        // Escuchar cambios en el filtro
+        this.employeeFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterEmployees());
+
         this.equipments = resp.equipments.data;
+        this.filteredEquipments = [...this.equipments];
+        // Escuchar filtro de equipos
+        this.equipmentFilterCtrl.valueChanges
+          .pipe(takeUntil(this._onDestroy))
+          .subscribe(() => this.filterEquipments());
+
       },
       error: (err) => {
         console.error('Error al cargar datos:', err);
@@ -89,6 +117,25 @@ export class EquipmentAssignmentFormComponent implements OnInit {
         this.loadData();
       },
     });
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  filterEmployees() {
+    const search = this.employeeFilterCtrl.value?.toLowerCase() || '';
+    this.filteredEmployees = this.employees.filter((emp) =>
+      emp.fullName.toLowerCase().includes(search)
+    );
+  }
+
+  filterEquipments() {
+    const search = this.equipmentFilterCtrl.value?.toLowerCase() || '';
+    this.filteredEquipments = this.equipments.filter(eq =>
+      (`${eq.category} ${eq.brand} ${eq.model} ${eq.serialNumber}`).toLowerCase().includes(search)
+    );
   }
 
   loadData() {
@@ -120,7 +167,8 @@ export class EquipmentAssignmentFormComponent implements OnInit {
     const assignmentRequest: EquipmentAssignmentRequestDTO = {
       employee: this.assignmentForm.value.employee,
       equipment: this.assignmentForm.value.equipment,
-      assigmentDate: this.assignmentForm.value.assignmentDate.format('YYYY-MM-DD'),
+      assigmentDate:
+        this.assignmentForm.value.assignmentDate.format('YYYY-MM-DD'),
     };
     this.equipmentAssignmentService.save(assignmentRequest).subscribe({
       next: (resp) => {
@@ -138,5 +186,4 @@ export class EquipmentAssignmentFormComponent implements OnInit {
   onCancel() {
     this.formService.close();
   }
-
 }
