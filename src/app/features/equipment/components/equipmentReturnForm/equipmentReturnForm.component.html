@@ -1,0 +1,51 @@
+<div class="form-wrapper">
+  <div class="form-overlay" *ngIf="isSubmitting || loading">
+    <div class="loading-spinner">
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="30"
+      ></mat-progress-spinner>
+      <span style="margin-left: 10px" *ngIf="isSubmitting">Guardando...</span>
+      <span style="margin-left: 10px" *ngIf="loading">Cargando...</span>
+    </div>
+  </div>
+
+  <form [formGroup]="equipmentForm">
+    
+    <div class="form-row">
+      <!-- Fecha de Devolución -->
+        <div class="form-field">
+        <label>Fecha de devolución <span class="required-asterisk">*</span></label
+        >
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="dateReturn"
+            placeholder="dd/mm/yyyy"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="itg-button-group">
+      <button mat-flat-button class="itg-cancel-button" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button
+        mat-flat-button
+        class="itg-primary-button"
+        (click)="onSubmit()"
+        [disabled]="isSubmitting || equipmentForm.invalid"
+      >
+        {{ entityId != 0 ? "Actualizar equipo" : " Crear equipo" }}
+      </button>
+    </div>
+  </form>
+</div>

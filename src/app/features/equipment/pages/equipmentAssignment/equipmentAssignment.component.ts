@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -34,6 +35,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
+    MatMenuModule,
     FormsModule,
     CommonModule,
     LayoutModule,
@@ -157,6 +159,7 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
   }
 
   return(equipment: EquipmentAssignmentDetailResponseDTO) {
+    /*
     this.loading.show();
     this.equipmentAssingmentService.revoke(equipment.id).subscribe({
       next: (resp) => {
@@ -175,7 +178,7 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
         );
       },
       error: (error) => {},
-    });
+    });*/
   }
 
   warningDelete(entity: EquipmentAssignmentDetailResponseDTO) {

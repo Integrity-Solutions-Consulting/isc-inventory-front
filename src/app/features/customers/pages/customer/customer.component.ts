@@ -21,6 +21,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+
 
 @Component({
   selector: 'app-customer',
@@ -32,6 +34,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
+    MatMenuModule,
     FormsModule,
     CommonModule,
     LayoutModule,

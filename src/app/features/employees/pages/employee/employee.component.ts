@@ -6,6 +6,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -35,6 +36,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
+    MatMenuModule,
     FormsModule,
     CommonModule,
     LayoutModule,
