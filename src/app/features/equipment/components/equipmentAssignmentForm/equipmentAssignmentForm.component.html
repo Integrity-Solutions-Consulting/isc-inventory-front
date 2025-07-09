@@ -18,11 +18,13 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="employee" required>
             <!-- Buscar-->
+            <mat-option> 
             <ngx-mat-select-search 
               [formControl]="employeeFilterCtrl"
               placeholderLabel="Buscar empleado..."
               noEntriesFoundLabel="No se encontraron empleados">
             </ngx-mat-select-search>
+            </mat-option>
 
           <!-- Opciones filtradas -->
           <mat-option *ngFor="let emp of filteredEmployees" [value]="emp.id">
@@ -44,11 +46,13 @@
         <mat-form-field appearance="outline" class="w-100">
         <mat-select formControlName="equipment" required>
           <!-- Buscar-->
+          <mat-option> 
           <ngx-mat-select-search
             [formControl]="equipmentFilterCtrl"
             placeholderLabel="Buscar equipo..."
             noEntriesFoundLabel="No se encontraron equipos">
           </ngx-mat-select-search>
+          </mat-option>
 
           <!-- Opciones filtradas -->
           <mat-option *ngFor="let eq of filteredEquipments" [value]="eq.id">

@@ -14,13 +14,14 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-select
             formControlName="employeeId"
-            (selectionChange)="onEmployeeSelected($event.value)"
-          >
-            <ngx-mat-select-search
+            (selectionChange)="onEmployeeSelected($event.value)">
+          <mat-option>   
+          <ngx-mat-select-search
               [formControl]="employeeFilterCtrl"
               placeholderLabel="Buscar empleado"
               noEntriesFoundLabel="No se encontraron coincidencias">
             </ngx-mat-select-search>
+          </mat-option>
 
             <mat-option *ngFor="let emp of filteredEmployees" [value]="emp.id">
               {{ emp.fullName }} - {{ emp.identification }}
@@ -65,11 +66,13 @@
         <label>Rol</label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="roleIds" multiple>
+            <mat-option> 
             <ngx-mat-select-search
               [formControl]="roleFilterCtrl"
               placeholderLabel="Buscar rol"
-              noEntriesFoundLabel="No se encontraron coincidencias"
-            ></ngx-mat-select-search>
+              noEntriesFoundLabel="No se encontraron coincidencias">
+            </ngx-mat-select-search>
+            </mat-option>
             <mat-option *ngFor="let role of filteredRoles" [value]="role.id">
               {{ role.name }}
             </mat-option>
@@ -87,11 +90,13 @@
         <label>Privilegios</label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="privilegeIds" multiple>
+            <mat-option> 
             <ngx-mat-select-search
               [formControl]="privilegeFilterCtrl"
               placeholderLabel="Buscar privilegio"
-              noEntriesFoundLabel="No se encontraron coincidencias"
-            ></ngx-mat-select-search>
+              noEntriesFoundLabel="No se encontraron coincidencias">
+            </ngx-mat-select-search>
+            </mat-option>
             <mat-option *ngFor="let p of filteredPrivileges" [value]="p.id">
               {{ p.key }}
             </mat-option>
@@ -104,11 +109,13 @@
         <label>Menús</label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="menuIds" multiple>
+            <mat-option> 
             <ngx-mat-select-search
               [formControl]="menuFilterCtrl"
               placeholderLabel="Buscar menú"
-              noEntriesFoundLabel="No se encontraron coincidencias"
-            ></ngx-mat-select-search>
+              noEntriesFoundLabel="No se encontraron coincidencias">
+            </ngx-mat-select-search>
+            </mat-option>
             <mat-option *ngFor="let m of filteredMenus" [value]="m.id">
               {{ m.label }}
             </mat-option>

@@ -44,12 +44,13 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idIdentificationType">
-        <ngx-mat-select-search
+        <mat-option> 
+            <ngx-mat-select-search
           [formControl]="identificationTypeFilterCtrl"
           placeholderLabel="Buscar tipo..."
           noEntriesFoundLabel="Sin resultados">
         </ngx-mat-select-search>
-
+        </mat-option>
         <mat-option *ngFor="let type of filteredIdentificationTypes" [value]="type.id">
           {{ type.description }}
         </mat-option>
@@ -123,11 +124,13 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idGender">
-          <ngx-mat-select-search
+          <mat-option> 
+            <ngx-mat-select-search
             [formControl]="genderFilterCtrl"
             placeholderLabel="Buscar tipo..."
             noEntriesFoundLabel="Sin resultados">
           </ngx-mat-select-search>
+          </mat-option>
           <mat-option *ngFor="let gender of filteredGenders" [value]="gender.id">
             {{ gender.description }}
           </mat-option>
@@ -147,11 +150,13 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idPosition">
-          <ngx-mat-select-search
+          <mat-option> 
+            <ngx-mat-select-search
             [formControl]="positionFilterCtrl"
             placeholderLabel="Buscar tipo..."
             noEntriesFoundLabel="Sin resultados">
           </ngx-mat-select-search>
+          </mat-option>
           <mat-option *ngFor="let position of filteredPositions" [value]="position.id">
             {{ position.name }}
           </mat-option>
@@ -169,11 +174,13 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idWorkMode">
-          <ngx-mat-select-search
+          <mat-option> 
+            <ngx-mat-select-search
             [formControl]="workModeFilterCtrl"
             placeholderLabel="Buscar tipo..."
             noEntriesFoundLabel="Sin resultados">
           </ngx-mat-select-search>
+          </mat-option>
           <mat-option *ngFor="let mode of filteredWorkModes" [value]="mode.id">
             {{ mode.name }}
           </mat-option>
@@ -192,11 +199,13 @@
         </label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="idNationality">
-          <ngx-mat-select-search
+          <mat-option> 
+            <ngx-mat-select-search
             [formControl]="nationalityFilterCtrl"
             placeholderLabel="Buscar tipo..."
             noEntriesFoundLabel="Sin resultados">
           </ngx-mat-select-search>
+          </mat-option>
           <mat-option *ngFor="let nationality of filteredNationalities" [value]="nationality.id">
             {{ nationality.description }}
           </mat-option>
