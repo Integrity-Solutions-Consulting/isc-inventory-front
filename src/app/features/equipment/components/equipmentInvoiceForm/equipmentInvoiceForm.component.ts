@@ -18,8 +18,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MenuService } from '../../../menu/services/menu.service';
-import { PrivilegeService } from '../../../privilege/services/privilege.service';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { FormControl } from '@angular/forms';
@@ -29,23 +27,16 @@ import { Subject } from 'rxjs';
 
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { forkJoin } from 'rxjs';
-import { FlattenedMenu } from '../../../../core/models/ResponseDTO/authentication/FlattenedMenu';
-import { EmployeeCatalogResponseDTO } from '../../../../core/models/ResponseDTO/administration/EmployeeCatalogResponseDTO';
-import { EquipmentResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentResponseDTO';
-import { EmployeeService } from '../../../employees/services/employee.service';
-import { EquipmentService } from '../../services/equipment/equipment.service';
-import { EquipmentAssignmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentAssignmentRequestDTO';
 import { AssaingmentService } from '../../services/assaignment/assaingment.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRequestDTO';
 import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
+import { InvoiceDetailRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceDetailRequestDTO';
 import { validateHorizontalPosition } from '@angular/cdk/overlay';
-import { EquipmentAssignmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentAssignmentDetailResponseDTO';
 import { EquipmentRevokeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRevokeRequestDTO';
+import { EquipmentService } from '../../services/equipment/equipment.service';
 
 @Component({
-  selector: 'app-equipmentReturnForm',
+  selector: 'app-InvoiceForm',
   standalone: true,
   imports: [
     CommonModule,
@@ -61,22 +52,23 @@ import { EquipmentRevokeRequestDTO } from '../../../../core/models/RequestDTO/in
     NgxMatSelectSearchModule,
     MatDatepickerModule,
   ],
-  templateUrl: './equipmentReturnForm.component.html',
-  styleUrls: ['./equipmentReturnForm.component.css'],
+  templateUrl: './equipmentInvoiceForm.component.html',
+  styleUrls: ['./equipmentInvoiceForm.component.css'],
 })
-export class EquipmentReturnFormComponent implements OnInit, OnDestroy {
+export class EquipmentInvoiceFormComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   loading = true;
 
-  equipmentReturnForm!: FormGroup;
+  equipmentInvoiceForm!: FormGroup;
   entityId: number = 0;
+  equipmentId: number = 0;
 
   private _onDestroy = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
-    private assignamentService: AssaingmentService,
+    private equipmentService: EquipmentService,
     public modalDialog: ModalDialogService,
     private location: Location
   ) {}
@@ -92,34 +84,53 @@ export class EquipmentReturnFormComponent implements OnInit, OnDestroy {
   }
 
   initForm() {
-    this.equipmentReturnForm = this.fb.group({
-      dateReturn: [null],
-    });
+    this.equipmentInvoiceForm = this.fb.group({
+      description: ['', Validators.required],
+      unitPrice: [0, [Validators.required, Validators.min(0)]],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      tax: [0, [Validators.required, Validators.min(0)]],
+      discount: [0, [Validators.required, Validators.min(0)]],
+      subtotal: [0, [Validators.min(0)]],
+      total: [0, [Validators.min(0)]]
+      }); 
   }
 
   loadData() {
-    this.entityId = this.formService.modalDataValue;
+    const data  = this.formService.modalDataValue;
+    this.equipmentId = data.equipmentId;
+    if (data.invoiceDetail) {
+      this.entityId = data.invoiceDetail.id;
+      this.equipmentInvoiceForm.patchValue({
+        description: data.invoiceDetail.description,
+        unitPrice: data.invoiceDetail.unitPrice,
+        quantity: data.invoiceDetail.quantity,
+        tax: data.invoiceDetail.tax,
+        discount: data.invoiceDetail.discount,
+        subtotal: data.invoiceDetail.subtotal,
+        total: data.invoiceDetail.total
+      });
+    }
     this.loading = false;
   }
 
   onSubmit() {
+    if (this.equipmentInvoiceForm.invalid) return;
     this.isSubmitting = true;
+    const formValue = this.equipmentInvoiceForm.getRawValue();
 
-    // Convertimos el objeto Date a string yyyy-MM-dd
-    const dateReturn = this.equipmentReturnForm.value.dateReturn;
-
-    const revokeDate: string = dateReturn 
-      ? dateReturn.format('YYYY-MM-DD')
-      : '';
-
-    const revokeRequest: EquipmentRevokeRequestDTO = {
-      revokeDate: revokeDate,
+    const request: InvoiceDetailRequestDTO = {
+      description: formValue.description,
+      unitPrice: formValue.unitPrice,
+      quantity: formValue.quantity,
+      subtotal: formValue.subtotal,
+      tax: formValue.tax,
+      discount: formValue.discount,
+      total: formValue.total
     };
-
-    this.assignamentService.revoke(this.entityId, revokeRequest).subscribe({
-      next: (response) => {
+    this.equipmentService.invoice(request , this.equipmentId).subscribe({
+      next: (resp) => {
         this.isSubmitting = false;
-        this.formService.close(response.data);
+        this.formService.close(resp.data);
       },
       error: (error) => {
         this.isSubmitting = false;

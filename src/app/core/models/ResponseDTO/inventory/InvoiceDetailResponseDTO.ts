@@ -9,6 +9,6 @@ export interface InvoiceDetailResponseDTO {
   discount: number;
   total: number;
   status: boolean;
-  creationDate: string; // ← revisa este nombre, podría ser un error tipográfico
+  creationDate: string;
   modificationDate: string;
 }

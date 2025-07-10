@@ -24,6 +24,7 @@ import { EquipmentAssignmentDetailResponseDTO } from '../../../../core/models/Re
 import { AssaingmentService } from '../../services/assaignment/assaingment.service';
 import { EquipmentAssignmentFormComponent } from '../../components/equipmentAssignmentForm/equipmentAssignmentForm.component';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { EquipmentReturnFormComponent } from '../../components/equipmentReturnForm/equipmentReturnForm.component';
 
 @Component({
   selector: 'app-equipmentAssignment',
@@ -159,7 +160,39 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
   }
 
   return(equipment: EquipmentAssignmentDetailResponseDTO) {
+    this.formService.open(
+      'Retornar equipo',
+      'add',
+      EquipmentReturnFormComponent,
+      equipment.id,
+      (result: EquipmentAssignmentDetailResponseDTO) => {
+        if (result) {
+          console.log(result);
+          const index = this.dataSource.data.findIndex(
+            (u) => u.id === result.id
+          );
+          if (index !== -1) {
+            this.dataSource.data[index] = result;
+            this.dataSource.data = [...this.dataSource.data]; // Reasignar para que se actualice la tabla
+          }
+          this.modalDialogService.open(
+            'success',
+            'Equipo retornado',
+            'El equipo fue retornado correctamente.'
+          );
+        }
+      },
+      (error) => {
+        console.error('Ocurrió un error al guardar', error);
+        this.modalDialogService.open(
+          'error',
+          'Error al desasignar',
+          'Ocurrió un error al desasignar el equipo.'
+        );
+      }
+    );
     /*
+    
     this.loading.show();
     this.equipmentAssingmentService.revoke(equipment.id).subscribe({
       next: (resp) => {

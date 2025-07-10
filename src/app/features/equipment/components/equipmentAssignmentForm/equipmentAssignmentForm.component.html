@@ -100,12 +100,9 @@
       <button mat-flat-button class="itg-cancel-button" (click)="onCancel()">
         Cancelar
       </button>
-      <button
-        mat-flat-button
-        color="primary"
+      <button mat-flat-button class="itg-primary-button"
         (click)="onSubmit()"
-        [disabled]="assignmentForm.invalid || isSubmitting"
-      >
+        [disabled]="assignmentForm.invalid || isSubmitting">
         {{ entityId ? "Actualizar asignación" : "Crear asignación" }}
       </button>
     </div>
