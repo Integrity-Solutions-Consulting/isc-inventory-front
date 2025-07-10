@@ -48,13 +48,11 @@
     <button mat-stroked-button class="itg-cancel-button" (click)="goBack()">
       Volver
     </button>
-    <button
-      mat-stroked-button
-      class="itg-primary-button"
-      color="primary"
-      (click)="openWarrantyForm()"
-    >
-      Añadir Garantía
+    <button mat-flat-button color="primary"
+       class="itg-primary-button"
+       (click)="openWarrantyForm()">
+       <mat-icon>verified_user</mat-icon>
+       Añadir Garantía
     </button>
     <button
       mat-stroked-button

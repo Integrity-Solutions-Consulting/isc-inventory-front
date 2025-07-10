@@ -1,0 +1,19 @@
+.form-wrapper {
+  padding: 1rem;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.form-field {
+  flex: 1 1 45%;
+  min-width: 250px;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}

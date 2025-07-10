@@ -25,6 +25,8 @@ import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentFormComponent } from '../../components/equipmentForm/equipmentForm.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { WarrantyTypeComponent } from '../../components/warranty-type-form/warranty-type-form.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-equipment',
@@ -64,14 +66,16 @@ export class EquipmentComponent implements OnInit {
 
   isSmallScreen: boolean = false;
 
-  constructor(
+  constructor
+  (
     private breakpointObserver: BreakpointObserver,
     private loading: LoadingService,
     private formService: FormService,
     private modalDialogService: ModalDialogService,
     private warningService: WarningService,
     private equipmentService: EquipmentService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -175,7 +179,8 @@ export class EquipmentComponent implements OnInit {
     );
   }
 
-  view(item: any) {
+  view(item: any)
+  {
     this.router.navigate(['dashboard/equipment/detail'], {
       queryParams: { id: item.id },
       state: { equipment: item }, // <-- Esto pasa el objeto completo

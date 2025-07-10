@@ -7,6 +7,7 @@ import { EquipmentResponseDTO } from '../../../../core/models/ResponseDTO/invent
 import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentDetailResponseDTO';
 import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRequestDTO';
 import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageResponseDTO';
+import { WarrantTypeRequestDTO } from '../../../../core/models/RequestDTO/inventory/WarrantTypeResponseDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,7 @@ export class EquipmentService {
 
   public getDetailById(id:number): Observable<ResponseDTO<EquipmentDetailResponseDTO>> {
     return this.httpClient.get<ResponseDTO<EquipmentDetailResponseDTO>>(
-      `${this.apiUrl}/detail/{id}`
+      `${this.apiUrl}/detail/${id}`
     );
   }
 
@@ -53,6 +54,16 @@ export class EquipmentService {
       `${this.apiUrl}/update/${id}`,
       entity
     );
+  }
+
+  public setWarranty(
+    entity: WarrantTypeRequestDTO,
+    id: number
+  ): Observable<ResponseDTO<EquipmentDetailResponseDTO>>{
+    return this.httpClient.put<ResponseDTO<EquipmentDetailResponseDTO>>(
+      `${this.apiUrl}/setWarranty/${id}`,
+      entity
+    )
   }
 
   public delete(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {

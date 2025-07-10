@@ -13,7 +13,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
-  FormControl 
+  FormControl
 } from '@angular/forms';
 import { EmployeeCatalogResponseDTO } from '../../../../core/models/ResponseDTO/administration/EmployeeCatalogResponseDTO';
 
@@ -64,7 +64,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
   privileges: PrivilegeResponseDTO[] = [];
   privilegeFilterCtrl = new FormControl();
   filteredPrivileges: any[] = [];
-  
+
   roles: RolesResponseDTO[] = [];
   roleFilterCtrl = new FormControl();
   filteredRoles: any[] = [];
@@ -116,7 +116,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.privilegeFilterCtrl.valueChanges
           .pipe(takeUntil(this._onDestroy))
           .subscribe(() => this.filterPrivileges());
-        
+
         this.roles = resp.roles.data;
         this.filteredRoles = this.roles.slice();
         this.roleFilterCtrl.valueChanges

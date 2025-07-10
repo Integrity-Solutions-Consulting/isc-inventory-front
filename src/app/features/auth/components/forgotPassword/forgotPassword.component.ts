@@ -69,7 +69,9 @@ export class ForgotPasswordComponent implements OnInit {
       }
       const passwordRequest: PasswordChangeRequestDTO = this.resetForm.value;
       this.authService.restorePassword(this.token, passwordRequest).subscribe({
-        next: (resp) => {},
+        next: (resp) => {
+          this.loading.hide();
+        },
         error: (error) => {
           this.loading.hide();
           this.modalDialogService.open(
@@ -79,12 +81,12 @@ export class ForgotPasswordComponent implements OnInit {
           );
         },
         complete: () => {
-          this.loading.hide();
           this.modalDialogService.open(
             'success',
             '¡Contraseña actualizada!',
             'Ahora puedes iniciar sesión con tu nueva contraseña.'
           );
+          this.loading.hide();
         },
       });
     } else {
@@ -93,6 +95,7 @@ export class ForgotPasswordComponent implements OnInit {
         this.authService.generateTokenForgotPassword(email).subscribe({
           next: (resp) => {
             console.log(resp);
+            this.loading.hide;
           },
           error: (error) => {
             this.loading.hide;

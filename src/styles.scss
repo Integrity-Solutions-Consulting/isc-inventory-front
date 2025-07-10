@@ -32,14 +32,17 @@
   --status-bug-reported: #c62828; /*bright red*/
   --status-bug-reported-bg: #ffcdd2; /*light pinkish red*/
 
-  --status-repaired: #388e3c; /*medium green*/
-  --status-repaired-bg: #c5e1a5; /*light lime green*/
+  --status-repaired: #00897b; /*medium green*/
+  --status-repaired-bg: #b2dfdb; /*light lime green*/
 
   --status-progress: #6a1b9a; /*dark purple*/
   --status-progress-bg: #e1bee7; /*light lavender*/
 
-  --status-out-of-service: #b71c1c;           /* dark blood red */
-  --status-out-of-service-bg: #ef9a9a;        /* light salmon red */
+  --status-out-of-service: #4e342e; /* dark brown (serious) */
+  --status-out-of-service-bg: #d7ccc8;        /* light salmon red */
+
+  --status-cancelled: #37474f; /* slate grey */
+  --status-cancelled-bg: #cfd8dc; /* bluish grey */
 }
 
 html,
@@ -290,7 +293,7 @@ mat-card-actions {
 
 .dot-available
 {
-  background-color: var(--status-bug-reported);
+  background-color: var(--status-available);
 }
 
 .dot-assigned
@@ -315,12 +318,12 @@ mat-card-actions {
 
 .dot-repaired
 {
-  background-color: var(--bg-repaired-status);
+  background-color: var(--status-repaired);
 }
 
 .dot-in-progress
 {
-  background-color: var(--bg-in-progress-status);
+  background-color: var(--status-progress);
 }
 
 .dot-out-of-service
@@ -343,45 +346,45 @@ mat-card-actions {
   background-color: var(--status-underway);
 }
 
-.dot-worn
+.dot-worn-out
 {
   background-color: var(--status-underway-review);
 }
 
 .dot-minor-fault
 {
-  background-color: var(--status-underway-review);
+  background-color: var(--status-cancelled);
 }
 
 .dot-major-fault
 {
-  background-color: var(--status-underway-review);
+  background-color: var(--status-bug-reported);
 }
 
-.dot-irreparable
+.dot-unrepairable
 {
-  background-color: var(--status-underway-review);
+  background-color: var(--status-out-of-service);
 }
 
-.irreparable
+.unrepairable
 {
-  background-color: var(--status-underway-review);
-  color: var(--status-underway-review);
+  background-color: var(--status-out-of-service-bg);
+  color: var(--status-out-of-service);
 }
 
 .major-fault
 {
-  background-color: var(--status-underway-review);
-  color: var(--status-underway-review-bg);
+  background-color: var(--status-bug-reported-bg);
+  color: var(--status-bug-reported);
 }
 
 .minor-fault
 {
-  background-color: var(--status-underway-review);
-  color: var(--status-underway-review-bg);
+  background-color: var(--status-cancelled-bg);
+  color: var(--status-cancelled);
 }
 
-.worn
+.worn-out
 {
   background-color: var(--status-underway-review-bg);
   color: var(--status-underway-review);
@@ -413,13 +416,13 @@ mat-card-actions {
 
 .inactive
 {
-  background-color: var(--status-out-of-service-bg); // rojo claro de fondo
-  color: var(--status-available-bg); // texto rojo fuerte
+  background-color: var(--status-out-of-service-bg);
+  color: var(--status-out-of-service);
 }
 
 .available
 {
-  background-color: var(var(--status-available-bg));
+  background-color: var(--status-available-bg);
   color:var(--status-available)
 }
 
