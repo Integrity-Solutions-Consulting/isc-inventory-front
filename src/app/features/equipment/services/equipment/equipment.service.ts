@@ -8,6 +8,8 @@ import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/
 import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRequestDTO';
 import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageResponseDTO';
 import { WarrantTypeRequestDTO } from '../../../../core/models/RequestDTO/inventory/WarrantTypeResponseDTO';
+import { InvoiceDetailRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceDetailRequestDTO';
+import { InvoiceDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/InvoiceDetailResponseDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +66,16 @@ export class EquipmentService {
       `${this.apiUrl}/setWarranty/${id}`,
       entity
     )
+
+  }
+  public invoice(
+    entity: InvoiceDetailRequestDTO,
+    id: number
+  ): Observable<ResponseDTO<InvoiceDetailResponseDTO>> {
+    return this.httpClient.put<ResponseDTO<InvoiceDetailResponseDTO>>(
+      `${this.apiUrl}/setInvoice/${id}`,
+      entity
+    );
   }
 
   public delete(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {

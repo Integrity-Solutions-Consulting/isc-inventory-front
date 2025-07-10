@@ -19,22 +19,17 @@
         >
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="condition" required>
-            <mat-option>
-              <ngx-mat-select-search
-                [formControl]="conditionFilterCtrl"
-                placeholderLabel="Buscar condición..."
-                noEntriesFoundLabel="No se encontraron resultados"
-              >
-              </ngx-mat-select-search>
-            </mat-option>
-
-            <mat-option
-              *ngFor="let condition of filteredConditions"
-              [value]="condition.id"
-            >
-              {{ condition.name }}
-            </mat-option>
-          </mat-select>
+        <mat-option>
+            <ngx-mat-select-search
+          [formControl]="conditionFilterCtrl"
+          placeholderLabel="Buscar condición..."
+          noEntriesFoundLabel="No se encontraron resultados">
+        </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let condition of filteredConditions" [value]="condition.id">
+          {{ condition.name }}
+        </mat-option>
+      </mat-select>
 
           <mat-error
             *ngIf="equipmentForm.get('condition')?.hasError('required')"
@@ -49,20 +44,17 @@
         <label>Empresa <span class="required-asterisk">*</span></label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="company" required>
+        <mat-option>
             <ngx-mat-select-search
-              [formControl]="companyFilterCtrl"
-              placeholderLabel="Buscar empresa..."
-              noEntriesFoundLabel="No se encontraron empresas"
-            >
-            </ngx-mat-select-search>
-
-            <mat-option
-              *ngFor="let company of filteredCompanies"
-              [value]="company.id"
-            >
-              {{ company.name }}
-            </mat-option>
-          </mat-select>
+          [formControl]="companyFilterCtrl"
+          placeholderLabel="Buscar empresa..."
+          noEntriesFoundLabel="No se encontraron empresas">
+        </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let company of filteredCompanies" [value]="company.id">
+          {{ company.name }}
+        </mat-option>
+      </mat-select>
 
           <mat-error *ngIf="equipmentForm.get('company')?.hasError('required')">
             La empresa es obligatoria
@@ -112,22 +104,20 @@
             >Selecciona una categoría
             <span class="required-asterisk">*</span></label
           >
+
           <mat-form-field appearance="outline" class="w-100">
             <mat-select formControlName="categoryId">
+              <mat-option>
               <ngx-mat-select-search
-                [formControl]="categoryFilterCtrl"
-                placeholderLabel="Buscar categoría..."
-                noEntriesFoundLabel="No se encontraron categorías"
-              >
-              </ngx-mat-select-search>
-
-              <mat-option
-                *ngFor="let category of filteredCategories"
-                [value]="category.id"
-              >
-                {{ category.name }}
-              </mat-option>
-            </mat-select>
+              [formControl]="categoryFilterCtrl"
+              placeholderLabel="Buscar categoría..."
+              noEntriesFoundLabel="No se encontraron categorías">
+            </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let category of filteredCategories" [value]="category.id">
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
 
             <mat-error
               *ngIf="equipmentForm.get('categoryId')?.hasError('required')"

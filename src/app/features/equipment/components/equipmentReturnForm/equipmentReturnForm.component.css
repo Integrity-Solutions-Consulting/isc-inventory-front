@@ -41,6 +41,19 @@
   gap: 1rem;
 }
 
+.form-row-characteristics {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.delete-field {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .form-field {
   display: flex;
   flex-direction: column;
@@ -60,6 +73,20 @@ mat-form-field {
   .mat-form-field-appearance-fill .mat-form-field-outline {
     display: none;
   }
+}
+
+::ng-deep .description-field .mat-mdc-form-field-infix {
+  height: auto !important;
+  min-height: 3rem !important;
+  display: flex;
+  align-items: start;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+::ng-deep .description-field textarea {
+  min-height: 3rem;
+  resize: vertical;
 }
 
 label {
@@ -93,4 +120,36 @@ label {
 
 .itg-cancel-button:hover {
   background-color: #bdbdbd !important;
+}
+
+.select-with-search .mat-select-trigger {
+  padding: 0;
+}
+ 
+.select-search-header {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.info-text {
+  font-size: 0.85rem;
+  color: #1976d2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.info-icon {
+  font-size: 18px;
+  vertical-align: middle;
+  color: #1976d2;
+  cursor: pointer;
+}
+
+.info-icon-inline {
+  font-size: 18px;
+  color: #1976d2;
 }

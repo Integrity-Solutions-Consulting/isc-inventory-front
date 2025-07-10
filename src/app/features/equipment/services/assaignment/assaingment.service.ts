@@ -7,6 +7,7 @@ import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventor
 import { ResponseDTO } from '../../../../core/models/ResponseDTO/ResponseDTO';
 import { EquipmentAssignmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentAssignmentDetailResponseDTO';
 import { EquipmentAssignmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentAssignmentRequestDTO';
+import { EquipmentRevokeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRevokeRequestDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -33,10 +34,10 @@ export class AssaingmentService {
     >(`${this.apiUrl}/assign`, entity);
   }
 
-  public revoke(id: number): Observable<ResponseDTO<EquipmentAssignmentDetailResponseDTO>> {
+  public revoke(id: number,revokeDate: EquipmentRevokeRequestDTO): Observable<ResponseDTO<EquipmentAssignmentDetailResponseDTO>> {
     return this.httpClient.put<ResponseDTO<EquipmentAssignmentDetailResponseDTO>>(
       `${this.apiUrl}/revoke/${id}`,
-      null
+      revokeDate
     );
   }
 

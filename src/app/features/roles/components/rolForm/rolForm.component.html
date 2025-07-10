@@ -42,11 +42,13 @@
         <label>Privilegios</label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="privilegesId" multiple>
+            <mat-option> 
             <ngx-mat-select-search
               [formControl]="privilegeFilterCtrl"
               placeholderLabel="Buscar privilegio"
-              noEntriesFoundLabel="Sin coincidencias"
-            ></ngx-mat-select-search>
+              noEntriesFoundLabel="Sin coincidencias">
+            </ngx-mat-select-search>
+            </mat-option>
             <mat-option
               *ngFor="let privilege of filteredPrivileges"
               [value]="privilege.id"
@@ -62,11 +64,13 @@
         <label>Menús</label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="menusId" multiple>
-           <ngx-mat-select-search
+           <mat-option> 
+            <ngx-mat-select-search
               [formControl]="menuFilterCtrl"
               placeholderLabel="Buscar menú"
-              noEntriesFoundLabel="Sin coincidencias"
-            ></ngx-mat-select-search>
+              noEntriesFoundLabel="Sin coincidencias">
+            </ngx-mat-select-search>
+            </mat-option>
             <mat-option
               *ngFor="let menu of filteredFlattenedMenus"
               [value]="menu.id"
