@@ -2,8 +2,10 @@ import { InvoiceDetailRequestDTO } from "./InvoiceDetailRequestDTO";
 
 export interface InvoiceRequestDTO{
     id:number;
-    invoiceDetails: InvoiceDetailRequestDTO;
+    invoiceDetail: InvoiceDetailRequestDTO;
     invoiceDate: string;
+    invoiceNumber: string;
+    supplier: number;
     
 
 } 

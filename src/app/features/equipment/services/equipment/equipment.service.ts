@@ -9,6 +9,7 @@ import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventor
 import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageResponseDTO';
 import { InvoiceDetailRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceDetailRequestDTO';
 import { InvoiceDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/InvoiceDetailResponseDTO';
+import { InvoiceRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceRequestDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -58,7 +59,7 @@ export class EquipmentService {
   }
 
   public invoice(
-    entity: InvoiceDetailRequestDTO,
+    entity: InvoiceRequestDTO,
     id: number
   ): Observable<ResponseDTO<InvoiceDetailResponseDTO>> {
     return this.httpClient.put<ResponseDTO<InvoiceDetailResponseDTO>>(
