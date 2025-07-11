@@ -465,4 +465,15 @@ mat-card-actions {
   color: var(--status-out-of-service);
 }
 
+/*Configuracion para graficos pie en legend*/
+.chart-legend .legend-wrap{
+    width: 8rem !important;
+}
 
+.chart-legend .legend-labels{
+    background: none;
+}
+
+.chart-legend .legend-title{
+  display: none;
+}
