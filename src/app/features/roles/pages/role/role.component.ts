@@ -173,7 +173,7 @@ export class RoleComponent implements OnInit {
         }
       );
     }
-  
+
     delete(entity: RolesResponseDTO): void {
       this.loading.show();
       this.roleService.delete(entity.id).subscribe({

@@ -2,7 +2,7 @@ import { MenuResponseDTO } from "./MenuResponseDTO";
 import { PrivilegeResponseDTO } from "./PrivilegeResponseDTO";
 import { RolesResponseDTO } from "./RolesResponseDTO";
 
-export interface UserResponseDTO { 
+export interface UserResponseDTO {
     id: number;
     username: string;
     email: string;

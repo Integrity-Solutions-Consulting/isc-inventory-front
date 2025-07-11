@@ -35,7 +35,7 @@ export class AuthService {
     );
   }
 
-  
+
   public register(
     userRequest: UserRequestoDTO
   ): Observable<ResponseDTO<UserResponseDTO>> {

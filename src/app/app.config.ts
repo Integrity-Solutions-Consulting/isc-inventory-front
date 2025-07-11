@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 
 import {
   MAT_DATE_LOCALE,
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authInterceptor])),
+    provideMomentDateAdapter(),
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,

@@ -1,0 +1,27 @@
+<div class="chart-title">
+  <h2>Estados de equipos</h2>
+  <mat-form-field
+    appearance="outline"
+    style="width: 100%; max-width: 300px; margin-bottom: 16px"
+  >
+    <mat-select
+      [(ngModel)]="selectedCategory"
+      (selectionChange)="onCategoryChange()"
+    >
+      <mat-option *ngFor="let cat of categories" [value]="cat">
+        {{ cat }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<ngx-charts-pie-chart
+  [results]="pieData"
+  [legend]="true"
+  [labels]="true"
+  [doughnut]="false"
+  [explodeSlices]="false"
+  [scheme]="colorScheme"
+  [view]="[400, 300]"
+>
+</ngx-charts-pie-chart>
