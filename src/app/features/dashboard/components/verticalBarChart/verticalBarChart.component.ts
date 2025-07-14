@@ -10,7 +10,7 @@ import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
   styleUrls: ['./verticalBarChart.component.css'],
 })
 export class VerticalBarChartComponent implements OnInit {
-  barWidth = 600;
+  barWidth = 400;
 
   colorScheme: Color = {
     name: 'customScheme',
@@ -32,6 +32,6 @@ export class VerticalBarChartComponent implements OnInit {
   ngOnInit() {
     const barCount = this.data.length;
     const barSpacing = 80; // ancho estimado por barra
-    this.barWidth = Math.max(barCount * barSpacing, 500);
+    this.barWidth = Math.max(barCount * barSpacing, 400);
   }
 }

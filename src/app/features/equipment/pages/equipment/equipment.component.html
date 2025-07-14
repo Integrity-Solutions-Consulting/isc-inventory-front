@@ -145,7 +145,7 @@
               <button
                 mat-menu-item
                 (click)="sendToRepair(item)"
-                [disabled]="!item.status"
+                [disabled]="!item.status || (item.equipmentStatusId !== 1 && item.equipmentStatusId !== 2)"
               >
                 <mat-icon>build</mat-icon>
                 <span>Enviar a reparación</span>

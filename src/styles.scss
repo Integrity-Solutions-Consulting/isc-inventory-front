@@ -38,8 +38,8 @@
   --status-progress: #6a1b9a; /*dark purple*/
   --status-progress-bg: #e1bee7; /*light lavender*/
 
-  --status-out-of-service: #b71c1c;           /* dark blood red */
-  --status-out-of-service-bg: #ef9a9a;        /* light salmon red */
+  --status-out-of-service: #b71c1c; /* dark blood red */
+  --status-out-of-service-bg: #ef9a9a; /* light salmon red */
 }
 
 html,
@@ -199,7 +199,6 @@ thead {
 
   .mat-mdc-card {
     padding: 1rem;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3) !important;
   }
 }
 
@@ -278,202 +277,175 @@ mat-card-actions {
   background-color: currentColor;
 }
 
-.dot-active
-{
+.dot-active {
   background-color: var(--status-available); /* Verde */
 }
 
-.dot-inactive
-{
+.dot-inactive {
   background-color: var(--status-out-of-service); /* Rojo apagado */
 }
 
-.dot-available
-{
+.dot-available {
   background-color: var(--status-bug-reported);
 }
 
-.dot-assigned
-{
+.dot-assigned {
   background-color: var(--status-assigned);
 }
 
-.dot-under-repair
-{
+.dot-under-repair {
   background-color: var(--status-underway);
 }
 
-.dot-under-review
-{
+.dot-under-review {
   background-color: var(--status-underway-review);
 }
 
-.dot-bug-reported
-{
+.dot-bug-reported {
   background-color: var(--status-bug-reported);
 }
 
-.dot-repaired
-{
+.dot-repaired {
   background-color: var(--bg-repaired-status);
 }
 
-.dot-in-progress
-{
+.dot-in-progress {
   background-color: var(--bg-in-progress-status);
 }
 
-.dot-out-of-service
-{
+.dot-out-of-service {
   background-color: var(--status-out-of-service);
 }
 
-.dot-new
-{
+.dot-new {
   background-color: var(--status-available);
 }
 
-.dot-like-new
-{
+.dot-like-new {
   background-color: var(--status-assigned);
 }
 
-.dot-used
-{
+.dot-used {
   background-color: var(--status-underway);
 }
 
-.dot-worn
-{
+.dot-worn {
   background-color: var(--status-underway-review);
 }
 
-.dot-minor-fault
-{
+.dot-minor-fault {
   background-color: var(--status-underway-review);
 }
 
-.dot-major-fault
-{
+.dot-major-fault {
   background-color: var(--status-underway-review);
 }
 
-.dot-irreparable
-{
+.dot-irreparable {
   background-color: var(--status-underway-review);
 }
 
-.irreparable
-{
+.irreparable {
   background-color: var(--status-underway-review);
   color: var(--status-underway-review);
 }
 
-.major-fault
-{
+.major-fault {
   background-color: var(--status-underway-review);
   color: var(--status-underway-review-bg);
 }
 
-.minor-fault
-{
+.minor-fault {
   background-color: var(--status-underway-review);
   color: var(--status-underway-review-bg);
 }
 
-.worn
-{
+.worn {
   background-color: var(--status-underway-review-bg);
   color: var(--status-underway-review);
 }
 
-.used
-{
+.used {
   background-color: var(--status-underway-bg);
   color: var(--status-underway);
 }
 
-.like-new
-{
+.like-new {
   background-color: var(--status-assigned-bg);
   color: var(--status-assigned);
 }
 
-.new
-{
+.new {
   background-color: var(--status-available-bg);
   color: var(--status-available);
 }
 
-.active
-{
+.active {
   background-color: var(--status-available-bg);
   color: var(--status-available);
 }
 
-.inactive
-{
+.inactive {
   background-color: var(--status-out-of-service-bg); // rojo claro de fondo
   color: var(--status-available-bg); // texto rojo fuerte
 }
 
-.available
-{
+.available {
   background-color: var(var(--status-available-bg));
-  color:var(--status-available)
+  color: var(--status-available);
 }
 
-.assigned
-{
+.assigned {
   background-color: var(--status-assigned-bg);
   color: var(--status-assigned);
 }
 
-.under-repair
-{
+.under-repair {
   background-color: var(--status-underway-bg);
   color: var(--status-underway);
 }
 
-.under-review
-{
+.under-review {
   background-color: var(--status-underway-review-bg);
   color: var(--status-underway-review);
 }
 
-.bug-reported
-{
+.bug-reported {
   background-color: var(--status-bug-reported-bg);
   color: var(--status-bug-reported);
 }
 
-.repaired
-{
+.repaired {
   background-color: var(--status-repaired-bg);
   color: var(--status-repaired);
 }
 
-.in-progress
-{
+.in-progress {
   background-color: var(--status-progress-bg);
   color: var(--status-progress);
 }
 
-.out-of-service
-{
+.out-of-service {
   background-color: var(--status-out-of-service-bg);
   color: var(--status-out-of-service);
 }
 
 /*Configuracion para graficos pie en legend*/
-.chart-legend .legend-wrap{
-    width: 8rem !important;
-}
-
-.chart-legend .legend-labels{
+.chart-legend .legend-wrap {
+  width: 8rem !important;
+  .legend-labels {
     background: none;
+
+    .legend-label-text {
+      color: var(--itg-text);
+    }
+  }
 }
 
-.chart-legend .legend-title{
+.chart-legend .legend-labels {
+  background: none;
+}
+
+.chart-legend .legend-title {
   display: none;
 }

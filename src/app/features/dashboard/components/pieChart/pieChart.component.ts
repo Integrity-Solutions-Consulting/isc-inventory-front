@@ -4,6 +4,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { FormsModule } from '@angular/forms';
+import { LegendPosition } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-pieChart',
@@ -22,6 +23,8 @@ export class PieChartComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  legendPosition: LegendPosition = LegendPosition.Right;
 
   selectedCategory = 'Categoria A';
 
