@@ -1,0 +1,11 @@
+.scrollable-chart {
+  overflow-x: auto;
+  width: 100%;
+}
+.chart-title{
+    text-align: start;
+    h2{
+        font-size: .8rem;
+        font-weight: bold;
+    }
+}
