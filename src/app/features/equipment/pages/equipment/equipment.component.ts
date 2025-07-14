@@ -25,7 +25,7 @@ import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentFormComponent } from '../../components/equipmentForm/equipmentForm.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { WarrantyTypeComponent } from '../../components/warranty-type-form/warranty-type-form.component';
+import { WarrantyTypeFormComponent } from '../../components/warranty-type-form/warranty-type-form.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({

@@ -1,19 +1,29 @@
 .form-wrapper {
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .form-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.2rem;
+  gap: 16px;
+  width: 100%;
 }
 
 .form-field {
-  flex: 1 1 45%;
-  min-width: 250px;
+  flex: 1;
+  min-width: 0;
 }
 
-.justify-end {
-  justify-content: flex-end;
+.w-100 {
+  width: 100%;
+}
+
+.support-full-width {
+  width: 100%;
+  display: block;
+}
+
+textarea.mat-input-element {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  line-height: 1.5;
 }

@@ -76,6 +76,11 @@ button.mat-flat-button {
   flex: none !important;
 }
 
+.equipment-info-card,
+.equipment-characteristics-card {
+  padding: 0.5rem;
+}
+
 .one-line-ellipsis {
   white-space: nowrap;
   overflow: hidden;

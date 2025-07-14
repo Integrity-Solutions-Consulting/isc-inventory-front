@@ -1,11 +1,5 @@
-import { WarrantyService } from './../../services/warranty/warranty.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  MenuResponseDTO,
-  PrivilegeResponseDTO,
-  RoleRequestDTO,
-} from '../../../../api';
+
 import {
   FormBuilder,
   FormGroup,
@@ -20,32 +14,30 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MenuService } from '../../../menu/services/menu.service';
-import { PrivilegeService } from '../../../privilege/services/privilege.service';
+
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { FormControl } from '@angular/forms';
-import { ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { Inject } from '@angular/core';
+
 import { LoadingService } from '../../../../core/services/modals/loading/loading.service';
-
-
-
-
+import { WarrantTypeRequestDTO } from'../../../../core/models/RequestDTO/inventory/WarrantTypeRequestDTO';
 import { FormService } from '../../../../core/services/modals/form/form.service';
+
+
+
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { forkJoin } from 'rxjs';
-import { FlattenedMenu } from '../../../../core/models/ResponseDTO/authentication/FlattenedMenu';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EquipmentService } from '../../services/equipment/equipment.service'; // ajusta ruta si es distinta
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import{WarrantTypeDetailResponseDTO} from '../../../../core/models/ResponseDTO/inventory/WarrantTypeDetailResponseDTO '
 
 
 @Component({
   selector: 'app-warranty-type-form',
   standalone: true,
-    imports: [
+  templateUrl: './warranty-type-form.component.html',
+  styleUrls: ['./warranty-type-form.component.css'],
+  imports: [
       CommonModule,
       FormsModule,
       MatFormFieldModule,
@@ -56,60 +48,96 @@ import { EquipmentService } from '../../services/equipment/equipment.service'; /
       ReactiveFormsModule,
       MatSelectModule,
       NgxMatSelectSearchModule,
+      MatProgressSpinnerModule,
       MatDatepickerModule,
+      MatInputModule,
+      MatNativeDateModule,
     ],
-      templateUrl: './warranty-type-form.component.html',
-      styleUrls: ['./warranty-type-form.component.css'],
 })
-export class WarrantyTypeComponent implements OnInit {
+export class WarrantyTypeFormComponent implements OnInit {
+  isSubmitting = false;
+
   warrantyForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<WarrantyTypeComponent>,
-    private warrantyService: WarrantyService,
-    private loading: LoadingService,
     private equipmentService: EquipmentService,
-    @Inject(MAT_DIALOG_DATA) public data: { equipmentId: number }
+    private loading: LoadingService,
+    private formService: FormService,
   ) {}
 
-  ngOnInit(): void {
-    this.warrantyForm = this.fb.group({
-      conditions: ['', [Validators.required, Validators.maxLength(255)]],
-      warrantyStartDate: [null, Validators.required],
-      warrantyEndDate: [null, Validators.required],
-      SupportContact: ['', [Validators.required, Validators.maxLength(100)]],
+  formTitle: string = '';
 
+  ngOnInit(): void
+  {
+    this.formTitle = this.formService.modalTitle();
+      const data = this.formService.modalDataValue as WarrantTypeDetailResponseDTO;
+
+      console.log('Datos recibidos en modal:', this.formService.modalDataValue);
+
+    this.warrantyForm = this.fb.group({
+      conditions: [data?.conditions||'', [Validators.required, Validators.maxLength(255)]],
+      warrantyStartDate: [data?.warrantyStartDate?new Date(data.warrantyStartDate):new Date(), Validators.required],
+      warrantyEndDate: [data?.warrantyEndDate?new Date(data.warrantyEndDate):null, Validators.required],
+      supportContact: [data?.supportContact||'', [Validators.required, Validators.maxLength(100)]],
+      warrantyStatus: [true, Validators.required],
+    });
+
+    if (data?.id) {
+    this.formTitle = 'Editar garantía';
+    this.warrantyForm.patchValue({
+      conditions:data.conditions || '',
+      warrantyStartDate:data.warrantyStartDate ? new Date(data.warrantyStartDate) : new Date(),
+      warrantyEndDate:data.warrantyEndDate ? new Date(data.warrantyEndDate) : null,
+      supportcontact:data.supportContact || '',
+      warrantyStatus:data.warrantyStatus ?? true
+    });
+  }
+  }
+
+  endDateValidator(control: any) {
+  const endDate = new Date(control.value);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Ignora la hora
+
+  if (control.value && endDate < today) {
+    return { endDateInvalid: true };
+  }
+  return null;
+}
+
+  onSubmit(): void {
+    if (this.warrantyForm.invalid) return;
+
+    const start = this.warrantyForm.value.warrantyStartDate;
+    const end = this.warrantyForm.value.warrantyEndDate;
+    const data = this.formService.modalDataValue as WarrantTypeDetailResponseDTO;
+
+    const payload: WarrantTypeRequestDTO = {
+      ...this.warrantyForm.value,
+      id: data?.id ?? 0,
+      id_equipment:data.idEquipment,
+      warrantyStartDate: start ? new Date(start).toISOString() : '',
+      warrantyEndDate: end ? new Date(end).toISOString() : '',
+    };
+
+    this.isSubmitting = true;
+    this.loading.show();
+
+    this.equipmentService.setWarranty(payload, data.idEquipment).subscribe({
+      next: () => {
+        this.loading.hide();
+        this.formService.close(payload);
+      },
+      error: (error) => {
+        this.loading.hide();
+        console.error('Error al guardar garantía:', error);
+        this.formService.error(error);
+      },
     });
   }
 
- onSubmit(): void {
-  if (this.warrantyForm.invalid) return;
-
-  const payload = {
-    ...this.warrantyForm.value,
-    id_equipment: this.data.equipmentId,
-    warrantyStartDate: this.warrantyForm.value.warrantyStartDate.toISOString(),
-    warrantyEndDate: this.warrantyForm.value.warrantyEndDate.toISOString(),
-  };
-
-  this.loading.show();
-
-  this.equipmentService.setWarranty(payload, this.data.equipmentId).subscribe({
-    next: () => {
-      this.loading.hide();
-      this.dialogRef.close(true); // cerrar modal exitosamente
-    },
-    error: (error) => {
-      this.loading.hide();
-      console.error('Error al guardar la garantía', error);
-      this.dialogRef.close(false);
-    },
-  });
-}
-
-
   onCancel(): void {
-    this.dialogRef.close();
+    this.formService.close();
   }
 }

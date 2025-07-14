@@ -10,13 +10,13 @@ import { ResponseDTO } from '../../../../core/models/ResponseDTO/ResponseDTO';
 })
 export class WarrantyService {
   private baseUrl = environment.apiBaseUrl;
-  private apiUrl = `${this.baseUrl}/warranty`;
+  private apiUrl = `${this.baseUrl}/warranty-types`;
 
   constructor(private httpClient: HttpClient) {}
 
   public findById(warrntyId: number): Observable<ResponseDTO<WarrantTypeDetailResponseDTO>> {
     return this.httpClient.get<ResponseDTO<WarrantTypeDetailResponseDTO>>(
-      `${this.apiUrl}/equipment/${warrntyId}`
+      `${this.apiUrl}/getDetailsWarranty/${warrntyId}`
     );
   }
 

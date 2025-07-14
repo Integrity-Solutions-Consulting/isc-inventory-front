@@ -7,7 +7,7 @@ import { EquipmentResponseDTO } from '../../../../core/models/ResponseDTO/invent
 import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentDetailResponseDTO';
 import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRequestDTO';
 import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageResponseDTO';
-import { WarrantTypeRequestDTO } from '../../../../core/models/RequestDTO/inventory/WarrantTypeResponseDTO';
+import { WarrantTypeRequestDTO } from '../../../../core/models/RequestDTO/inventory/WarrantTypeRequestDTO';
 import { InvoiceDetailRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceDetailRequestDTO';
 import { InvoiceDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/InvoiceDetailResponseDTO';
 

@@ -5,5 +5,4 @@ export interface WarrantTypeResponseDTO {
   warrantyStartDate: string; // ISO format string (LocalDateTime)
   warrantyEndDate: string;   // ISO format string (LocalDateTime)
   SupportContact: string;
-  warrantyStatus: boolean;
 }
