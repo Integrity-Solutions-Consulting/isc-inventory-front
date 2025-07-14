@@ -25,6 +25,8 @@ import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentFormComponent } from '../../components/equipmentForm/equipmentForm.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { EquipmentRepairFormComponent } from '../../components/equipmentRepairForm/equipmentRepairForm.component';
+import { EquipmentRepairDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentRepairDetailResponseDTO';
 
 @Component({
   selector: 'app-equipment',
@@ -142,12 +144,12 @@ export class EquipmentComponent implements OnInit {
     );
   }
 
-  edit(user: EquipmentDetailResponseDTO): void {
+  edit(entity: EquipmentDetailResponseDTO): void {
     this.formService.open(
       'Editar Rol',
       'edit',
       EquipmentFormComponent,
-      user,
+      entity,
       (result: EquipmentDetailResponseDTO) => {
         if (result) {
           const index = this.dataSource.data.findIndex(
@@ -182,9 +184,42 @@ export class EquipmentComponent implements OnInit {
     });
   }
 
-  sendToRepair(item: EquipmentDetailResponseDTO): void {
-    console.log('Enviar a reparación:', item);
-    // Aquí va tu lógica
+  sendToRepair(entity: EquipmentDetailResponseDTO): void {
+    this.formService.open(
+      'Reparar Equipo',
+      'engineering',
+      EquipmentRepairFormComponent,
+      entity,
+      (result: EquipmentRepairDetailResponseDTO) => {
+        if (result) {
+          console.log('Equipo reparado:', result);
+          this.dataSource.data = this.dataSource.data.map((item) => {
+            if (item.id === result.equipment) {
+              return {
+                ...item,
+                 equipmentConditionId: 3,
+                equipmentStatusName: 'En reparación',
+              };
+            }
+            return item;
+          });
+
+          this.modalDialogService.open(
+            'success',
+            'Equipo enviado a reparación',
+            'El equipo fue registrado correctamente.'
+          );
+        }
+      },
+      (error) => {
+        console.error('Ocurrió un error al guardar', error);
+        this.modalDialogService.open(
+          'error',
+          'Error al guardar',
+          'Ocurrió un error al registrar la reparacion del equipo.'
+        );
+      }
+    );
   }
 
   warningDelete(entity: EquipmentDetailResponseDTO) {
@@ -268,25 +303,25 @@ export class EquipmentComponent implements OnInit {
   }
 
   getConditions(statusName: string | undefined): string {
-  if (!statusName) return 'dot-inactive out-of-service';
+    if (!statusName) return 'dot-inactive out-of-service';
 
-  switch (statusName.trim().toLowerCase()) {
-    case 'nuevo':
-      return 'dot-new new';
-    case 'como nuevo':
-      return 'dot-like-new like-new';
-    case 'usado':
-      return 'dot-used used';
-    case 'desgastado':
-      return 'dot-worn-out worn-out';
-    case 'falla menor':
-      return 'dot-minor-issue minor-issue';
-    case 'falla mayor':
-      return 'dot-major-issue major-issue';
-    case 'irreparable':
-      return 'dot-unrepairable unrepairable';
-    default:
-      return 'dot-inactive out-of-service';
+    switch (statusName.trim().toLowerCase()) {
+      case 'nuevo':
+        return 'dot-new new';
+      case 'como nuevo':
+        return 'dot-like-new like-new';
+      case 'usado':
+        return 'dot-used used';
+      case 'desgastado':
+        return 'dot-worn-out worn-out';
+      case 'falla menor':
+        return 'dot-minor-issue minor-issue';
+      case 'falla mayor':
+        return 'dot-major-issue major-issue';
+      case 'irreparable':
+        return 'dot-unrepairable unrepairable';
+      default:
+        return 'dot-inactive out-of-service';
+    }
   }
-}
 }

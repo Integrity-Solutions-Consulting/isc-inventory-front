@@ -29,7 +29,7 @@
 }
 
 mat-card-title {
-  font-size: .8rem !important;
+  font-size: .75rem !important;
   font-weight: bold;
   margin-bottom: 4px;
   width: 100%;
@@ -53,9 +53,11 @@ mat-card-content h2 {
 }
 
 .chart-box {
-  flex: 1 1 500px;
-  max-width: 50%;
+  flex: 1 1 auto;
   min-width: 300px;
+  background-color: var(--itg-bg);
+  padding: 1rem;
+  border-radius: .7rem;
 }
 
 /* Responsive: en pantallas pequeñas, 100% de ancho */

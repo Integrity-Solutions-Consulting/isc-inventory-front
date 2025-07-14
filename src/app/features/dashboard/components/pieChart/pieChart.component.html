@@ -18,10 +18,12 @@
 <ngx-charts-pie-chart
   [results]="pieData"
   [legend]="true"
-  [labels]="true"
-  [doughnut]="false"
+  [labels]="false"
+  [legendPosition]="legendPosition"
+  [doughnut]="true"
   [explodeSlices]="false"
-  [scheme]="colorScheme"
-  [view]="[400, 300]"
+  [scheme]="'cool'"
+  [view]="[300, 200 ]"
+  [tooltipDisabled]="true"
 >
 </ngx-charts-pie-chart>
