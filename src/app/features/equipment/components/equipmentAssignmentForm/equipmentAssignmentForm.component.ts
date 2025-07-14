@@ -154,7 +154,7 @@ export class EquipmentAssignmentFormComponent implements OnInit, OnDestroy {
     this.assignmentForm = this.fb.group({
       employee: [null, Validators.required],
       equipment: [null, Validators.required],
-      assignmentDate: [null, Validators.required],
+      assignmentDate: [new Date(), Validators.required],
     });
   }
 

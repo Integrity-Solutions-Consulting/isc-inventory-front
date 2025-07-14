@@ -140,7 +140,7 @@ export class EquipmentFormComponent implements OnInit {
   filterConditions() {
   const search = this.conditionFilterCtrl.value?.toLowerCase() || '';
   this.filteredConditions = this.conditions.filter(c =>
-    c.conditionType.toLowerCase().includes(search)
+    c.name.toLowerCase().includes(search)
   );
 }
 

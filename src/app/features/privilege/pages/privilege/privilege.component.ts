@@ -101,7 +101,7 @@ export class PrivilegeComponent implements OnInit {
 
   create(): void {
     this.formService.open(
-      'Nuevo Rol',
+      'Nuevo permiso',
       'person_add',
       PrivilegeFormComponent,
       null,
@@ -111,8 +111,8 @@ export class PrivilegeComponent implements OnInit {
           this.dataSource.data = [...this.dataSource.data, result];
           this.modalDialogService.open(
             'success',
-            'Rol creado',
-            'El rol fue registrado correctamente.'
+            'Permiso creado',
+            'El permiso fue registrado correctamente.'
           );
         }
       },
@@ -121,7 +121,7 @@ export class PrivilegeComponent implements OnInit {
         this.modalDialogService.open(
           'error',
           'Error al guardar',
-          'Ocurrió un error al guardar el rol.'
+          'Ocurrió un error al guardar el permiso.'
         );
       }
     );
@@ -129,7 +129,7 @@ export class PrivilegeComponent implements OnInit {
 
   edit(user: PrivilegeResponseDTO): void {
     this.formService.open(
-      'Editar Rol',
+      'Editar permiso',
       'edit',
       PrivilegeFormComponent,
       user,

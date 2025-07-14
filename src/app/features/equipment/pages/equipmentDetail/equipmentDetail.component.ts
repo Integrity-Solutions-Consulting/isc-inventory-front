@@ -8,6 +8,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
+import { FormService } from '../../../../core/services/modals/form/form.service';
+import { EquipmentInvoiceFormComponent } from '../../components/equipmentInvoiceForm/equipmentInvoiceForm.component';
+import { InvoiceDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/InvoiceDetailResponseDTO';
+import { MatTableDataSource } from '@angular/material/table';
+import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
 
 @Component({
   selector: 'app-equipmentDetail',
@@ -26,11 +31,16 @@ import { MatDialogModule } from '@angular/material/dialog';
 export class EquipmentDetailComponent implements OnInit {
   @Input() equipmentId?: number;
   equipment?: EquipmentDetailResponseDTO;
+  invoice?: InvoiceDetailResponseDTO;
   loading = true;
+
+  dataSource = new MatTableDataSource<InvoiceDetailResponseDTO>();
 
   constructor(
     private route: ActivatedRoute,
     private equipmentService: EquipmentService,
+    private modalDialogService: ModalDialogService,
+    private formService: FormService,
     private location: Location,
   ) {}
 
@@ -64,9 +74,38 @@ export class EquipmentDetailComponent implements OnInit {
 
   goBack() {
   this.location.back();
-}
+  }
 
   openWarrantyForm() {}
 
-  openInvoiceForm() {}
+  openInvoiceForm() {  
+    const invoice = {
+      equipmentId: this.equipment?.id,
+      invoiceDetail: this.invoice
+
+    }
+    this.formService.open(
+    'Registrar detalle de factura',
+    'edit',
+    EquipmentInvoiceFormComponent,
+    invoice,
+    (result: InvoiceDetailResponseDTO) => {
+      if (result) {
+          this.dataSource.data = [...this.dataSource.data, result];
+          this.modalDialogService.open(
+            'success',
+            'Factura creada',
+            'La factura fue creada correctamente.'
+          );
+        }
+    }, (error) => {
+        this.modalDialogService.open(
+          'error',
+          'Error al crear',
+          'Ocurrió un error al crear la factura.'
+        );
+      }
+  )
+
+}
 }

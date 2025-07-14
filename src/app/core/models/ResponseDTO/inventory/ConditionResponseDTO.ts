@@ -1,4 +1,4 @@
 export interface ConditionResponseDTO {
   id: number;
-  conditionType: string;
+  name: string;
 }
