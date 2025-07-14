@@ -67,6 +67,18 @@ export class EquipmentService {
     );
   }
 
+    public changeStatus(
+    status: number,
+    id: number
+  ): Observable<ResponseDTO<MessageResponseDTO[]>> {
+    return this.httpClient.put<ResponseDTO<MessageResponseDTO[]>>(
+      `${this.apiUrl}/changeStatus/${id}`,
+      status
+    );
+  }
+
+
+
   public delete(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {
     return this.httpClient.delete<ResponseDTO<MessageResponseDTO[]>>(
       `${this.apiUrl}/inactive/${id}`

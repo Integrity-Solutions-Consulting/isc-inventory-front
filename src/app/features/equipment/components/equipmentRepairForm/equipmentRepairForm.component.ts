@@ -41,6 +41,7 @@ import { AssaingmentService } from '../../services/assaignment/assaingment.servi
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EquipmentRepairRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairRequestDTO';
 import { RepairService } from '../../services/repair/repair.service';
+import { WarningService } from '../../../../core/services/modals/warning/warning.service';
 
 @Component({
   selector: 'app-equipmentRepairForm',
@@ -66,15 +67,19 @@ export class EquipmentRepairFormComponent implements OnInit {
   equipment = {
     id: 0,
     serialNumber: '',
+    equipmentStatusId: 0,
   };
 
   isSubmitting = false;
   repairForm!: FormGroup;
   entityId: number = 0;
 
+  revoke: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
+    private warningService: WarningService,
     private repairSearvice: RepairService
   ) {}
 
@@ -93,10 +98,12 @@ export class EquipmentRepairFormComponent implements OnInit {
 
   loadData() {
     const entityToEdit = this.formService.modalDataValue;
+    console.log(entityToEdit);
     if (entityToEdit) {
       this.equipment = {
         id: entityToEdit.equipmentId || entityToEdit.id,
         serialNumber: entityToEdit.serialNumber,
+        equipmentStatusId: entityToEdit.equipmentStatusId || 0,
       };
       if (entityToEdit.equipmentId) {
         this.entityId = entityToEdit.id;
@@ -121,6 +128,7 @@ export class EquipmentRepairFormComponent implements OnInit {
       serviceProvider: formValue.serviceProvider || null,
       cost: formValue.cost,
       equipment: this.equipment.id,
+      revoke: this.revoke,
     };
     if (this.entityId == 0) {
       this.repairSearvice.save(request).subscribe({
@@ -135,6 +143,28 @@ export class EquipmentRepairFormComponent implements OnInit {
       });
     }
   }
+
+  submitAndRepair() {
+    if (this.equipment.equipmentStatusId == 2) {
+      this.warningService.open(
+        'Confirmar devolucion',
+        'Este equipoe se encuentra asignado a un usuario, ¿desea realizar la devolución automaática?',
+        () => {
+          this.revoke = true;
+          this.onSubmit();
+        },
+        () => {
+          this.revoke = false;
+          this.onSubmit();
+        },
+        'Sí, continuar',
+        'Continuar sin devolución'
+      );
+    } else {
+      this.onSubmit();
+    }
+  }
+
   onCancel() {
     this.formService.close();
   }

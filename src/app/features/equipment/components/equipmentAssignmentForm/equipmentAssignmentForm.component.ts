@@ -39,6 +39,7 @@ import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentAssignmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentAssignmentRequestDTO';
 import { AssaingmentService } from '../../services/assaignment/assaingment.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import moment from 'moment';
 
 @Component({
   selector: 'app-equipmentAssignmentForm',
@@ -168,7 +169,7 @@ export class EquipmentAssignmentFormComponent implements OnInit, OnDestroy {
       employee: this.assignmentForm.value.employee,
       equipment: this.assignmentForm.value.equipment,
       assigmentDate:
-        this.assignmentForm.value.assignmentDate.format('YYYY-MM-DD'),
+        moment(this.assignmentForm.value.assignmentDate).format('YYYY-MM-DD'),
     };
     this.equipmentAssignmentService.save(assignmentRequest).subscribe({
       next: (resp) => {

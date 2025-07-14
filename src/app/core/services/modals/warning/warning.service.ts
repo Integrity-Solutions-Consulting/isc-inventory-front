@@ -22,9 +22,9 @@ export class WarningService {
     title: string,
     message: string,
     onConfirm: () => void,
+    onCancel: () => void = () => {},
     confirmText = 'Sí, continuar',
-    cancelText = 'Cancelar',
-    onCancel: () => void = () => {}
+    cancelText = 'Cancelar'
   ) {
     this._title.set(title);
     this._message.set(message);
