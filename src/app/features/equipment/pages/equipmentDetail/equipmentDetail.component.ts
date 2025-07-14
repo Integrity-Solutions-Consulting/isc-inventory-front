@@ -15,97 +15,99 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
 
 @Component({
-  selector: 'app-equipmentDetail',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatDialogModule
-  ],
-  templateUrl: './equipmentDetail.component.html',
-  styleUrls: ['./equipmentDetail.component.css'],
-})
+    selector: 'app-equipmentDetail',
+    standalone: true,
+    imports: [
+      CommonModule,
+      MatCardModule,
+      MatButtonModule,
+      MatIconModule,
+      MatProgressSpinnerModule,
+      MatDialogModule
+    ],
+    templateUrl: './equipmentDetail.component.html',
+    styleUrls: ['./equipmentDetail.component.css'],
+    })
 export class EquipmentDetailComponent implements OnInit {
-  @Input() equipmentId?: number;
-  equipment?: EquipmentDetailResponseDTO;
-  invoice?: InvoiceDetailResponseDTO;
-  loading = true;
-
-  dataSource = new MatTableDataSource<InvoiceDetailResponseDTO>();
-
-  constructor(
-    private route: ActivatedRoute,
-    private equipmentService: EquipmentService,
-    private modalDialogService: ModalDialogService,
-    private formService: FormService,
-    private location: Location,
-  ) {}
-
-  ngOnInit() {
-    const navigation = history.state as {
+      @Input() equipmentId?: number;
       equipment?: EquipmentDetailResponseDTO;
-    };
+      invoice?: InvoiceDetailResponseDTO;
+      loading = true;
 
-    if (navigation.equipment) {
-      this.equipment = navigation.equipment;
-      this.loading = false;
-    } else {
-      const id =
-        this.equipmentId ?? Number(this.route.snapshot.queryParamMap.get('id'));
-      if (id) {
-        this.equipmentService.getDetailById(id).subscribe({
-          next: (resp) => {
-            this.equipment = resp.data;
-            this.loading = false;
-          },
-          error: (err) => {
-            console.error('Error al cargar el detalle', err);
-            this.loading = false;
-          },
-        });
-      } else {
+      dataSource = new MatTableDataSource<InvoiceDetailResponseDTO>();
+
+      constructor(
+        private route: ActivatedRoute,
+        private equipmentService: EquipmentService,
+        private modalDialogService: ModalDialogService,
+        private formService: FormService,
+        private location: Location,
+      ) {}
+
+      ngOnInit() {
+      const navigation = history.state as {
+        equipment?: EquipmentDetailResponseDTO;
+      };
+
+      if (navigation.equipment) {
+        this.equipment = navigation.equipment;
         this.loading = false;
-      }
-    }
-  }
-
-  goBack() {
-  this.location.back();
-  }
-
-  openWarrantyForm() {}
-
-  openInvoiceForm() {  
-    const invoice = {
-      equipmentId: this.equipment?.id,
-      invoiceDetail: this.invoice
-
-    }
-    this.formService.open(
-    'Registrar detalle de factura',
-    'edit',
-    EquipmentInvoiceFormComponent,
-    invoice,
-    (result: InvoiceDetailResponseDTO) => {
-      if (result) {
-          this.dataSource.data = [...this.dataSource.data, result];
-          this.modalDialogService.open(
-            'success',
-            'Factura creada',
-            'La factura fue creada correctamente.'
-          );
+      } else {
+        const id =
+          this.equipmentId ?? Number(this.route.snapshot.queryParamMap.get('id'));
+        if (id) {
+          this.equipmentService.getDetailById(id).subscribe({
+            next: (resp) => {
+              this.equipment = resp.data;
+              this.loading = false;
+            },
+            error: (err) => {
+              console.error('Error al cargar el detalle', err);
+              this.loading = false;
+            },
+          });
+        } else {
+          this.loading = false;
         }
-    }, (error) => {
-        this.modalDialogService.open(
-          'error',
-          'Error al crear',
-          'Ocurrió un error al crear la factura.'
-        );
       }
-  )
+    }
 
-}
+    goBack() {
+    this.location.back();
+    }
+
+    openWarrantyForm() {}
+
+    openInvoiceForm() {  
+      const invoice = {
+        equipmentId: this.equipment?.id,
+        invoiceDetail: this.invoice
+
+      }
+      this.formService.open(
+      'Registrar detalle de factura',
+      'edit',
+      EquipmentInvoiceFormComponent,
+      invoice,
+      (result: InvoiceDetailResponseDTO) => {
+        if (result && this.equipment?.id) {
+            this.equipmentService.getDetailById(this.equipment.id).subscribe({
+            next: (resp) => {
+              this.equipment = resp.data;
+              this.modalDialogService.open(
+                'success',
+                'Factura creada',
+                'La factura fue creada correctamente.'
+              );}
+            });
+          }
+          }, (error) => {
+          this.modalDialogService.open(
+            'error',
+            'Error al crear',
+            'Ocurrió un error al crear la factura.'
+          );}
+      )
+
+    } 
 }

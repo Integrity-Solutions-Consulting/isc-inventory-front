@@ -100,6 +100,48 @@
     </mat-card-content>
   </mat-card>
 
+  <!-- Detalles de factura-->
+  <mat-card class="equipment-info-card">
+    <mat-card-title>Detalles de Factura</mat-card-title>
+    <mat-card-content>
+      <div class="detail-grid">
+        <div>
+          <strong>Descripción:</strong> {{ equipment.invoiceDetail.description }}
+        </div>
+        <div>
+          <strong>Número de Factura:</strong>
+          {{
+            equipment.warranty ? equipment.warranty + " meses" : "No registrada"
+          }}
+        </div>
+        <div><strong>Fecha de Factura:</strong> {{ equipment.equipmentStatusName }}</div>
+        <div>
+          <strong>Proveedor:</strong> {{ equipment.equipmentConditionName }}
+        </div>
+        <div><strong>Precio Unitario:</strong> {{ equipment.companyName }}</div>
+        <div>
+          <strong>Cantidad:</strong> {{ equipment.categoryStock }}
+        </div>
+        <div>
+          <strong>Subtotal:</strong> {{ equipment.categoryStock }}
+        </div>
+        <div>
+          <strong>Impuesto (%):</strong> {{ equipment.categoryStock }}
+        </div>
+        <div>
+          <strong>Descuento (%):</strong> {{ equipment.categoryStock }}
+        </div>
+        <div>
+          <strong>Total:</strong> {{ equipment.categoryStock }}
+        </div>
+        <div>
+          <strong>Creado:</strong>
+          {{ equipment.creationDate | date : "dd/MM/yyyy" }}
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
   <!-- Características -->
   <mat-card
     class="equipment-characteristics-card"
