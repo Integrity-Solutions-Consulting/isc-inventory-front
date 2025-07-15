@@ -13,13 +13,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageDialogComponent } from '../../../../shared/components/message-dialog/message-dialog.component';
-import { LoginRequestDTO } from '../../../../api';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { AuthService } from '../../services/auth.service';
-import { ErrorResponseDTO } from '../../../../core/models/ResponseDTO/ErrorResponseDTO';
 import { SessionService } from '../../../../core/services/session/session.service';
 import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
+import { LoginRequestDTO } from '../../../../core/models/RequestDTO/LoginRequestDTO';
 
 @Component({
   selector: 'app-login',

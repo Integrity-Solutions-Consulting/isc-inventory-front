@@ -5,9 +5,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { SessionService } from '../../../core/services/session/session.service';
-import { MenuResponseDTO } from '../../../api';
 import { RouterLink } from '@angular/router';
 import { RouterLinkActive } from '@angular/router';
+import { MenuResponseDTO } from '../../../core/models/ResponseDTO/MenuResponseDTO';
 
 @Component({
   selector: 'app-side-nav',

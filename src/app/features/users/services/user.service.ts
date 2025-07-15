@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ResponseDTO } from '../../../core/models/ResponseDTO/ResponseDTO';
 import { UserResponseDTO } from '../../../core/models/ResponseDTO/UserResponseDTO';
 import { UserRequestoDTO } from '../../../core/models/RequestDTO/UserRequestDTO';
-import { MessageResponseDTO } from '../../../api';
+import { MessageResponseDTO } from '../../../core/models/ResponseDTO/MessageResponseDTO';
 
 @Injectable({
   providedIn: 'root',

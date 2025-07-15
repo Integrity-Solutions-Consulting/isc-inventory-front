@@ -16,10 +16,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { MessageDialogComponent } from '../../../../shared/components/message-dialog/message-dialog.component';
 import { AuthService } from '../../services/auth.service';
-import { PasswordChangeRequestDTO } from '../../../../api';
 import { error_routes } from '../../../../errors/routes/error.routing';
 import { LoadingService } from '../../../../core/services/modals/loading/loading.service';
 import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
+import { PasswordChangeRequestDTO } from '../../../../core/models/RequestDTO/PasswordChangeRequestDTO';
 @Component({
   selector: 'app-forgotPassword',
   standalone: true,

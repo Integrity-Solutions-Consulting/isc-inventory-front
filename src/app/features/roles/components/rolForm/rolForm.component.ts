@@ -1,10 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  MenuResponseDTO,
-  PrivilegeResponseDTO,
-  RoleRequestDTO,
-} from '../../../../api';
-import {
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -27,6 +22,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { forkJoin, Subject, takeUntil} from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { FlattenedMenu } from '../../../../core/models/ResponseDTO/authentication/FlattenedMenu';
+import { MenuResponseDTO } from '../../../../core/models/ResponseDTO/MenuResponseDTO';
+import { PrivilegeResponseDTO } from '../../../../core/models/ResponseDTO/PrivilegeResponseDTO';
+import { RoleRequestDTO } from '../../../../core/models/RequestDTO/authentication/RoleRequestDTO';
 
 @Component({
   selector: 'app-rolForm',

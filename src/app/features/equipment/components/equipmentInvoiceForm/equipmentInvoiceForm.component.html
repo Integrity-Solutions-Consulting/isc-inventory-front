@@ -92,6 +92,46 @@
       </div>
     </div>
 
+    <div class="form-field">
+      <label>Proveedor <span class="required-asterisk">*</span></label>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-select formControlName="supplier" placeholder="Seleccione proveedor">
+          <mat-option *ngFor="let supplier of suppliers" [value]="supplier.id">
+            {{ supplier.businessName }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="equipmentInvoiceForm.get('supplier')?.hasError('required')">
+          El proveedor es obligatorio
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field">
+      <label>Fecha de Factura <span class="required-asterisk">*</span></label>
+      <mat-form-field appearance="outline" class="w-100">
+        <input matInput [matDatepicker]="picker" formControlName="invoiceDate" placeholder="dd/mm/yyyy"/>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+       <div class="info-text">
+        <mat-icon class="info-icon-inline">info</mat-icon>
+        Si no se selecciona una fecha, se utilizará la fecha actual.
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Número de Factura <span class="required-asterisk">*</span></label>
+      <mat-form-field appearance="outline" class="w-100">
+        <input matInput formControlName="invoiceNumber" placeholder="Ej. FAC-2025-001" />
+        <mat-error *ngIf="equipmentInvoiceForm.get('invoiceNumber')?.hasError('required')">
+          El número de factura es obligatorio
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+
+
+
     <!-- Botones -->
     <div class="itg-button-group">
       <button mat-flat-button class="itg-cancel-button" (click)="onCancel()">
