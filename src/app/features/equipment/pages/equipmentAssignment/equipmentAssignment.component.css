@@ -76,3 +76,20 @@ button.mat-flat-button {
   width: 20rem;
   display: inline-block;
 }
+
+.status-container{
+  padding: 3px 5px;
+  border-radius: 1rem;
+}
+
+.active{
+  background-color: var(--status-available-bg);
+  color: var(--status-available);
+  font-weight: bold !important;
+}
+
+.inactive {
+  background-color: var(--status-out-of-service-bg);   /* Rojo claro de fondo */
+  color: var(--status-out-of-service);              /* Rojo fuerte para el texto */
+  font-weight: bold !important;
+}

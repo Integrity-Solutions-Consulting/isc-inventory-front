@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   MatPaginator,
@@ -26,6 +26,7 @@ import { UserFormComponent } from '../../components/userForm/userForm.component'
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
 import { WarningService } from '../../../../core/services/modals/warning/warning.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -42,7 +43,7 @@ import { WarningService } from '../../../../core/services/modals/warning/warning
     CommonModule,
     LayoutModule,
     MatCardModule,
-  ],
+],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
 })
@@ -58,6 +59,8 @@ export class UserComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<UserResponseDTO>();
   totalUsers = 0;
+  private router = inject(Router);
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -141,8 +144,9 @@ export class UserComponent implements OnInit {
     );
   }
 
-  viewUser(user: any): void {
+  viewUser(user: UserResponseDTO): void {
     console.log('Ver usuario:', user);
+    this.router.navigate(['dashboard/setting/users/detail'], { queryParams: { id: user.id } });
   }
 
   editUser(user: UserResponseDTO): void {

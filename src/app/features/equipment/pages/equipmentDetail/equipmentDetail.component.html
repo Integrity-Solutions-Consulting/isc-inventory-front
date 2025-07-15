@@ -48,14 +48,24 @@
     <button mat-stroked-button class="itg-cancel-button" (click)="goBack()">
       Volver
     </button>
-    <button
-      mat-stroked-button
-      class="itg-primary-button"
-      color="primary"
-      (click)="openWarrantyForm()"
-    >
-      Añadir Garantía
+
+    <ng-container *ngIf="equipment.status">
+    <ng-container *ngIf="!warrantyDetail; else editButton">
+    <button mat-flat-button color="primary"
+       class="itg-primary-button"
+       (click)="openWarrantyForm()">
+       <mat-icon>verified_user</mat-icon>
+       Añadir Garantía
     </button>
+    </ng-container>
+    <ng-template #editButton>
+      <button mat-stroked-button color="primary"
+       class="itg-primary-button"
+      (click)="editWarranty()">
+    <mat-icon>verified_user</mat-icon>
+    Editar Garantía
+  </button>
+    </ng-template>
     <button
       mat-stroked-button
       class="itg-primary-button"
@@ -64,6 +74,7 @@
     >
       Añadir Factura
     </button>
+    </ng-container>
   </div>
 
   <!-- Detalles -->
@@ -74,12 +85,17 @@
         <div>
           <strong>Factura:</strong> {{ equipment.invoice || "No registrada" }}
         </div>
-        <div>
-          <strong>Garantía:</strong>
-          {{
-            equipment.warranty ? equipment.warranty + " meses" : "No registrada"
-          }}
-        </div>
+       <div>
+     <strong>Garantía:</strong>
+     <ng-container *ngIf="equipment.warranty && equipment.warranty > 0; else noWarranty">
+    <span class="status-container status-container">
+      Si registrada
+     </span>
+      </ng-container>
+       <ng-template #noWarranty>
+      No registrada
+     </ng-template>
+      </div>
         <div><strong>Estado:</strong> {{ equipment.equipmentStatusName }}</div>
         <div>
           <strong>Condición:</strong> {{ equipment.equipmentConditionName }}
@@ -99,6 +115,41 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+<!-- Detalle de la Garantía -->
+<mat-card *ngIf="warrantyDetail" class="equipment-info-card">
+  <mat-card-title class="warranty-title">
+    <mat-icon color="primary">verified_user</mat-icon>
+    Detalle de la garantía
+  </mat-card-title>
+
+  <mat-card-content (click)="editWarranty()" style="cursor: pointer;">
+    <div class="detail-grid">
+      <div>
+        <strong>Fecha de inicio:</strong>
+        {{ warrantyDetail.warrantyStartDate | date: 'dd/MM/yyyy' }}
+      </div>
+      <div>
+        <strong>Fecha de fin:</strong>
+        {{ warrantyDetail.warrantyEndDate | date: 'dd/MM/yyyy' }}
+      </div>
+      <div *ngIf="warrantyDetail?.supportContact">
+        <strong>Contacto de soporte:</strong>
+        <span>{{ warrantyDetail.supportContact }}</span>
+      </div>
+      <div>
+        <strong>Condiciones:</strong> {{ warrantyDetail.conditions }}
+      </div>
+      <div *ngIf="warrantyDetail.warrantyEndDate" class="remaining-days">
+        <strong style="color: var(--status-bug-reported);">
+          Días restantes:
+          {{ calculateRemainingDays(warrantyDetail.warrantyEndDate) }}
+        </strong>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
 
   <!-- Características -->
   <mat-card

@@ -48,11 +48,12 @@ import { EquipmentService } from '../../services/equipment/equipment.service';
     MatProgressSpinner,
     MatSlideToggleModule,
     NgxMatSelectSearchModule,
-
   ],
   templateUrl: './equipmentForm.component.html',
   styleUrls: ['./equipmentForm.component.css'],
 })
+
+
 export class EquipmentFormComponent implements OnInit {
   categories: EquipmentCategoryResponseDTO[] = [];
   categoryFilterCtrl = new FormControl();
@@ -61,11 +62,11 @@ export class EquipmentFormComponent implements OnInit {
   companies: CompanyResponseDTO[] = [];
   companyFilterCtrl = new FormControl();
   filteredCompanies: CompanyResponseDTO[] = [];
-  
+
   components: ComponentTypeResponseDTO[] = [];
   componentFilterCtrl = new FormControl();
   filteredComponents: ComponentTypeResponseDTO[] = [];
-  
+
   conditions: ConditionResponseDTO[] = [];
   conditionFilterCtrl = new FormControl();
   filteredConditions: ConditionResponseDTO[] = [];
@@ -108,18 +109,18 @@ export class EquipmentFormComponent implements OnInit {
         this.conditionFilterCtrl.valueChanges
           .pipe(takeUntil(this._onDestroy))
           .subscribe(() => this.filterConditions());
-        
+
         this.components = resp.components.data;
         this.filteredComponents = [...this.components];
         this.componentFilterCtrl.valueChanges
           .pipe(takeUntil(this._onDestroy))
           .subscribe(() => this.filterComponents());
-        
+
         this.companies = resp.companies.data;
         this.filteredCompanies = [...this.companies];
         this.companyFilterCtrl.valueChanges
           .pipe(takeUntil(this._onDestroy))
-          .subscribe(() => this.filterCompanies());      
+          .subscribe(() => this.filterCompanies());
 
       },
       error: (err) => {
@@ -260,6 +261,19 @@ loadData() {
   removeCharacteristic(index: number) {
     this.characteristics.removeAt(index);
   }
+
+  toUpperCaseField(fieldName: string) {
+  const control = this.equipmentForm.get(fieldName);
+  if (control) {
+    const currentValue = control.value;
+    if (currentValue) {
+      control.setValue(
+        currentValue.toString().toUpperCase(),
+        { emitEvent: false } // Evita bucles de detección de cambios
+      );
+    }
+  }
+}
 
   onSubmit() {
     if (this.equipmentForm.invalid) return;

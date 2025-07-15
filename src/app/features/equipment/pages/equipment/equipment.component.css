@@ -76,6 +76,11 @@ button.mat-flat-button {
   flex: none !important;
 }
 
+.equipment-info-card,
+.equipment-characteristics-card {
+  padding: 0.5rem;
+}
+
 .one-line-ellipsis {
   white-space: nowrap;
   overflow: hidden;
@@ -85,7 +90,7 @@ button.mat-flat-button {
 }
 
 .status-container{
-  padding: 0 5px;
+  padding: 3px 5px;
   border-radius: 1rem;
 }
 
@@ -112,36 +117,42 @@ button.mat-flat-button {
 {
   background-color: var(--status-assigned-bg);
   color: var(--status-assigned);
+  font-weight: bold !important;
 }
 
 .under-repair
 {
   background-color: var(--status-underway-bg);
   color: var(--status-underway);
+  font-weight: bold !important;
 }
 
 .under-review
 {
   background-color: var(--status-under-review-bg);
   color: var(--status-under-review);
+  font-weight: bold !important;
 }
 
 .bug-reported
 {
   background-color: var(--status-bug-reported-bg);
   color: var(--status-bug-reported);
+  font-weight: bold !important;
 }
 
 .repaired
 {
   background-color: var(--status-repaired-bg);
   color: var(--status-repaired);
+  font-weight: bold !important;
 }
 
 .in-progress
 {
   background-color: var(--status-progress-bg);
   color: var(--status-progress);
+  font-weight: bold !important;
 }
 
 .out-of-service
@@ -172,7 +183,7 @@ button.mat-flat-button {
   font-weight: bold !important;
 }
 
-.worn
+.worn-out
 {
   background-color: var(--status-underway-review-bg);
   color: var(--status-underway-review);
@@ -190,6 +201,13 @@ button.mat-flat-button {
 {
   background-color: var(--status-underway-review);
   color: var(--status-underway-review-bg);
+  font-weight: bold !important;
+}
+
+.unrepairable
+{
+  background-color: var(--status-out-of-service-bg);
+  color: var(--status-out-of-service);
   font-weight: bold !important;
 }
 

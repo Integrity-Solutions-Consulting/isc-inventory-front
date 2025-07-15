@@ -44,7 +44,7 @@
         <label>Empresa <span class="required-asterisk">*</span></label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="company" required>
-        <mat-option> 
+        <mat-option>
             <ngx-mat-select-search
           [formControl]="companyFilterCtrl"
           placeholderLabel="Buscar empresa..."
@@ -77,14 +77,20 @@
 
     <!-- Categoría -->
     <div class="form-row">
-      <div class="form-field"
-        *ngIf="equipmentForm.get('isCreatingNewCategory')?.value;
-          else selectCategory">
-        <label>Nombre de la nueva categoría
+      <div
+        class="form-field"
+        *ngIf="
+          equipmentForm.get('isCreatingNewCategory')?.value;
+          else selectCategory
+        "
+      >
+        <label
+          >Nombre de la nueva categoría
           <span class="required-asterisk">*</span></label
         >
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="categoryName" />
+          <input matInput formControlName="categoryName"
+          (input)="toUpperCaseField('categoryName')" />
           <mat-error
             *ngIf="equipmentForm.get('categoryName')?.hasError('required')"
           >
@@ -98,7 +104,7 @@
             >Selecciona una categoría
             <span class="required-asterisk">*</span></label
           >
-          
+
           <mat-form-field appearance="outline" class="w-100">
             <mat-select formControlName="categoryId">
               <mat-option>
@@ -128,13 +134,15 @@
       <div class="form-field">
         <label>Marca</label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="brand" />
+          <input matInput formControlName="brand"
+          (input)="toUpperCaseField('brand')" />
         </mat-form-field>
       </div>
       <div class="form-field">
         <label>Modelo <span class="required-asterisk">*</span></label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="model" />
+          <input matInput formControlName="model"
+          (input)="toUpperCaseField('model')" />
         </mat-form-field>
       </div>
     </div>
@@ -165,16 +173,20 @@
           <label>Componente <span class="required-asterisk">*</span></label>
           <mat-form-field appearance="outline" class="w-100">
             <mat-select formControlName="component" required>
-          <ngx-mat-select-search
-            [formControl]="componentFilterCtrl"
-            placeholderLabel="Buscar componente..."
-            noEntriesFoundLabel="No se encontraron componentes">
-          </ngx-mat-select-search>
+              <ngx-mat-select-search
+                [formControl]="componentFilterCtrl"
+                placeholderLabel="Buscar componente..."
+                noEntriesFoundLabel="No se encontraron componentes"
+              >
+              </ngx-mat-select-search>
 
-          <mat-option *ngFor="let comp of filteredComponents" [value]="comp.id">
-            {{ comp.description }}
-          </mat-option>
-        </mat-select>
+              <mat-option
+                *ngFor="let comp of filteredComponents"
+                [value]="comp.id"
+              >
+                {{ comp.description }}
+              </mat-option>
+            </mat-select>
 
             <mat-error
               *ngIf="equipmentForm.get('categoryName')?.hasError('required')"

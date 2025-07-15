@@ -7,9 +7,10 @@ import { EquipmentResponseDTO } from '../../../../core/models/ResponseDTO/invent
 import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentDetailResponseDTO';
 import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRequestDTO';
 import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageResponseDTO';
+import { WarrantTypeRequestDTO } from '../../../../core/models/RequestDTO/inventory/WarrantTypeRequestDTO';
 import { InvoiceDetailRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceDetailRequestDTO';
 import { InvoiceDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/InvoiceDetailResponseDTO';
-
+import {WarrantTypeDetailResponseDTO} from '../../../../core/models/ResponseDTO/inventory/WarrantTypeDetailResponseDTO '
 @Injectable({
   providedIn: 'root',
 })
@@ -33,7 +34,7 @@ export class EquipmentService {
 
   public getDetailById(id:number): Observable<ResponseDTO<EquipmentDetailResponseDTO>> {
     return this.httpClient.get<ResponseDTO<EquipmentDetailResponseDTO>>(
-      `${this.apiUrl}/detail/{id}`
+      `${this.apiUrl}/detail/${id}`
     );
   }
 
@@ -55,6 +56,17 @@ export class EquipmentService {
       `${this.apiUrl}/update/${id}`,
       entity
     );
+  }
+
+  public setWarranty(
+    entity: WarrantTypeRequestDTO,
+    id: number
+  ): Observable<ResponseDTO<WarrantTypeDetailResponseDTO>>{
+    return this.httpClient.put<ResponseDTO<WarrantTypeDetailResponseDTO>>(
+      `${this.apiUrl}/setWarranty/${id}`,
+      entity
+    )
+
   }
 
   public invoice(

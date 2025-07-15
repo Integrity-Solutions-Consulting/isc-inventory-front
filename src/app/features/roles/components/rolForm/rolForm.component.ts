@@ -10,7 +10,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
-  FormControl 
+  FormControl
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -31,7 +31,7 @@ import { FlattenedMenu } from '../../../../core/models/ResponseDTO/authenticatio
 @Component({
   selector: 'app-rolForm',
   standalone: true,
-  imports: [
+  imports:[
     CommonModule,
     FormsModule,
     MatFormFieldModule,
@@ -42,8 +42,8 @@ import { FlattenedMenu } from '../../../../core/models/ResponseDTO/authenticatio
     ReactiveFormsModule,
     MatSelectModule,
     MatProgressSpinner,
-    NgxMatSelectSearchModule
-  ],
+    NgxMatSelectSearchModule]
+  ,
   templateUrl: './rolForm.component.html',
   styleUrls: ['./rolForm.component.scss'],
 })
@@ -54,7 +54,7 @@ export class RolFormComponent implements OnInit, OnDestroy {
   privilegeFilterCtrl = new FormControl();
   filteredPrivileges: PrivilegeResponseDTO[] = [];
 
-  
+
   menus: MenuResponseDTO[] = [];
   menuFilterCtrl = new FormControl();
   filteredFlattenedMenus: FlattenedMenu[] = [];
@@ -77,7 +77,7 @@ export class RolFormComponent implements OnInit, OnDestroy {
     private roleService: RoleService,
     private formService: FormService
   ) {}
-  
+
   ngOnDestroy(): void {
     this._onDestroy.next();
     this._onDestroy.complete();  }
