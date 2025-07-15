@@ -100,47 +100,49 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Detalles de factura-->
+  <!-- Buscar factura por invoice y serial -->
   <mat-card class="equipment-info-card">
-    <mat-card-title>Detalles de Factura</mat-card-title>
+    <mat-card-title>Búsqueda de Factura</mat-card-title>
     <mat-card-content>
-      <div class="detail-grid">
-        <div>
-          <!--<strong>Descripción:</strong> {{ equipment.invoiceDetail.description }}-->
-        </div>
-        <div>
-          <strong>Número de Factura:</strong>
-          {{
-            equipment.warranty ? equipment.warranty + " meses" : "No registrada"
-          }}
-        </div>
-        <div><strong>Fecha de Factura:</strong> {{ equipment.equipmentStatusName }}</div>
-        <div>
-          <strong>Proveedor:</strong> {{ equipment.equipmentConditionName }}
-        </div>
-        <div><strong>Precio Unitario:</strong> {{ equipment.companyName }}</div>
-        <div>
-          <strong>Cantidad:</strong> {{ equipment.categoryStock }}
-        </div>
-        <div>
-          <strong>Subtotal:</strong> {{ equipment.categoryStock }}
-        </div>
-        <div>
-          <strong>Impuesto (%):</strong> {{ equipment.categoryStock }}
-        </div>
-        <div>
-          <strong>Descuento (%):</strong> {{ equipment.categoryStock }}
-        </div>
-        <div>
-          <strong>Total:</strong> {{ equipment.categoryStock }}
-        </div>
-        <div>
-          <strong>Creado:</strong>
-          {{ equipment.creationDate | date : "dd/MM/yyyy" }}
-        </div>
+      <div class="search-bar" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;">
+        <mat-form-field appearance="outline" style="flex: 1 1 200px;">
+          <mat-label>Número de Factura</mat-label>
+          <input matInput [(ngModel)]="invoiceNumberSearch" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="flex: 1 1 200px;">
+          <mat-label>Número de Serie</mat-label>
+          <input matInput [(ngModel)]="serialNumberSearch" />
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="searchInvoices()">
+          Buscar
+        </button>
       </div>
     </mat-card-content>
   </mat-card>
+
+  <!-- Detalles de factura-->
+  <mat-card class="equipment-info-card" *ngIf="invoice">
+    <mat-card-title>Detalles de Factura</mat-card-title>
+    <mat-card-content>
+      <div class="detail-grid">
+        <div><strong>Descripción:</strong> {{ invoice.description }}</div>
+        <div><strong>Número de Factura:</strong> {{ invoice.invoiceNumber }}</div>
+        <div><strong>Fecha de Factura:</strong> {{ invoice.invoiceDate | date: "dd/MM/yyyy" }}</div>
+        <div><strong>Proveedor:</strong> {{ invoice.supplier }}</div>
+        <div><strong>Precio Unitario:</strong> {{ invoice.unitPrice }}</div>
+        <div><strong>Cantidad:</strong> {{ invoice.quantity }}</div>
+        <div><strong>Subtotal:</strong> {{ invoice.subtotal }}</div>
+        <div><strong>Impuesto (%):</strong> {{ invoice.tax }}</div>
+        <div><strong>Descuento (%):</strong> {{ invoice.discount }}</div>
+        <div><strong>Total:</strong> {{ invoice.total | number: '1.2-2' }}</div>
+        <div><strong>Creado:</strong> {{ invoice.creationDate | date: "dd/MM/yyyy" }}</div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+   
+        
 
   <!-- Características -->
   <mat-card

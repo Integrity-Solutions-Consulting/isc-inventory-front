@@ -1,6 +1,5 @@
 export interface InvoiceDetailResponseDTO {
   id: number;
-  category: number;
   description: string;
   unitPrice: number;
   quantity: number;

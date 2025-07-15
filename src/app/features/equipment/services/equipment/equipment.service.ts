@@ -7,7 +7,6 @@ import { EquipmentResponseDTO } from '../../../../core/models/ResponseDTO/invent
 import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentDetailResponseDTO';
 import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRequestDTO';
 import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageResponseDTO';
-import { InvoiceDetailRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceDetailRequestDTO';
 import { InvoiceDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/InvoiceDetailResponseDTO';
 import { InvoiceRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceRequestDTO';
 
@@ -37,7 +36,6 @@ export class EquipmentService {
       `${this.apiUrl}/detail/{id}`
     );
   }
-
 
   public save(
     entity: EquipmentRequestDTO

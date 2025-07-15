@@ -1,10 +1,11 @@
 import { EquipmentCharacteristicResponseDTO } from './EquipmentCharacteristicResponseDTO';
+import { InvoiceDetailResponseDTO } from './InvoiceDetailResponseDTO';
 
 export interface EquipmentDetailResponseDTO {
   id: number;
   invoice: number | null;
   warranty: number | null;
-
+  
   equipmentStatusId: number;
   equipmentStatusName: string;
 
