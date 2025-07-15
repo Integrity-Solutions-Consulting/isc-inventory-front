@@ -13,8 +13,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
-import { MenuResponseDTO, PrivilegeResponseDTO, RolesResponseDTO } from '../../../../api';
 import { RoleDetailResponseDTO } from '../../../../core/models/ResponseDTO/RoleDetailsResponseDTO';
+import { PrivilegeResponseDTO } from '../../../../core/models/ResponseDTO/PrivilegeResponseDTO';
+import { RolesResponseDTO } from '../../../../core/models/ResponseDTO/RolesResponseDTO';
+import { MenuResponseDTO } from '../../../../core/models/ResponseDTO/MenuResponseDTO';
 
 @Component({
   selector: 'app-userDetails',
