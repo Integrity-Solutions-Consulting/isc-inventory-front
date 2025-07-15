@@ -40,7 +40,6 @@ export class EquipmentService {
     );
   }
 
-
   public save(
     entity: EquipmentRequestDTO
   ): Observable<ResponseDTO<EquipmentDetailResponseDTO>> {
