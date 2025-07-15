@@ -1,0 +1,103 @@
+<div class="user-detail-container" *ngIf="user">
+  <!-- Encabezado -->
+  <div class="user-header">
+    <div class="user-avatar-placeholder">
+    </div>
+
+    <div class="user-summary">
+      <h2>{{ user.username }}</h2>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Nombres:</strong> {{ user.firstNames }}</p>
+      <p>
+        <span class="status-dot" [ngClass]="user.active ? 'dot-active' : 'dot-inactive'"></span>
+        {{ user.active ? 'Activo' : 'Inactivo' }}
+      </p>
+      <p *ngIf="user.suspended" style="color: var(--status-bug-reported)">
+        <mat-icon>warning</mat-icon> Usuario suspendido
+      </p>
+      <p>
+        <strong>Última conexión:</strong>
+        {{ user.lastConnection ? (user.lastConnection | date: 'dd/MM/yyyy HH:mm') : 'Nunca' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Botón volver -->
+  <div class="itg-button-group">
+    <button mat-stroked-button class="itg-cancel-button" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+  </div>
+
+  <!-- Detalles del usuario -->
+  <mat-card class="user-info-card">
+    <mat-card-title>Información general</mat-card-title>
+    <mat-card-content>
+      <div class="detail-grid">
+        <div><strong>ID Empleado:</strong> {{ user.employeeId }}</div>
+        <div><strong>Última modificación:</strong> {{ user.lastModificationDate | date: 'dd/MM/yyyy HH:mm' }}</div>
+        <div><strong>Conectado actualmente:</strong> {{ user.loggedIn ? 'Sí' : 'No' }}</div>
+        <div><strong>Estado de cuenta:</strong> {{ user.suspended ? 'Suspendido' : (user.active ? 'Activo' : 'Inactivo') }}</div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Roles asignados -->
+  <mat-card *ngIf="user.roles?.size" class="user-info-card">
+    <mat-card-title>Roles asignados</mat-card-title>
+    <mat-card-content>
+      <ul>
+        <li *ngFor="let role of user.roles">
+          <mat-icon color="primary">admin_panel_settings</mat-icon>
+          {{ role.name }}
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Privilegios -->
+  <mat-card *ngIf="user.privileges?.size" class="user-info-card">
+    <mat-card-title>Privilegios personalizados</mat-card-title>
+    <mat-card-content>
+      <ul>
+         <li *ngFor="let privilege of user.privileges" class="privilege-item">
+          <div class="privilege-header">
+            <mat-icon color="accent">vpn_key</mat-icon>
+            <strong>{{ privilege.key }}</strong>
+          </div>
+          <div class="privilege-details">
+            <div><strong>ID:</strong> {{ privilege.id }}</div>
+            <div><strong>Estado:</strong> {{ privilege.active ? 'Activo' : 'Inactivo' }}</div>
+            <div><strong>Aplicación ID:</strong> {{ privilege.applicationId }}</div>
+            <div><strong>Creado:</strong> {{ privilege.creationDate | date:'dd/MM/yyyy' }}</div>
+            <div *ngIf="privilege.lastModificationDate">
+              <strong>Modificado:</strong> {{ privilege.lastModificationDate | date:'dd/MM/yyyy' }}
+            </div>
+          </div>
+        </li>
+      </ul>
+    </mat-card-content>
+</mat-card>
+
+  <!-- Menús -->
+  <mat-card *ngIf="user.menus?.size" class="user-info-card">
+    <mat-card-title>Accesos a menús</mat-card-title>
+    <mat-card-content>
+      <ul>
+        <li *ngFor="let menu of user.menus">
+          <mat-icon>menu</mat-icon>
+          {{ menu.icon }}
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- Cargando -->
+<ng-container *ngIf="loading">
+  <div class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando información del usuario...</p>
+  </div>
+</ng-container>

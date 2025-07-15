@@ -48,12 +48,24 @@
     <button mat-stroked-button class="itg-cancel-button" (click)="goBack()">
       Volver
     </button>
+
+    <ng-container *ngIf="equipment.status">
+    <ng-container *ngIf="!warrantyDetail; else editButton">
     <button mat-flat-button color="primary"
        class="itg-primary-button"
        (click)="openWarrantyForm()">
        <mat-icon>verified_user</mat-icon>
        Añadir Garantía
     </button>
+    </ng-container>
+    <ng-template #editButton>
+      <button mat-stroked-button color="primary"
+       class="itg-primary-button"
+      (click)="editWarranty()">
+    <mat-icon>verified_user</mat-icon>
+    Editar Garantía
+  </button>
+    </ng-template>
     <button
       mat-stroked-button
       class="itg-primary-button"
@@ -62,6 +74,7 @@
     >
       Añadir Factura
     </button>
+    </ng-container>
   </div>
 
   <!-- Detalles -->
@@ -120,9 +133,9 @@
         <strong>Fecha de fin:</strong>
         {{ warrantyDetail.warrantyEndDate | date: 'dd/MM/yyyy' }}
       </div>
-      <div class="detail-item" *ngIf="warrantyDetail?.supportContact">
+      <div *ngIf="warrantyDetail?.supportContact">
         <strong>Contacto de soporte:</strong>
-        <span class="detail-value">{{ warrantyDetail.supportContact }}</span>
+        <span>{{ warrantyDetail.supportContact }}</span>
       </div>
       <div>
         <strong>Condiciones:</strong> {{ warrantyDetail.conditions }}

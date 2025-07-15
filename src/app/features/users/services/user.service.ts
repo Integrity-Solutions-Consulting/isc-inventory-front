@@ -16,6 +16,13 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) {}
 
+
+  public getDetailsById(id: number): Observable<ResponseDTO<UserResponseDTO>> {
+  return this.httpClient.get<ResponseDTO<UserResponseDTO>>(
+    `${this.userGetUrl}/detail/${id}`
+  );
+}
+
   public getAll(): Observable<ResponseDTO<UserResponseDTO[]>> {
     return this.httpClient.get<ResponseDTO<UserResponseDTO[]>>(
       `${this.userGetUrl}`

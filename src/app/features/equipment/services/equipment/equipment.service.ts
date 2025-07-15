@@ -10,7 +10,7 @@ import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageR
 import { WarrantTypeRequestDTO } from '../../../../core/models/RequestDTO/inventory/WarrantTypeRequestDTO';
 import { InvoiceDetailRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceDetailRequestDTO';
 import { InvoiceDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/InvoiceDetailResponseDTO';
-
+import {WarrantTypeDetailResponseDTO} from '../../../../core/models/ResponseDTO/inventory/WarrantTypeDetailResponseDTO '
 @Injectable({
   providedIn: 'root',
 })
@@ -61,13 +61,14 @@ export class EquipmentService {
   public setWarranty(
     entity: WarrantTypeRequestDTO,
     id: number
-  ): Observable<ResponseDTO<EquipmentDetailResponseDTO>>{
-    return this.httpClient.put<ResponseDTO<EquipmentDetailResponseDTO>>(
+  ): Observable<ResponseDTO<WarrantTypeDetailResponseDTO>>{
+    return this.httpClient.put<ResponseDTO<WarrantTypeDetailResponseDTO>>(
       `${this.apiUrl}/setWarranty/${id}`,
       entity
     )
 
   }
+
   public invoice(
     entity: InvoiceDetailRequestDTO,
     id: number

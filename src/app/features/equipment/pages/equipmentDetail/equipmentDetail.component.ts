@@ -66,7 +66,6 @@ export class EquipmentDetailComponent implements OnInit {
       },
     });
   }
-
   ngOnInit() {
     const navigation = history.state as {
       equipment?: EquipmentDetailResponseDTO;
@@ -127,7 +126,8 @@ export class EquipmentDetailComponent implements OnInit {
     newWarrantyData,
     (result: WarrantTypeDetailResponseDTO) => {
       if (result) {
-        this.loadWarranty(this.equipment!.id); // <-- Actualiza la garantía
+        this.warrantyDetail = result;
+        this.equipment!.warranty = result.id;
         this.modalDialogService.open(
           'success',
           'Garantía registrada',
@@ -161,7 +161,7 @@ export class EquipmentDetailComponent implements OnInit {
 
   const dataWithEquipmentId = {
     ...this.warrantyDetail,
-    idEquipment: this.equipment.id // añade explícitamente el ID
+    idEquipment: this.equipment.id
   };
     console.log('Garantía para editar:', this.warrantyDetail);
 

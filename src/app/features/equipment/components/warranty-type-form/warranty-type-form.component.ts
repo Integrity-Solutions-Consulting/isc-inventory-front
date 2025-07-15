@@ -84,7 +84,6 @@ export class WarrantyTypeFormComponent implements OnInit {
     });
 
     if (data?.id) {
-    this.formTitle = 'Editar garantía';
     this.warrantyForm.patchValue({
       conditions:data.conditions || '',
       warrantyStartDate:data.warrantyStartDate ? new Date(data.warrantyStartDate) : new Date(),
@@ -125,9 +124,9 @@ export class WarrantyTypeFormComponent implements OnInit {
     this.loading.show();
 
     this.equipmentService.setWarranty(payload, data.idEquipment).subscribe({
-      next: () => {
+      next: (resp) => {
         this.loading.hide();
-        this.formService.close(payload);
+        this.formService.close(resp.data);
       },
       error: (error) => {
         this.loading.hide();
