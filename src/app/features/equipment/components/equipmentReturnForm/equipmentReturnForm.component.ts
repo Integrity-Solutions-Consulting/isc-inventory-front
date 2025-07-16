@@ -1,10 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  MenuResponseDTO,
-  PrivilegeResponseDTO,
-  RoleRequestDTO,
-} from '../../../../api';
-import {
   FormBuilder,
   FormGroup,
   FormsModule,

@@ -1,10 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  MenuResponseDTO,
-  PrivilegeResponseDTO,
-  RoleRequestDTO,
-} from '../../../../api';
-import {
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -18,8 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MenuService } from '../../../menu/services/menu.service';
-import { PrivilegeService } from '../../../privilege/services/privilege.service';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { FormControl } from '@angular/forms';
@@ -30,10 +23,8 @@ import { Subject } from 'rxjs';
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { forkJoin } from 'rxjs';
-import { FlattenedMenu } from '../../../../core/models/ResponseDTO/authentication/FlattenedMenu';
 import { EmployeeCatalogResponseDTO } from '../../../../core/models/ResponseDTO/administration/EmployeeCatalogResponseDTO';
 import { EquipmentResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentResponseDTO';
-import { RoleService } from '../../../roles/services/role.service';
 import { EmployeeService } from '../../../employees/services/employee.service';
 import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentAssignmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentAssignmentRequestDTO';

@@ -6,6 +6,7 @@ import { CustomerComponent } from '../../customers/pages/customer/customer.compo
 import { EquipmentComponent } from '../../equipment/pages/equipment/equipment.component';
 import { EquipmentAssignmentComponent } from '../../equipment/pages/equipmentAssignment/equipmentAssignment.component';
 import { EquipmentRepairComponent } from '../../equipment/pages/equipmentRepair/equipmentRepair.component';
+import { SupplierComponent } from '../../suppliers/pages/supplier/supplier.component';
 
 export const dashboard_routes: Routes = [
   {
@@ -31,6 +32,7 @@ export const dashboard_routes: Routes = [
       },
       { path: 'employees', component: EmployeeComponent },
       { path: 'clients', component: CustomerComponent },
+      { path: 'supplier', component: SupplierComponent },
       {
         path: 'setting',
         loadChildren: () =>

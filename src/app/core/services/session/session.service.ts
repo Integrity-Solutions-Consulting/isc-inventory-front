@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserLoginResponseDTO } from '../../models/ResponseDTO/UserLoginResponseDTO';
-import { MenuResponseDTO, RolesResponseDTO } from '../../../api';
+import { MenuResponseDTO } from '../../models/ResponseDTO/MenuResponseDTO';
 
 @Injectable({
   providedIn: 'root',

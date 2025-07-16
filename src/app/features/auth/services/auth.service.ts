@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs';
-import {
-  LoginRequestDTO,
-  MessageResponseDTO,
-  PasswordChangeRequestDTO,
-  TokenResponseDTO,
-  UserRequestoDTO,
-  UserResponseDTO,
-} from '../../../api';
 import { HttpClient } from '@angular/common/http';
 import { UserLoginResponseDTO } from '../../../core/models/ResponseDTO/UserLoginResponseDTO';
 import { ResponseDTO } from '../../../core/models/ResponseDTO/ResponseDTO';
+import { LoginRequestDTO } from '../../../core/models/RequestDTO/LoginRequestDTO';
+import { PasswordChangeRequestDTO } from '../../../core/models/RequestDTO/PasswordChangeRequestDTO';
+import { UserRequestoDTO } from '../../../core/models/RequestDTO/UserRequestDTO';
+import { MessageResponseDTO } from '../../../core/models/ResponseDTO/MessageResponseDTO';
+import { TokenResponseDTO } from '../../../core/models/ResponseDTO/TokenResponseDTO';
+import { UserResponseDTO } from '../../../core/models/ResponseDTO/UserResponseDTO';
 
 @Injectable({
   providedIn: 'root',

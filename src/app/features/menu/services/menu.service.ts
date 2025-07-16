@@ -3,7 +3,7 @@ import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ResponseDTO } from '../../../core/models/ResponseDTO/ResponseDTO';
-import { MenuResponseDTO } from '../../../api';
+import { MenuResponseDTO } from '../../../core/models/ResponseDTO/MenuResponseDTO';
 
 @Injectable({
   providedIn: 'root'

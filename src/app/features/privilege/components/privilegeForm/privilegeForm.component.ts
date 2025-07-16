@@ -1,7 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  PrivilegeRequestDTO,
-} from '../../../../api';
 import { FormBuilder, 
   FormGroup, 
   Validators, 
@@ -21,6 +18,7 @@ import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { PrivilegeRequestDTO } from '../../../../core/models/RequestDTO/authentication/PrivilegeRequestDTO';
 @Component({
   selector: 'app-privilegeForm',
   standalone: true,

@@ -1,6 +1,5 @@
 export interface InvoiceDetailResponseDTO {
   id: number;
-  category: number;
   description: string;
   unitPrice: number;
   quantity: number;
@@ -8,6 +7,10 @@ export interface InvoiceDetailResponseDTO {
   tax: number;
   discount: number;
   total: number;
+  supplierId: number;
+  supplier: string;
+  invoiceDate: string;
+  invoiceNumber: string;
   status: boolean;
   creationDate: string;
   modificationDate: string;

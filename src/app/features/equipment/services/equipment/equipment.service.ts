@@ -11,6 +11,8 @@ import { WarrantTypeRequestDTO } from '../../../../core/models/RequestDTO/invent
 import { InvoiceDetailRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceDetailRequestDTO';
 import { InvoiceDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/InvoiceDetailResponseDTO';
 import {WarrantTypeDetailResponseDTO} from '../../../../core/models/ResponseDTO/inventory/WarrantTypeDetailResponseDTO '
+import { InvoiceRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceRequestDTO';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,7 +39,6 @@ export class EquipmentService {
       `${this.apiUrl}/detail/${id}`
     );
   }
-
 
   public save(
     entity: EquipmentRequestDTO
@@ -70,7 +71,7 @@ export class EquipmentService {
   }
 
   public invoice(
-    entity: InvoiceDetailRequestDTO,
+    entity: InvoiceRequestDTO,
     id: number
   ): Observable<ResponseDTO<InvoiceDetailResponseDTO>> {
     return this.httpClient.put<ResponseDTO<InvoiceDetailResponseDTO>>(
