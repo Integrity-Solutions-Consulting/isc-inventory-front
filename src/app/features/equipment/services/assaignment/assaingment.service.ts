@@ -33,11 +33,19 @@ export class AssaingmentService {
     >(`${this.apiUrl}/assign`, entity);
   }
 
-  public revoke(id: number,revokeDate: EquipmentRevokeRequestDTO): Observable<ResponseDTO<EquipmentAssignmentDetailResponseDTO>> {
-    return this.httpClient.put<ResponseDTO<EquipmentAssignmentDetailResponseDTO>>(
-      `${this.apiUrl}/revoke/${id}`,
-      revokeDate
-    );
+  public revoke(
+    id: number,
+    revokeDate: EquipmentRevokeRequestDTO
+  ): Observable<ResponseDTO<EquipmentAssignmentDetailResponseDTO>> {
+    return this.httpClient.put<
+      ResponseDTO<EquipmentAssignmentDetailResponseDTO>
+    >(`${this.apiUrl}/revoke/${id}`, revokeDate);
+  }
+
+  generatePdf(id: number): Observable<Blob> {
+    return this.httpClient.get(`${this.apiUrl}/${id}/report`, {
+      responseType: 'blob',
+    });
   }
 
   public delete(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {

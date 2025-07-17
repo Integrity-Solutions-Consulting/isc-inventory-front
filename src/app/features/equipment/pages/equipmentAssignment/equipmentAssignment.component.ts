@@ -92,24 +92,23 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
       this.sort.direction = 'asc';
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = (item, property) => {
-      switch (property) {
-        case 'employee':
-          return item.employee?.fullName || '';
-        case 'equipment':
-          return item.equipment?.model || '';
-        case 'company':
-          return item.company?.name || '';
-        case 'assignmentDate':
-          return item.assignmentDate || '';
-        case 'returnDate':
-          return item.returnDate || '';
-        default:
-          return (item as any)[property];
-      }
-    };
+        switch (property) {
+          case 'employee':
+            return item.employee?.fullName || '';
+          case 'equipment':
+            return item.equipment?.model || '';
+          case 'company':
+            return item.company?.name || '';
+          case 'assignmentDate':
+            return item.assignmentDate || '';
+          case 'returnDate':
+            return item.returnDate || '';
+          default:
+            return (item as any)[property];
+        }
+      };
     });
   }
-
 
   loadTable(): void {
     this.loading.show(); // Show loading spinner
@@ -262,6 +261,20 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
         );
       }
     );
+  }
+
+  generatePdf(item: any): void {
+    this.equipmentAssingmentService.generatePdf(item.id).subscribe((response) => {
+      const blob = new Blob([response], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `reporte-${item.id}.pdf`;
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+    });
   }
 
   warningDelete(entity: EquipmentAssignmentDetailResponseDTO) {
