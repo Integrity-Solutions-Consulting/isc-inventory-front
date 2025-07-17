@@ -89,7 +89,9 @@ export class EquipmentDetailComponent implements OnInit {
     if (navigation.equipment) {
       this.equipment = navigation.equipment;
       this.loadWarranty(this.equipment.warranty ?? 0);
-      this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
+      if(this.equipment?.invoice){
+        this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
+      }      
       this.loading = false;
     } else {
       const id = this.equipmentId ?? Number(this.route.snapshot.queryParamMap.get('id'));
@@ -98,7 +100,9 @@ export class EquipmentDetailComponent implements OnInit {
           next: (resp) => {
             this.equipment = resp.data;
             this.loadWarranty(this.equipment?.warranty ?? 0);
-            this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
+            if (this.equipment?.invoice){
+              this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
+            }            
             this.loading = false;
           },
           error: (err) => {

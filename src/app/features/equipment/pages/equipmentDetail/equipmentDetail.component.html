@@ -150,28 +150,6 @@
   </mat-card-content>
 </mat-card>
 
-  <!-- Buscar factura por invoice y serial -->
-  <mat-card class="equipment-info-card">
-    <mat-card-title>Búsqueda de Factura</mat-card-title>
-    <mat-card-content>
-      <div class="search-bar" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;">
-        <mat-form-field appearance="outline" style="flex: 1 1 200px;">
-          <mat-label>Número de Factura</mat-label>
-          <input matInput [(ngModel)]="invoiceNumberSearch" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="flex: 1 1 200px;">
-          <mat-label>Número de Serie</mat-label>
-          <input matInput [(ngModel)]="serialNumberSearch" />
-        </mat-form-field>
-
-        <button mat-raised-button color="primary" (click)="searchInvoices()">
-          Buscar
-        </button>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
   <!-- Detalles de factura-->
   <mat-card class="equipment-info-card" *ngIf="invoice">
     <mat-card-title>Detalles de Factura</mat-card-title>
