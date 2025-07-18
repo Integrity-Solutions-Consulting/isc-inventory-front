@@ -6,6 +6,7 @@ import { ResponseDTO } from '../../../core/models/ResponseDTO/ResponseDTO';
 import { UserResponseDTO } from '../../../core/models/ResponseDTO/UserResponseDTO';
 import { UserRequestoDTO } from '../../../core/models/RequestDTO/UserRequestDTO';
 import { MessageResponseDTO } from '../../../core/models/ResponseDTO/MessageResponseDTO';
+import { UserDetailsResponseDTO } from '../../../core/models/ResponseDTO/UserDetailsResponseDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +18,8 @@ export class UserService {
   constructor(private httpClient: HttpClient) {}
 
 
-  public getDetailsById(id: number): Observable<ResponseDTO<UserResponseDTO>> {
-  return this.httpClient.get<ResponseDTO<UserResponseDTO>>(
+  public getDetailsById(id: number): Observable<ResponseDTO<UserDetailsResponseDTO>> {
+  return this.httpClient.get<ResponseDTO<UserDetailsResponseDTO>>(
     `${this.userGetUrl}/detail/${id}`
   );
 }

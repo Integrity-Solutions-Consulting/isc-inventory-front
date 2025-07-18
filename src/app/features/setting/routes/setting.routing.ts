@@ -4,7 +4,7 @@ import { UserComponent } from '../../users/pages/user/user.component';
 import { RoleComponent } from '../../roles/pages/role/role.component';
 import { PrivilegeComponent } from '../../privilege/pages/privilege/privilege.component';
 import { MenuComponent } from '../../menu/pages/menu/menu.component';
-import { UserDetailComponent } from '../../users/pages/userDetails/userDetails.component';
+import { UserDetailsComponent } from '../../users/pages/userDetails/userDetails.component';
 
 
 export const setting_routes: Routes = [
@@ -19,7 +19,7 @@ export const setting_routes: Routes = [
                   loadComponent: () =>
                     import(
                       '../../users/pages/userDetails/userDetails.component'
-                    ).then((m) => m.UserDetailComponent),
+                    ).then((m) => m.UserDetailsComponent),
                 },
               ],
             },
