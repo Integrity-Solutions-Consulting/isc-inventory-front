@@ -60,6 +60,7 @@ export class SupplierFormComponent implements OnInit {
       this.supplierForm.patchValue(supplierToEdit);
       this.supplierId = supplierToEdit.id;
     }
+    this.loading = false;
   }
 
   onSubmit(): void {

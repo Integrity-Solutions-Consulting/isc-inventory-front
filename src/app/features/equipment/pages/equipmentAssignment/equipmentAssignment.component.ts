@@ -25,6 +25,9 @@ import { AssaingmentService } from '../../services/assaignment/assaingment.servi
 import { EquipmentAssignmentFormComponent } from '../../components/equipmentAssignmentForm/equipmentAssignmentForm.component';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { EquipmentReturnFormComponent } from '../../components/equipmentReturnForm/equipmentReturnForm.component';
+import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentDetailResponseDTO';
+import { EquipmentRepairDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentRepairDetailResponseDTO';
+import { EquipmentRepairFormComponent } from '../../components/equipmentRepairForm/equipmentRepairForm.component';
 
 @Component({
   selector: 'app-equipmentAssignment',
@@ -84,23 +87,27 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (item, property) => {
-      switch (property) {
-        case 'employee':
-          return item.employee?.fullName || '';
-        case 'equipment':
-          return item.equipment?.model || '';
-        case 'company':
-          return item.company?.name || '';
-        case 'assignmentDate':
-          return item.assignmentDate || '';
-        case 'returnDate':
-          return item.returnDate || '';
-        default:
-          return (item as any)[property];
-      }
-    };
+    setTimeout(() => {
+      this.sort.active = 'returnDate';
+      this.sort.direction = 'asc';
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (item, property) => {
+        switch (property) {
+          case 'employee':
+            return item.employee?.fullName || '';
+          case 'equipment':
+            return item.equipment?.model || '';
+          case 'company':
+            return item.company?.name || '';
+          case 'assignmentDate':
+            return item.assignmentDate || '';
+          case 'returnDate':
+            return item.returnDate || '';
+          default:
+            return (item as any)[property];
+        }
+      };
+    });
   }
 
   loadTable(): void {
@@ -212,6 +219,62 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
       },
       error: (error) => {},
     });*/
+  }
+
+  sendToRepair(entity: EquipmentAssignmentDetailResponseDTO): void {
+    const item = {
+      id: entity.equipment.id,
+      serialNumber: entity.equipment.serialNumber,
+      equipmentStatusId: 2,
+    };
+    this.formService.open(
+      'Reparar Equipo',
+      'engineering',
+      EquipmentRepairFormComponent,
+      item,
+      (result: EquipmentRepairDetailResponseDTO) => {
+        if (result) {
+          this.dataSource.data = this.dataSource.data.map((item) => {
+            if (item.id === result.equipment) {
+              return {
+                ...item,
+                equipmentConditionId: 3,
+                equipmentStatusName: 'En reparación',
+              };
+            }
+            return item;
+          });
+
+          this.modalDialogService.open(
+            'success',
+            'Equipo enviado a reparación',
+            'El equipo fue registrado correctamente.'
+          );
+        }
+      },
+      (error) => {
+        console.error('Ocurrió un error al guardar', error);
+        this.modalDialogService.open(
+          'error',
+          'Error al guardar',
+          'Ocurrió un error al registrar la reparacion del equipo.'
+        );
+      }
+    );
+  }
+
+  generatePdf(item: any): void {
+    this.equipmentAssingmentService.generatePdf(item.id).subscribe((response) => {
+      const blob = new Blob([response], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `reporte-${item.id}.pdf`;
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+    });
   }
 
   warningDelete(entity: EquipmentAssignmentDetailResponseDTO) {

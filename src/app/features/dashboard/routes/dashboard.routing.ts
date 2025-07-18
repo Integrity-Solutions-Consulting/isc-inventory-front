@@ -5,6 +5,7 @@ import { EmployeeComponent } from '../../employees/pages/employee/employee.compo
 import { CustomerComponent } from '../../customers/pages/customer/customer.component';
 import { EquipmentComponent } from '../../equipment/pages/equipment/equipment.component';
 import { EquipmentAssignmentComponent } from '../../equipment/pages/equipmentAssignment/equipmentAssignment.component';
+import { EquipmentRepairComponent } from '../../equipment/pages/equipmentRepair/equipmentRepair.component';
 import { SupplierComponent } from '../../suppliers/pages/supplier/supplier.component';
 
 export const dashboard_routes: Routes = [
@@ -14,7 +15,7 @@ export const dashboard_routes: Routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
-      { path: 'inventory-control', component: HomeComponent },
+      { path: 'equipment-repair', component: EquipmentRepairComponent },
       { path: 'equipment-assignment', component: EquipmentAssignmentComponent },
       {
         path: 'equipment',

@@ -48,7 +48,7 @@ import { EquipmentInvoiceFormComponent } from '../../components/equipmentInvoice
     MatSortModule,
     MatMenuModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
   ],
   templateUrl: './equipmentDetail.component.html',
   styleUrls: ['./equipmentDetail.component.css'],
@@ -89,16 +89,22 @@ export class EquipmentDetailComponent implements OnInit {
     if (navigation.equipment) {
       this.equipment = navigation.equipment;
       this.loadWarranty(this.equipment.warranty ?? 0);
-      this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
+      if (this.equipment?.invoice) {
+        this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
+      }
+
       this.loading = false;
     } else {
-      const id = this.equipmentId ?? Number(this.route.snapshot.queryParamMap.get('id'));
+      const id =
+        this.equipmentId ?? Number(this.route.snapshot.queryParamMap.get('id'));
       if (id) {
         this.equipmentService.getDetailById(id).subscribe({
           next: (resp) => {
             this.equipment = resp.data;
             this.loadWarranty(this.equipment?.warranty ?? 0);
-            this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
+            if (this.equipment?.invoice) {
+              this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
+            }
             this.loading = false;
           },
           error: (err) => {
@@ -153,11 +159,19 @@ export class EquipmentDetailComponent implements OnInit {
         if (result) {
           this.warrantyDetail = result;
           this.equipment!.warranty = result.id;
-          this.modalDialogService.open('success', 'Garantía registrada', 'La garantía fue registrada correctamente.');
+          this.modalDialogService.open(
+            'success',
+            'Garantía registrada',
+            'La garantía fue registrada correctamente.'
+          );
         }
       },
       () => {
-        this.modalDialogService.open('error', 'Error al registrar', 'No se pudo registrar la garantía.');
+        this.modalDialogService.open(
+          'error',
+          'Error al registrar',
+          'No se pudo registrar la garantía.'
+        );
       }
     );
   }
@@ -165,7 +179,10 @@ export class EquipmentDetailComponent implements OnInit {
   editWarranty(): void {
     if (!this.warrantyDetail || !this.equipment?.id) return;
 
-    const dataWithEquipmentId = { ...this.warrantyDetail, idEquipment: this.equipment.id };
+    const dataWithEquipmentId = {
+      ...this.warrantyDetail,
+      idEquipment: this.equipment.id,
+    };
 
     this.formService.open(
       'Editar Garantía',
@@ -175,12 +192,20 @@ export class EquipmentDetailComponent implements OnInit {
       (result: WarrantTypeDetailResponseDTO) => {
         if (result) {
           this.warrantyDetail = result;
-          this.modalDialogService.open('success', 'Garantía actualizada', 'La garantía fue modificada correctamente.');
+          this.modalDialogService.open(
+            'success',
+            'Garantía actualizada',
+            'La garantía fue modificada correctamente.'
+          );
         }
       },
       (error) => {
         console.error('Error al actualizar la garantía', error);
-        this.modalDialogService.open('error', 'Error al editar', 'No se pudo actualizar la garantía.');
+        this.modalDialogService.open(
+          'error',
+          'Error al editar',
+          'No se pudo actualizar la garantía.'
+        );
       }
     );
   }
@@ -202,13 +227,21 @@ export class EquipmentDetailComponent implements OnInit {
           this.equipmentService.getDetailById(this.equipment.id).subscribe({
             next: (resp) => {
               this.equipment = resp.data;
-              this.modalDialogService.open('success', 'Factura creada', 'La factura fue creada correctamente.');
+              this.modalDialogService.open(
+                'success',
+                'Factura creada',
+                'La factura fue creada correctamente.'
+              );
             },
           });
         }
       },
       () => {
-        this.modalDialogService.open('error', 'Error al crear', 'Ocurrió un error al crear la factura.');
+        this.modalDialogService.open(
+          'error',
+          'Error al crear',
+          'Ocurrió un error al crear la factura.'
+        );
       }
     );
   }
@@ -219,7 +252,11 @@ export class EquipmentDetailComponent implements OnInit {
     } else if (this.serialNumberSearch?.trim()) {
       this.loadInvoicesBySerialNumber(this.serialNumberSearch.trim());
     } else {
-      this.modalDialogService.open('error', 'Búsqueda vacía', 'Por favor ingrese un número de factura o de serie.');
+      this.modalDialogService.open(
+        'error',
+        'Búsqueda vacía',
+        'Por favor ingrese un número de factura o de serie.'
+      );
     }
   }
 
@@ -229,16 +266,24 @@ export class EquipmentDetailComponent implements OnInit {
       next: (resp) => {
         this.invoice = resp.data ?? null;
         if (!this.invoice) {
-          this.modalDialogService.open('error', 'No encontrado', 'No se encontró una factura para ese número de serie.');
+          this.modalDialogService.open(
+            'error',
+            'No encontrado',
+            'No se encontró una factura para ese número de serie.'
+          );
         }
       },
       error: (err) => {
         console.error('Error al buscar por serial number', err);
-        this.modalDialogService.open('error', 'Error', 'No se pudo cargar la factura.');
+        this.modalDialogService.open(
+          'error',
+          'Error',
+          'No se pudo cargar la factura.'
+        );
       },
       complete: () => {
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -250,11 +295,15 @@ export class EquipmentDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al buscar por número de factura', err);
-        this.modalDialogService.open('error', 'Factura no encontrada', 'No se encontró una factura con ese número.');
+        this.modalDialogService.open(
+          'error',
+          'Factura no encontrada',
+          'No se encontró una factura con ese número.'
+        );
       },
       complete: () => {
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -269,11 +318,19 @@ export class EquipmentDetailComponent implements OnInit {
   deleteInvoice(invoice: InvoiceDetailResponseDTO): void {
     this.invoiceService.delete(invoice.id).subscribe({
       next: () => {
-        this.modalDialogService.open('success', 'Factura eliminada', 'La factura fue eliminada correctamente.');
+        this.modalDialogService.open(
+          'success',
+          'Factura eliminada',
+          'La factura fue eliminada correctamente.'
+        );
       },
       error: (err) => {
         console.error('Error al eliminar factura', err);
-        this.modalDialogService.open('error', 'Error al eliminar', 'No se pudo eliminar la factura.');
+        this.modalDialogService.open(
+          'error',
+          'Error al eliminar',
+          'No se pudo eliminar la factura.'
+        );
       },
     });
   }

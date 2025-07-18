@@ -76,7 +76,7 @@
         mat-flat-button
         color="primary"
         class="itg-primary-button"
-        (click)="onSubmit()"
+        (click)="submitAndRepair()"
         [disabled]="repairForm.invalid || isSubmitting"
       >
         {{ entityId ? "Actualizar reparación" : "Crear reparación" }}

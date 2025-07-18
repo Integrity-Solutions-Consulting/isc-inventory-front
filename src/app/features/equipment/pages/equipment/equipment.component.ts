@@ -197,7 +197,6 @@ export class EquipmentComponent implements OnInit {
       entity,
       (result: EquipmentRepairDetailResponseDTO) => {
         if (result) {
-          console.log('Equipo reparado:', result);
           this.dataSource.data = this.dataSource.data.map((item) => {
             if (item.id === result.equipment) {
               return {
