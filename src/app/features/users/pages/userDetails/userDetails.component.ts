@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
-import { RoleDetailsResponseDTO } from '../../../../core/models/ResponseDTO/RoleDetailsResponseDTO';
+import { RoleDetailResponseDTO } from '../../../../core/models/ResponseDTO/RoleDetailsResponseDTO';
 import { PrivilegeResponseDTO } from '../../../../core/models/ResponseDTO/PrivilegeResponseDTO';
 import { RolesResponseDTO } from '../../../../core/models/ResponseDTO/RolesResponseDTO';
 import { MenuResponseDTO } from '../../../../core/models/ResponseDTO/MenuResponseDTO';
@@ -38,7 +38,7 @@ export class UserDetailsComponent implements OnInit {
   privilege?: PrivilegeResponseDTO;
   roles?: RolesResponseDTO;
   menu?: MenuResponseDTO;
-  roleDetails?: RoleDetailsResponseDTO;
+  roleDetails?: RoleDetailResponseDTO;
   loading: boolean = true;
 
 

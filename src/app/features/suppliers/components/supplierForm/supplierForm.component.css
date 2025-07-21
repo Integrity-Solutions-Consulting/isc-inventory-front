@@ -94,3 +94,8 @@ label {
 .itg-cancel-button:hover {
   background-color: #bdbdbd !important;
 }
+
+.button-spinner {
+  margin-left: 8px;
+  display: inline-block;
+}

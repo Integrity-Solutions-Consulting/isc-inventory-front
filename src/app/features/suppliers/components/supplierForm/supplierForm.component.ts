@@ -10,6 +10,11 @@ import { FormService } from '../../../../core/services/modals/form/form.service'
 import { SupplierRequestDTO } from '../../../../core/models/RequestDTO/inventory/SupplierRequestDTO';
 import { SupplierService } from '../../services/supplier/supplier.service';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { SupplierTypeResponseDTO } from '../../../../core/models/ResponseDTO/inventory/SupplierTypeResponseDTO';
+import { SupplierTypeService } from '../../services/supplier/supplier-type.service';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { SupplierTypeRequestDTO } from '../../../../core/models/RequestDTO/inventory/SupplierTypeRequestDTO';
 
 @Component({
   selector: 'app-supllierForm',
@@ -22,7 +27,9 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinner
+    MatProgressSpinner,
+    MatSelectModule,
+    MatOptionModule
 ],
   templateUrl: './supplierForm.component.html',
   styleUrls: ['./supplierForm.component.css']
@@ -32,15 +39,18 @@ export class SupplierFormComponent implements OnInit {
   loading: boolean = true;
   isSubmitting: boolean = false;
   supplierId: number = 0;
+  supplierTypes: SupplierTypeResponseDTO[] = [];
 
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
-    private supplierService: SupplierService
+    private supplierService: SupplierService,
+    private supplierTypeService: SupplierTypeService
   ) { }
 
   ngOnInit() {
     this.initForm();
+    this.loadSupplierTypes();
     this.loadData();
   }
 
@@ -50,53 +60,88 @@ export class SupplierFormComponent implements OnInit {
       address: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      taxId: ['', [Validators.required, Validators.pattern(/^\d{10,13}$/)]]
+      taxId: ['', [Validators.required, Validators.pattern(/^\d{10,13}$/)]],
+      supplierType: ['', Validators.required]
     });
   }
 
   loadData(): void {
     const supplierToEdit = this.formService.modalDataValue;
-    if (supplierToEdit) {
-      this.supplierForm.patchValue(supplierToEdit);
-      this.supplierId = supplierToEdit.id;
+    if (supplierToEdit)
+      {
+      this.supplierForm.patchValue({...supplierToEdit,supplierType: supplierToEdit.supplierType?.id
+      });
+            this.supplierId = supplierToEdit.id;
+
     }
     this.loading = false;
   }
 
-  onSubmit(): void {
-    if (this.supplierForm.invalid) {
-      this.supplierForm.markAllAsTouched();
-      return;
-    }
-    this.isSubmitting = true;
-    const supplierRequest: SupplierRequestDTO = this.supplierForm.value;
-
-    if (this.supplierId !== 0) {
-      this.supplierService.update(supplierRequest, this.supplierId).subscribe({
-        next: (resp) => {
-          this.isSubmitting = false;
-          this.formService.close(resp.data);
-        },
-        error: (err) => {
-          console.error(err);
-          this.isSubmitting = false;
-          this.formService.error(err.error);
-        }
-      });
-    } else {
-      this.supplierService.create(supplierRequest).subscribe({
-        next: (resp) => {
-          this.isSubmitting = false;
-          this.formService.close(resp.data);
-        },
-        error: (err) => {
-          console.error(err);
-          this.isSubmitting = false;
-          this.formService.error(err.error);
-        }
-      });
-    }
+  loadSupplierTypes(): void {
+    this.supplierTypeService.getAllActive().subscribe({
+      next: (resp) => {
+        this.supplierTypes = resp.data;
+      },
+      error: (err) => {
+        console.error('Error cargando tipos de proveedor:', err);
+      }
+    });
   }
+
+
+
+  onSubmit(): void {
+  if (this.supplierForm.invalid) {
+    this.supplierForm.markAllAsTouched();
+    return;
+  }
+
+  this.isSubmitting = true;
+  const formValue = this.supplierForm.value;
+
+  // Buscar el tipo de proveedor completo en el array
+  const selectedSupplierType = this.supplierTypes.find(type => type.id === formValue.supplierType);
+
+  if (!selectedSupplierType) {
+    console.error('Tipo de proveedor no encontrado');
+    this.isSubmitting = false;
+    this.formService.error('Seleccione un tipo de proveedor válido');
+    return;
+  }
+
+  // Crear el DTO de solicitud con el objeto completo
+  const supplierRequest: SupplierRequestDTO = {
+    businessName: formValue.businessName,
+    address: formValue.address,
+    phone: formValue.phone,
+    email: formValue.email,
+    taxId: formValue.taxId,
+    supplierType: selectedSupplierType // Enviamos el objeto completo
+  };
+
+  console.log('Enviando al backend:', supplierRequest); // Para depuración
+
+  const serviceCall = this.supplierId !== 0
+    ? this.supplierService.update(supplierRequest, this.supplierId)
+    : this.supplierService.create(supplierRequest);
+
+  serviceCall.subscribe({
+    next: (resp) => {
+      this.isSubmitting = false;
+      this.formService.close(resp.data);
+    },
+    error: (err) => {
+      console.error('Error detallado:', {
+        status: err.status,
+        message: err.message,
+        error: err.error,
+        url: err.url
+      });
+      this.isSubmitting = false;
+      this.formService.error(err.error?.message || 'Error al guardar el proveedor');
+    }
+  });
+}
 
   onCancel(): void {
     this.formService.close();

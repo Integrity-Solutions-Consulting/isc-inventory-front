@@ -44,16 +44,17 @@ import { SupplierFormComponent } from '../../components/supplierForm/supplierFor
 export class SupplierComponent implements OnInit {
   searchTerm: string = '';
   displayedColumns: string[] = [
+    'supplierType',
     'businessName',
     'address',
     'phone',
-    'email',    
+    'email',
     'taxId',
   ];
   dataSource = new MatTableDataSource<SupplierResponseDTO>();
   totalSupplier = 0;
-  
-  @ViewChild(MatPaginator) paginator!: MatPaginator;  
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   isSmallScreen: boolean = false;
 
   constructor(

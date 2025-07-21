@@ -20,10 +20,10 @@ export class SupplierService {
 
   public getAll(): Observable<ResponseDTO<SupplierResponseDTO[]>> {
       return this.httpClient.get<ResponseDTO<SupplierResponseDTO[]>>(
-        `${this.apiURl}`
+        `${this.apiURl}/list`
       );
     }
-  
+
   public create(
       entity: SupplierRequestDTO
     ): Observable<ResponseDTO<SupplierResponseDTO>> {
@@ -32,7 +32,7 @@ export class SupplierService {
         entity
       );
     }
-  
+
     public update(
      entity: SupplierRequestDTO,
       id: number

@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <div [formGroup]="supplierForm">
+  <div [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
     <div class="form-row">
       <!-- Nombre Empresa -->
       <div class="form-field">
@@ -56,33 +56,48 @@
       </div>
     </div>
 
-    <div class="form-row">
-      <!-- Email -->
-      <div class="form-field">
-        <label>Email</label>
-        <mat-form-field appearance="outline" class="w-100">
-          <input matInput type="email" formControlName="email" />
-          <mat-error *ngIf="supplierForm.get('email')?.hasError('required')">
-            El email es obligatorio
-          </mat-error>
-          <mat-error *ngIf="supplierForm.get('email')?.hasError('email')">
-            Ingresa un email válido
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </div>
+   <div class="form-row">
+  <!-- Email -->
+  <div class="form-field">
+    <label>Email</label>
+    <mat-form-field appearance="outline" class="w-100">
+      <input matInput type="email" formControlName="email" />
+      <mat-error *ngIf="supplierForm.get('email')?.hasError('required')">
+        El email es obligatorio
+      </mat-error>
+      <mat-error *ngIf="supplierForm.get('email')?.hasError('email')">
+        Ingresa un email válido
+      </mat-error>
+    </mat-form-field>
+  </div>
 
+  <!-- Tipo de proveedor -->
+  <div class="form-field">
+    <label>Tipo de proveedor</label>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-select formControlName="supplierType">
+        <mat-option *ngFor="let type of supplierTypes" [value]="type.id">
+          {{ type.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="supplierForm.get('supplierType')?.hasError('required')">
+        El tipo de proveedor es obligatorio
+      </mat-error>
+    </mat-form-field>
+  </div>
+</div>
     <div class="itg-button-group">
-      <button mat-flat-button class="itg-cancel-button" (click)="onCancel()">
+      <button mat-flat-button class="itg-cancel-button" type="button" (click)="onCancel()">
         Cancelar
       </button>
       <button
         mat-flat-button
         class="itg-primary-button"
+        type="submit"
         (click)="onSubmit()"
-        [disabled]="isSubmitting"
-      >
+        [disabled]="isSubmitting">
         {{ supplierId != 0 ? 'Actualizar' : 'Crear' }}
+          <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
       </button>
     </div>
   </div>

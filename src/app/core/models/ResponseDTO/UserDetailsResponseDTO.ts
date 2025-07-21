@@ -1,6 +1,6 @@
   import { MenuResponseDTO } from "./MenuResponseDTO";
   import { PrivilegeResponseDTO } from "./PrivilegeResponseDTO";
-  import { RoleDetailsResponseDTO } from "./RoleDetailsResponseDTO";
+  import { RoleDetailResponseDTO } from "./RoleDetailsResponseDTO";
 
 export interface UserDetailsResponseDTO {
       id: number;
@@ -13,7 +13,7 @@ export interface UserDetailsResponseDTO {
       isLoggedIn: boolean,
       active: boolean,
       suspended: boolean,
-      roles: RoleDetailsResponseDTO[],
+      roles: RoleDetailResponseDTO[],
       privileges: PrivilegeResponseDTO[],
       menus: MenuResponseDTO[]
 }

@@ -30,6 +30,13 @@
     <div class="custom-table-wrapper">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
 
+        <!-- Tipo de proveedor -->
+        <ng-container matColumnDef="supplierType">
+          <th mat-header-cell *matHeaderCellDef>Tipo de proveedor</th>
+          <td mat-cell *matCellDef="let s">{{ s.supplierType?.name }}</td>
+        </ng-container>
+
+
         <!-- Nombre comercial -->
         <ng-container matColumnDef="businessName">
           <th mat-header-cell *matHeaderCellDef>Nombre</th>
