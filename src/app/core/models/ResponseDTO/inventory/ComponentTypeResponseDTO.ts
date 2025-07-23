@@ -1,4 +1,4 @@
 export interface ComponentTypeResponseDTO {
-  id: number;
-  description: string;
+    id: number;
+    description: string;
 }

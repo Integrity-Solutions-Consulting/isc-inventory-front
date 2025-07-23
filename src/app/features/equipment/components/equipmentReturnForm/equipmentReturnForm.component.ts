@@ -38,6 +38,7 @@ import { ModalDialogService } from '../../../../core/services/modals/modalDialog
 import { validateHorizontalPosition } from '@angular/cdk/overlay';
 import { EquipmentAssignmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentAssignmentDetailResponseDTO';
 import { EquipmentRevokeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRevokeRequestDTO';
+import { ConditionResponseDTO } from '../../../../core/models/ResponseDTO/inventory/ConditionResponseDTO';
 
 @Component({
   selector: 'app-equipmentReturnForm',
@@ -62,6 +63,10 @@ import { EquipmentRevokeRequestDTO } from '../../../../core/models/RequestDTO/in
 export class EquipmentReturnFormComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   loading = true;
+
+  conditions: ConditionResponseDTO[] = [];
+  conditionFilterCtrl = new FormControl();
+  filteredConditions: ConditionResponseDTO[] = [];
 
   equipmentReturnForm!: FormGroup;
   entityId: number = 0;

@@ -11,7 +11,7 @@
     <div class="form-row">
       <!-- Nombre Empresa -->
       <div class="form-field">
-        <label>Nombre Empresa</label>
+        <label>Nombre Empresa <span class="required-asterisk">*</span> </label>
         <mat-form-field appearance="outline" class="w-100">
           <input matInput formControlName="businessName" />
           <mat-error *ngIf="supplierForm.get('businessName')?.hasError('required')">
@@ -22,7 +22,7 @@
 
       <!-- RUC -->
       <div class="form-field">
-        <label>RUC</label>
+        <label>RUC <span class="required-asterisk">*</span> </label>
         <mat-form-field appearance="outline" class="w-100">
           <input matInput formControlName="taxId" />
           <mat-error *ngIf="supplierForm.get('taxId')?.hasError('required')">
@@ -35,7 +35,7 @@
     <div class="form-row">
       <!-- Dirección -->
       <div class="form-field">
-        <label>Dirección</label>
+        <label>Dirección <span class="required-asterisk">*</span> </label>
         <mat-form-field appearance="outline" class="w-100">
           <input matInput formControlName="address" />
           <mat-error *ngIf="supplierForm.get('address')?.hasError('required')">
@@ -46,7 +46,7 @@
 
       <!-- Teléfono -->
       <div class="form-field">
-        <label>Teléfono</label>
+        <label>Teléfono <span class="required-asterisk">*</span> </label>
         <mat-form-field appearance="outline" class="w-100">
           <input matInput formControlName="phone" />
           <mat-error *ngIf="supplierForm.get('phone')?.hasError('required')">
@@ -56,20 +56,21 @@
       </div>
     </div>
 
-   <div class="form-row">
-  <!-- Email -->
-  <div class="form-field">
-    <label>Email</label>
-    <mat-form-field appearance="outline" class="w-100">
-      <input matInput type="email" formControlName="email" />
-      <mat-error *ngIf="supplierForm.get('email')?.hasError('required')">
-        El email es obligatorio
-      </mat-error>
-      <mat-error *ngIf="supplierForm.get('email')?.hasError('email')">
-        Ingresa un email válido
-      </mat-error>
-    </mat-form-field>
-  </div>
+    <div class="form-row">
+      <!-- Email -->
+      <div class="form-field">
+        <label>Email <span class="required-asterisk">*</span> </label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput type="email" formControlName="email" />
+          <mat-error *ngIf="supplierForm.get('email')?.hasError('required')">
+            El email es obligatorio
+          </mat-error>
+          <mat-error *ngIf="supplierForm.get('email')?.hasError('email')">
+            Ingresa un email válido
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
 
   <!-- Tipo de proveedor -->
   <div class="form-field">
@@ -101,4 +102,3 @@
       </button>
     </div>
   </div>
-</div>

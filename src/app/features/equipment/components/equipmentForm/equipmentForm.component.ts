@@ -13,12 +13,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { FormService } from '../../../../core/services/modals/form/form.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { forkJoin, Subject, takeUntil } from 'rxjs';
+import { forkJoin, lastValueFrom, Subject, takeUntil } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ComponentTypeResponseDTO } from '../../../../core/models/ResponseDTO/inventory/ComponentTypeResponseDTO';
 import { CompanyResponseDTO } from '../../../../core/models/ResponseDTO/inventory/CompanyResponseDTO';
@@ -31,6 +31,7 @@ import { EquipmentCategoriesService } from '../../services/equipmentCategories/e
 import { EquipmentCategoryResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentCategoryResponseDTO';
 import { EquipmentRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRequestDTO';
 import { EquipmentService } from '../../services/equipment/equipment.service';
+import { ComponentTypeRequestDTO } from '../../../../core/models/RequestDTO/inventory/ComponentTypeRequestDTO';
 
 @Component({
   selector: 'app-equipmentForm',
@@ -161,22 +162,76 @@ filterCategories() {
 
 filterComponents() {
   const search = this.componentFilterCtrl.value?.toLowerCase() || '';
-  this.filteredComponents = this.components.filter(c =>
-    c.description.toLowerCase().includes(search)
-  );
-}
+  let currentFiltered = this.components.filter((c) =>
+      c.description.toLowerCase().includes(search)
+    ); 
+    const hasExactMatch = this.components.some(
+      (c) => c.description.toLowerCase() === search
+    );   // If there's no exact match and the search term is not empty, add the 'create new' option
+    if (!hasExactMatch && search.trim()) {
+      const createNewOption: ComponentTypeResponseDTO = {
+        id: -1, // Use -1 as a temporary ID for new components
+        description: `Crear nuevo: "${search.trim().toUpperCase()}"`,
+      };
+      this.filteredComponents = [...currentFiltered, createNewOption];
+    } else { this.filteredComponents = currentFiltered;
+    }
+  }
 
+  async onComponentSelect(event: MatSelectChange, characteristicIndex: number) {
+    const selectedId = event.value;
+    if (selectedId === -1) {
+      // User selected "Crear nuevo"
+      const descriptionToCreate = this.componentFilterCtrl.value?.trim().toUpperCase() || '';
+      if (!descriptionToCreate || descriptionToCreate.includes('CREAR NUEVO: "')) {
+        // Prevent creating "Crear nuevo: " as a component
+        // Or if the search box is empty when 'create new' option is selected
+        this.characteristics.at(characteristicIndex).get('component')?.setValue(null); // Clear the selection
+        this.formService.error({ message: 'Debe ingresar un nombre válido para el nuevo componente.' });
+        return;
+      }
+      const newComponentRequest: ComponentTypeRequestDTO = {
+        description: descriptionToCreate,
+      };
+      try {
+        const response = await lastValueFrom(
+          this.equipmentComponentService.save(newComponentRequest)
+        );
+        if (response && response.data) {
+          // Add the newly created component to the main 'components' list
+          this.components.push(response.data);
+          // Update the filtered list as well
+          this.filterComponents();
+          // Set the actual ID of the newly created component to the form control
+          this.characteristics
+            .at(characteristicIndex)
+            .get('component')
+            ?.setValue(response.data.id);
+          // Optionally, clear the filter control after creation
+          this.componentFilterCtrl.setValue('');
+          this.formService.success('Componente creado exitosamente.');
+        } else {
+          throw new Error('No se recibió la data del nuevo componente.');
+        }
+      } catch (error: any) {
+        console.error('Error al crear nuevo componente:', error);
+        this.formService.error(error.error?.message || 'Error al crear el componente.');
+        // If creation fails, reset the form control for the characteristic
+        this.characteristics.at(characteristicIndex).get('component')?.setValue(null);
+      }
+    }
+  }
 
   initForm() {
     this.equipmentForm = this.fb.group({
       condition: [null, Validators.required],
       company: [null, Validators.required],
       categoryId: [null],
-      categoryName: [''],
-      brand: [''],
-      model: [''],
-      serialNumber: [''],
-      itemCode: [''],
+      categoryName: ['', Validators.required],
+      brand: ['', Validators.required],
+      model: ['', Validators.required],
+      serialNumber: ['', Validators.required],
+      itemCode: ['', Validators.required],
       equipmentCharacteristics: this.fb.array([]),
       isCreatingNewCategory: [false],
     });
@@ -223,7 +278,6 @@ loadData() {
 
     // Si deseas deshabilitar campos cuando estás editando
     this.entityId = (entityToEdit as any).id; // Asegúrate de que venga el id si es necesario
-
     this.toggleCategoryValidators(); // ← importante para actualizar validaciones
   }
 }
@@ -279,7 +333,6 @@ loadData() {
     if (this.equipmentForm.invalid) return;
 
     this.isSubmitting = true;
-
     const formValue = this.equipmentForm.value;
 
     const requestPayload: EquipmentRequestDTO = {
@@ -303,7 +356,7 @@ loadData() {
         ? {}
         : { categoryId: formValue.categoryId }),
     };
-
+    
      if (this.entityId == 0) {
       this.equipmentService.save(requestPayload).subscribe({
         next: (resp) => {

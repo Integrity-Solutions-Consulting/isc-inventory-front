@@ -9,6 +9,8 @@ export class FormService {
   private _modalIcon = signal('');
   private _modalContent = signal<Type<unknown> | null>(null);
   private _modalData = signal<any>(null);
+  private _successMessage = signal<string | null>(null);
+  private _onSuccessCallback: ((message: string) => void) | null = null;
 
   private _onCloseCallback: ((result?: any) => void) | null = null;
   private _onErrorCallback: ((error: any) => void) | null = null;
@@ -18,6 +20,7 @@ export class FormService {
   readonly modalIcon = computed(() => this._modalIcon());
   readonly modalContent = computed(() => this._modalContent());
   readonly modalData = computed(() => this._modalData());
+  readonly successMessage = computed(() => this._successMessage());
 
   open(
     title: string,
@@ -58,6 +61,15 @@ export class FormService {
     if (this._onErrorCallback) {
       this._onErrorCallback(error);
       this._onErrorCallback = null;
+    }
+    this._onCloseCallback = null;
+  }
+
+  success(message: string) {
+    this._successMessage.set(message);
+    if (this._onSuccessCallback) {
+      this._onSuccessCallback(message);
+      this._onSuccessCallback = null;
     }
     this._onCloseCallback = null;
   }

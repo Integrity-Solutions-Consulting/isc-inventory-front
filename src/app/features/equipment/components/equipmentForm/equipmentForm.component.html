@@ -132,10 +132,14 @@
     <!-- Datos del equipo -->
     <div class="form-row">
       <div class="form-field">
-        <label>Marca</label>
+        <label>Marca <span class="required-asterisk">*</span></label>
         <mat-form-field appearance="outline" class="w-100">
           <input matInput formControlName="brand"
           (input)="toUpperCaseField('brand')" />
+          <mat-error
+            *ngIf="equipmentForm.get('brand')?.hasError('required')">
+            El nombre de la marca es obligatorio
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="form-field">
@@ -143,6 +147,9 @@
         <mat-form-field appearance="outline" class="w-100">
           <input matInput formControlName="model"
           (input)="toUpperCaseField('model')" />
+          <mat-error *ngIf="equipmentForm.get('model')?.hasError('required') && equipmentForm.get('model')?.touched">
+            El nombre del modelo es obligatorio
+          </mat-error>
         </mat-form-field>
       </div>
     </div>
@@ -152,12 +159,22 @@
         <label>Número de serie <span class="required-asterisk">*</span></label>
         <mat-form-field appearance="outline" class="w-100">
           <input matInput formControlName="serialNumber" />
+          <mat-error
+            *ngIf="equipmentForm.get('serialNumber')?.hasError('required')"
+          >
+            El número de serie es obligatorio
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="form-field">
         <label>Código del ítem <span class="required-asterisk">*</span></label>
         <mat-form-field appearance="outline" class="w-100">
           <input matInput formControlName="itemCode" />
+          <mat-error
+            *ngIf="equipmentForm.get('serialNumber')?.hasError('required')"
+          >
+            El código del ítem es obligatorio
+          </mat-error>
         </mat-form-field>
       </div>
     </div>
@@ -172,14 +189,16 @@
         <div class="form-field">
           <label>Componente <span class="required-asterisk">*</span></label>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-select formControlName="component" required>
+            <mat-select formControlName="component" required
+            (selectionChange)="onComponentSelect($event, i)">
+            <mat-option>
               <ngx-mat-select-search
                 [formControl]="componentFilterCtrl"
                 placeholderLabel="Buscar componente..."
                 noEntriesFoundLabel="No se encontraron componentes"
-              >
-              </ngx-mat-select-search>
-
+              ></ngx-mat-select-search>
+              </mat-option>
+              
               <mat-option
                 *ngFor="let comp of filteredComponents"
                 [value]="comp.id"
@@ -187,9 +206,8 @@
                 {{ comp.description }}
               </mat-option>
             </mat-select>
-
-            <mat-error
-              *ngIf="equipmentForm.get('categoryName')?.hasError('required')"
+            <mat-error *ngIf="equipmentForm.get('component')?.hasError('required') &&
+              characteristics.controls[i].get('component')?.touched"
             >
               El componente es obligatorio
             </mat-error>
@@ -200,6 +218,11 @@
           <label>Descripción <span class="required-asterisk">*</span></label>
           <mat-form-field appearance="outline" class="w-100">
             <input matInput formControlName="description" />
+              <mat-error
+              *ngIf="equipmentForm.get('description')?.hasError('required')"
+            >
+              El número de serie es obligatorio
+            </mat-error>
           </mat-form-field>
         </div>
 
