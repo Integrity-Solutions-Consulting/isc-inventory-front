@@ -25,6 +25,11 @@ export class AssaingmentService {
     >(`${this.apiUrl}/details`);
   }
 
+  public getAvailableEquipmentIds(): Observable<ResponseDTO<number[]>>
+  {
+    return this.httpClient.get<ResponseDTO<number[]>>(`${this.apiUrl}/available-ids`);
+  }
+
   public save(
     entity: EquipmentAssignmentRequestDTO
   ): Observable<ResponseDTO<EquipmentAssignmentDetailResponseDTO>> {

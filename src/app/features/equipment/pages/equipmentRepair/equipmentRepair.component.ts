@@ -28,6 +28,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDivider } from '@angular/material/divider';
 import { EquipmentService } from '../../services/equipment/equipment.service';
+import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairStatusChangeRequestDTO';
 
 @Component({
   selector: 'app-equipmentRepair',
@@ -67,7 +68,7 @@ export class EquipmentRepairComponent implements OnInit {
 
   equipmentStatuses = [
     { id: 1, name: 'Disponible' },
-    { id: 4, name: 'En Revisión' },
+    { id: 3, name: 'En reparación' },
     { id: 6, name: 'Reparado' },
     { id: 7, name: 'Fuera de Servicio' },
   ];
@@ -154,16 +155,26 @@ export class EquipmentRepairComponent implements OnInit {
     });
   }
 
-  setRepairStatus(equipmentId: number, status: number) {
-    this.equipmentService.changeStatus(status, equipmentId).subscribe({
+  setRepairStatus(equipmentId: number, status: number, idRepair:number) {
+
+    const equipmentRepairStatusChange: EquipmentRepairStatusChangeRequestDTO = {
+    statusChange: status,
+    idRepair: idRepair
+  };
+
+    this.equipmentService.changeStatus(equipmentRepairStatusChange,equipmentId).subscribe({
       next: (response) => {
         const newStatus = this.equipmentStatuses.find((s) => s.id === status);
 
         // Recorre todos los elementos que coincidan con equipmentId
         this.dataSource.data.forEach((item) => {
           if (item.equipment === equipmentId) {
-            if (newStatus) {
-              item.equipmentStatus = {
+
+            const newStatus = this.equipmentStatuses.find((s) => s.id === status);
+
+            if (newStatus&&newStatus?.id==3)
+              {
+              item.repairStatus = {
                 id: newStatus.id,
                 name: newStatus.name,
               };

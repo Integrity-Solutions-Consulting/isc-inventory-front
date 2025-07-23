@@ -101,10 +101,10 @@
           <td mat-cell *matCellDef="let item">
             <span
               class="status-container"
-              [ngClass]="getStatusClasses(item.equipmentStatus.name)"
+              [ngClass]="getStatusClasses(item.repairStatus.name)"
             >
               <span class="status-dot"></span>
-              {{ item.equipmentStatus.name }}
+              {{ item.repairStatus.name }}
             </span>
           </td>
         </ng-container>
@@ -126,20 +126,20 @@
               <!-- Solo se puede marcar como 'En Revisión' si no está ya en revisión -->
               <button
                 mat-menu-item
-                (click)="setRepairStatus(item.equipment, 4)"
-                *ngIf="item.equipmentStatus.id !== 4"
-                [disabled]="item.equipmentStatus.id == 1 || item.equipmentStatus.id == 2"
+                (click)="setRepairStatus(item.equipment, 3, item.id)"
+                *ngIf="item.repairStatus !== 4"
+                [disabled]="item.repairStatus.id == 1 || item.repairStatus.id == 2"
               >
                 <mat-icon>visibility</mat-icon>
-                <span>Marcar como En Revisión</span>
+                <span>Marcar como En Reparación</span>
               </button>
 
-              <!-- Solo se puede marcar como 'Reparado' si está en revisión -->
+              <!-- Solo se puede marcar como 'Reparado' si está en reparacion -->
               <button
                 mat-menu-item
-                (click)="setRepairStatus(item.equipment, 6)"
+                (click)="setRepairStatus(item.equipment, 6,item.id)"
                 [disabled]="
-                  item.equipmentStatus.id !== 4 && item.equipmentStatus.id !== 3
+                  item.repairStatus.id !== 3
                 "
               >
                 <mat-icon>build_circle</mat-icon>
@@ -149,8 +149,8 @@
               <!-- Solo se puede marcar como 'Disponible' si ya está reparado -->
               <button
                 mat-menu-item
-                (click)="setRepairStatus(item.equipment, 1)"
-                [disabled]="item.equipmentStatus.id  !== 6"
+                (click)="setRepairStatus(item.equipment, 1,item.id)"
+                [disabled]="item.repairStatus.id  !== 6"
               >
                 <mat-icon>check_circle</mat-icon>
                 <span>Marcar como Disponible</span>
@@ -159,7 +159,7 @@
               <!-- 'Fuera de servicio' siempre está disponible -->
               <button
                 mat-menu-item
-                (click)="setRepairStatus(item.equipment, 7)"
+                (click)="setRepairStatus(item.equipment, 7,item.id)"
               >
                 <mat-icon>highlight_off</mat-icon>
                 <span>Fuera de servicio</span>

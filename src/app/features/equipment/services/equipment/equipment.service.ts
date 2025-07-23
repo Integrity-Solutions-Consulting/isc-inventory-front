@@ -12,6 +12,7 @@ import { InvoiceDetailRequestDTO } from '../../../../core/models/RequestDTO/inve
 import { InvoiceDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/InvoiceDetailResponseDTO';
 import {WarrantTypeDetailResponseDTO} from '../../../../core/models/ResponseDTO/inventory/WarrantTypeDetailResponseDTO '
 import { InvoiceRequestDTO } from '../../../../core/models/RequestDTO/inventory/InvoiceRequestDTO';
+import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairStatusChangeRequestDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -80,13 +81,10 @@ export class EquipmentService {
     );
   }
 
-    public changeStatus(
-    status: number,
-    id: number
-  ): Observable<ResponseDTO<MessageResponseDTO[]>> {
+    public changeStatus(entity: EquipmentRepairStatusChangeRequestDTO, id: number  ): Observable<ResponseDTO<MessageResponseDTO[]>> {
     return this.httpClient.put<ResponseDTO<MessageResponseDTO[]>>(
       `${this.apiUrl}/changeStatus/${id}`,
-      status
+      entity
     );
   }
 

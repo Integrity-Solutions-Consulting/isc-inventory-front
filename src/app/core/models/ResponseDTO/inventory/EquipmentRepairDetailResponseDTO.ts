@@ -3,7 +3,7 @@ import { EquipmentStatusResponseDTO } from "./EquipmentStatusResponseDTO";
 export interface EquipmentRepairDetailResponseDTO {
   id: number;
   equipment: number;
-  equipmentStatus: EquipmentStatusResponseDTO;
+  repairStatus: EquipmentStatusResponseDTO;
   serialNumber: string;
   repairDate: string; // O Date si lo vas a convertir
   description: string;

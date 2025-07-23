@@ -31,6 +31,7 @@ import { EquipmentAssignmentRequestDTO } from '../../../../core/models/RequestDT
 import { AssaingmentService } from '../../services/assaignment/assaingment.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import moment from 'moment';
+import { EquipmentAssignmentComponent } from '../../pages/equipmentAssignment/equipmentAssignment.component';
 
 @Component({
   selector: 'app-equipmentAssignmentForm',
@@ -59,8 +60,9 @@ export class EquipmentAssignmentFormComponent implements OnInit, OnDestroy {
   employeeFilterCtrl: FormControl = new FormControl(); // 🔍
 
   equipments: EquipmentResponseDTO[] = [];
+  availableEquipmentId:number[]=[];
   equipmentFilterCtrl: FormControl = new FormControl(); // 🔍 Filtro de equipo
-  filteredEquipments: EquipmentResponseDTO[] = []; 
+  filteredEquipments: EquipmentResponseDTO[] = [];
 
   loading: boolean = true;
   isSubmitting = false;
@@ -68,7 +70,7 @@ export class EquipmentAssignmentFormComponent implements OnInit, OnDestroy {
   assignmentForm!: FormGroup;
   entityId: number = 0;
 
- 
+
   private _onDestroy = new Subject<void>();
 
   constructor(
@@ -84,6 +86,7 @@ export class EquipmentAssignmentFormComponent implements OnInit, OnDestroy {
     forkJoin({
       employees: this.employeeService.getAll(),
       equipments: this.equipmentService.getAll(),
+      availableIds: this.equipmentAssignmentService.getAvailableEquipmentIds()
     }).subscribe({
       next: (resp) => {
         this.employees = resp.employees.data;
@@ -94,7 +97,8 @@ export class EquipmentAssignmentFormComponent implements OnInit, OnDestroy {
           .subscribe(() => this.filterEmployees());
 
         this.equipments = resp.equipments.data;
-        this.filteredEquipments = [...this.equipments];
+        this.availableEquipmentId = resp.availableIds.data;
+        this.filteredEquipments = this.getAvailableEquipments();
         // Escuchar filtro de equipos
         this.equipmentFilterCtrl.valueChanges
           .pipe(takeUntil(this._onDestroy))
@@ -111,6 +115,12 @@ export class EquipmentAssignmentFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Método para filtrar solo equipos disponibles
+  getAvailableEquipments(): EquipmentResponseDTO[] {
+    return this.equipments.filter(equipment =>
+      this.availableEquipmentId.includes(equipment.id)
+    );
+  }
   ngOnDestroy() {
     this._onDestroy.next();
     this._onDestroy.complete();
@@ -124,11 +134,17 @@ export class EquipmentAssignmentFormComponent implements OnInit, OnDestroy {
   }
 
   filterEquipments() {
-    const search = this.equipmentFilterCtrl.value?.toLowerCase() || '';
-    this.filteredEquipments = this.equipments.filter(eq =>
-      (`${eq.category} ${eq.brand} ${eq.model} ${eq.serialNumber}`).toLowerCase().includes(search)
-    );
-  }
+  const search = this.equipmentFilterCtrl.value?.toLowerCase() || '';
+
+  this.filteredEquipments = this.equipments.filter(eq => {
+    // Verificamos que esté en availableEquipmentIds Y coincida con la búsqueda
+    const isAvailable = this.availableEquipmentId.includes(eq.id);
+    if (!isAvailable) return false;
+
+    const equipmentText = `${eq.category} ${eq.brand} ${eq.model} ${eq.serialNumber}`.toLowerCase();
+    return equipmentText.includes(search);
+  });
+}
 
   loadData() {
     const entityToEdit = this.formService.modalDataValue;

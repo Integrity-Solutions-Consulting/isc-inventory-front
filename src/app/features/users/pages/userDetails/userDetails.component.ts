@@ -41,6 +41,8 @@ export class UserDetailsComponent implements OnInit {
   roleDetails?: RoleDetailResponseDTO;
   loading: boolean = true;
 
+  Math = Math;
+
 
   constructor(
     private route: ActivatedRoute,
