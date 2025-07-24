@@ -450,10 +450,11 @@ mat-card-actions {
 
 /*Configuracion para graficos pie en legend*/
 .chart-legend .legend-wrap {
-  width: 8rem !important;
+  width: 9rem !important;
   .legend-labels {
     background: none;
-
+    max-height: unset;
+    width: unset;
     .legend-label-text {
       color: var(--itg-text);
     }

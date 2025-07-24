@@ -15,10 +15,11 @@
   </mat-form-field>
 </div>
 <div class="chart-container">
+  @if (lineData()) {
   <ngx-charts-line-chart
-    [view]="view"
+    [view]="view()"
     [scheme]="'nightLights'"
-    [results]="lineData"
+    [results]="lineData()"
     [gradient]="true"
     [xAxis]="true"
     [yAxis]="true"
@@ -39,4 +40,5 @@
       </div>
     </ng-template>
   </ngx-charts-line-chart>
+  }
 </div>

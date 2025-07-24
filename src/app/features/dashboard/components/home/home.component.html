@@ -18,7 +18,9 @@
   </div>
   <div class="chart-row">
     <div class="chart-box">
-      <app-verticalBarChart />
+      @if(barData()){
+      <app-verticalBarChart [data]="barData()" />
+      }
     </div>
     <div class="chart-box">
       <app-pieChart />
@@ -30,4 +32,3 @@
     </div>
   </div>
 </div>
-

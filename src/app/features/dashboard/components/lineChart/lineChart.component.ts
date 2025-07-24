@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  effect,
+  input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LineChartModule } from '@swimlane/ngx-charts';
 import {
@@ -11,6 +19,11 @@ import {
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { DashboardEquipmentAssignedByCategoryResponseDTO } from '../../../../core/models/ResponseDTO/inventory/DashboardEquipmentAssignedByCategoryResponseDTO ';
+import { EquipmentCategoriesService } from '../../../equipment/services/equipmentCategories/equipmentCategories.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
+import { DashboardAcquisitionResponseDTO } from '../../../../core/models/ResponseDTO/inventory/DashboardAcquisitionResponseDTO';
+import { fromEvent } from 'rxjs';
 @Component({
   selector: 'app-lineChart',
   standalone: true,
@@ -25,63 +38,83 @@ import { FormsModule } from '@angular/forms';
   ],
 })
 export class LineChartComponent implements OnInit, AfterViewInit {
-  curve: any = curveMonotoneX;
+  data = signal<DashboardAcquisitionResponseDTO[]>([]); // Input signal for data
+  readonly barChartData = computed(() =>
+    this.data().map((item) => ({
+      name: item.nombreMes,
+      value: item.valorTotalAdquisiciones,
+    }))
+  );
 
-  view: [number, number] = [0, 400];
+  resizeWidth = signal<number>(0);
+  readonly view = computed(() => [this.resizeWidth(), 400] as [number, number]);
 
-  years: number[] = [2023, 2024, 2025];
-  selectedYear: number = 2024;
+  years: number[] = [];
+  selectedYear = new Date().getFullYear();
 
-  lineData: any[] = [];
+  lineData = signal<any[]>([]); // Usar signal para reactividad
 
   colorScheme = {
     domain: ['#5AA454'],
   };
+  curve: any = curveMonotoneX;
+
+  constructor(
+    private dashboardService: DashboardService,
+    private equipmentCategoriesService: EquipmentCategoriesService
+  ) {}
 
   ngOnInit(): void {
-    this.loadData(this.selectedYear);
+    const currentYear = new Date().getFullYear();
+    this.years = Array.from({ length: 8 }, (_, i) => currentYear - 4 + i);
+
+    this.selectedYear = currentYear;
+    this.dashboardService.getLine(this.selectedYear).subscribe({
+      next: (response) => {
+        this.data.set(response.data);
+        this.loadData(this.selectedYear);
+      },
+      error: (error) => {
+        console.error('Error fetching line chart data:', error);
+      },
+    });
   }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.updateView();
-    }, 0);
-    window.addEventListener('resize', () => this.updateView());
-  }
+      const width =
+        (document.querySelector('.chart-container') as HTMLElement)
+          ?.clientWidth || 400;
+      this.resizeWidth.set(width);
+    });
 
-  updateView(): void {
-    const width = (document.querySelector('.chart-container') as HTMLElement)
-      .clientWidth;
-
-    this.view = [width, 400]; // ajusta el alto si lo deseas
+    fromEvent(window, 'resize').subscribe(() => {
+      const width =
+        (document.querySelector('.chart-container') as HTMLElement)
+          ?.clientWidth || 400;
+      this.resizeWidth.set(width);
+    });
   }
 
   onYearChange(event: any): void {
-    this.loadData(+event.target.value);
+    this.selectedYear = +event.value;
+    this.dashboardService.getLine(this.selectedYear).subscribe({
+      next: (response) => {
+        this.data.set(response.data);
+        this.loadData(this.selectedYear);
+      },
+      error: (error) => {
+        console.error('Error fetching line chart data:', error);
+      },
+    });
   }
 
   loadData(year: number): void {
-    this.selectedYear = year;
-
-    // Datos ficticios (puedes reemplazarlos por los del backend luego)
-    this.lineData = [
+    this.lineData.set([
       {
         name: `Año ${year}`,
-        series: [
-          { name: 'Enero', value: 120 },
-          { name: 'Febrero', value: 150 },
-          { name: 'Marzo', value: 180 },
-          { name: 'Abril', value: 75 },
-          { name: 'Mayo', value: 200 },
-          { name: 'Junio', value: 95 },
-          { name: 'Julio', value: 160 },
-          { name: 'Agosto', value: 130 },
-          { name: 'Septiembre', value: 90 },
-          { name: 'Octubre', value: 170 },
-          { name: 'Noviembre', value: 145 },
-          { name: 'Diciembre', value: 190 },
-        ],
+        series: this.barChartData(),
       },
-    ];
+    ]);
   }
 }

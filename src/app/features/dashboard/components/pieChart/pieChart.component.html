@@ -8,22 +8,25 @@
       [(ngModel)]="selectedCategory"
       (selectionChange)="onCategoryChange()"
     >
-      <mat-option *ngFor="let cat of categories" [value]="cat">
-        {{ cat }}
+      <mat-option *ngFor="let cat of categories()" [value]="cat">
+        {{ cat.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
 </div>
 
+@if(chartData()){
 <ngx-charts-pie-chart
-  [results]="pieData"
+  [results]="chartData()"
   [legend]="true"
   [labels]="false"
   [legendPosition]="legendPosition"
   [doughnut]="true"
   [explodeSlices]="false"
   [scheme]="'cool'"
-  [view]="[300, 200 ]"
+  [view]="[400, 200 ]"
   [tooltipDisabled]="true"
 >
 </ngx-charts-pie-chart>
+
+}

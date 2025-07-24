@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { FormsModule } from '@angular/forms';
 import { LegendPosition } from '@swimlane/ngx-charts';
+import { DashboardEquipmentStatusSummaryResponseDTO } from '../../../../core/models/ResponseDTO/inventory/DashboardEquipmentStatusSummaryResponseDTO ';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
+import { EquipmentCategoriesService } from '../../../equipment/services/equipmentCategories/equipmentCategories.service';
+import { EquipmentCategoryResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentCategoryResponseDTO';
 
 @Component({
   selector: 'app-pieChart',
@@ -20,41 +24,48 @@ import { LegendPosition } from '@swimlane/ngx-charts';
   styleUrls: ['./pieChart.component.css'],
 })
 export class PieChartComponent implements OnInit {
-  constructor() {}
+  data = signal<DashboardEquipmentStatusSummaryResponseDTO[]>([]);
+  readonly chartData = computed(() =>
+    this.data()
+      .filter((item) => item.equipmentCount > 0)
+      .map((item) => ({
+        name: item.statusName,
+        value: item.equipmentCount,
+      }))
+  );
 
-  ngOnInit() {}
+  selectedCategoryId = 1;
+  categories = signal<EquipmentCategoryResponseDTO[]>([]);
+  selectedCategory: EquipmentCategoryResponseDTO | undefined;
+
+  constructor(
+    private dashboardService: DashboardService,
+    private equipmentCategoriesService: EquipmentCategoriesService
+  ) {}
+
+  ngOnInit() {
+    this.equipmentCategoriesService.getAll().subscribe({
+      next: (response) => {
+        this.categories.set(response.data);
+        this.selectedCategory = this.categories()[0]; // Selecciona la primera categoría por defecto
+        this.dashboardService.getPie(this.selectedCategory.id).subscribe({
+          next: (response) => {
+            this.data.set(response.data);
+          },
+          error: (error) => {
+            console.error('Error fetching pie chart data:', error);
+          },
+        });
+      },
+      error: (error) => {
+        console.error('Error fetching equipment categories:', error);
+      },
+    });
+  }
 
   legendPosition: LegendPosition = LegendPosition.Right;
 
-  selectedCategory = 'Categoria A';
-
-  categories = ['Categoria A', 'Categoria B', 'Categoria C'];
-
-  // Datos ejemplo: estados por categoría
-  allData = {
-    'Categoria A': [
-      { name: 'Asignados', value: 45 },
-      { name: 'Disponibles', value: 50 },
-      { name: 'Reparación', value: 12 },
-      { name: 'Baja', value: 8 },
-    ],
-    'Categoria B': [
-      { name: 'Asignados', value: 20 },
-      { name: 'Disponibles', value: 70 },
-      { name: 'Reparación', value: 15 },
-      { name: 'Baja', value: 3 },
-    ],
-    'Categoria C': [
-      { name: 'Asignados', value: 10 },
-      { name: 'Disponibles', value: 30 },
-      { name: 'Reparación', value: 5 },
-      { name: 'Baja', value: 2 },
-    ],
-  };
-
-  pieData = this.allData[this.selectedCategory as keyof typeof this.allData];
-
- colorScheme: Color = {
+  colorScheme: Color = {
     name: 'customScheme',
     selectable: true,
     group: ScaleType.Ordinal,
@@ -62,6 +73,15 @@ export class PieChartComponent implements OnInit {
   };
 
   onCategoryChange() {
-    this.pieData = this.allData[this.selectedCategory as keyof typeof this.allData];
+    if (this.selectedCategory) {
+      this.dashboardService.getPie(this.selectedCategory?.id).subscribe({
+        next: (response) => {
+          this.data.set(response.data);
+        },
+        error: (error) => {
+          console.error('Error fetching pie chart data:', error);
+        },
+      });
+    }
   }
 }
