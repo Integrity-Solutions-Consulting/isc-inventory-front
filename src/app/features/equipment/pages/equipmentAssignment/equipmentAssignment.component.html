@@ -137,13 +137,13 @@
                 <span>Retornar</span>
               </button>
               <button
-                mat-menu-item
-                (click)="sendToRepair(item)"
-                [disabled]="!item.status || item.returnDate"
-              >
-                <mat-icon>build</mat-icon>
-                <span>Enviar a reparación</span>
-              </button>
+  mat-menu-item
+  (click)="sendToRepair(item)"
+  [disabled]="item.equipmentStatusId != 2"
+>
+  <mat-icon>build</mat-icon>
+  <span>Enviar a reparación</span>
+</button>
               <button
                 mat-menu-item
                 (click)="warningDelete(item)"

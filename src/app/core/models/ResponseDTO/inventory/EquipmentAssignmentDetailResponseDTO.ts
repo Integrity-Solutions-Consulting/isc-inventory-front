@@ -10,5 +10,7 @@ export interface EquipmentAssignmentDetailResponseDTO{
     assignmentDate: string,
     returnDate: string,
     status:boolean
+    statusId: number;
+
 
 }

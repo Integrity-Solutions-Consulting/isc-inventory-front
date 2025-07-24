@@ -31,6 +31,7 @@ import { MenuResponseDTO } from '../../../../core/models/ResponseDTO/MenuRespons
 import { PrivilegeResponseDTO } from '../../../../core/models/ResponseDTO/PrivilegeResponseDTO';
 import { RolesResponseDTO } from '../../../../core/models/ResponseDTO/RolesResponseDTO';
 import { UserRequestoDTO } from '../../../../core/models/RequestDTO/UserRequestDTO';
+import { UserResponseDTO } from '../../../../core/models/ResponseDTO/UserResponseDTO';
 @Component({
   selector: 'app-userForm',
   standalone: true,
@@ -53,8 +54,9 @@ import { UserRequestoDTO } from '../../../../core/models/RequestDTO/UserRequestD
 export class UserFormComponent implements OnInit, OnDestroy {
   selectedEmployee: EmployeeCatalogResponseDTO | null = null;
   employees: EmployeeCatalogResponseDTO[] = [];
+    availableEmployees: EmployeeCatalogResponseDTO[] = [];
   employeeFilterCtrl = new FormControl();
-  filteredEmployees: any[] = [];
+  filteredEmployees: EmployeeCatalogResponseDTO[] = [];
 
   menus: MenuResponseDTO[] = [];
   menuFilterCtrl = new FormControl();
@@ -91,13 +93,20 @@ export class UserFormComponent implements OnInit, OnDestroy {
     this.initForm();
     forkJoin({
       employees: this.employeeService.getAll(),
+      users: this.userService.getAll(),
       menus: this.menuService.getAll(),
       privileges: this.privilegeService.getAll(),
       roles: this.roleService.getAll(),
     }).subscribe({
       next: (resp) => {
         this.employees = resp.employees.data;
-        this.filteredEmployees = this.employees.slice();
+
+        const usersWithEmployeeId = resp.users.data.map((user: UserResponseDTO) => user.employeeId);
+        this.availableEmployees = this.employees.filter(emp=>
+           !usersWithEmployeeId.includes(emp.id)
+        );
+
+        this.filteredEmployees = this.availableEmployees.slice();
         this.employeeFilterCtrl.valueChanges
           .pipe(takeUntil(this._onDestroy))
           .subscribe(() => {
@@ -135,7 +144,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   filterEmployees() {
     const search = this.employeeFilterCtrl.value?.toLowerCase() || '';
-    this.filteredEmployees = this.employees.filter(emp =>
+    this.filteredEmployees = this.availableEmployees.filter(emp =>
       (`${emp.fullName} ${emp.identification}`.toLowerCase().includes(search))
     );
   }
@@ -190,7 +199,14 @@ export class UserFormComponent implements OnInit, OnDestroy {
           userToEdit.privileges?.map((p: PrivilegeResponseDTO) => p.id) || [],
         menuIds: userToEdit.menus?.map((m: MenuResponseDTO) => m.id) || [],
       });
+
      this.selectedEmployee = this.employees.find((emp) => emp.id === userToEdit.employeeId) || null;
+
+     if (this.selectedEmployee && !this.availableEmployees.find(emp => emp.id === this.selectedEmployee!.id)) {
+        this.availableEmployees.unshift(this.selectedEmployee);
+        this.filteredEmployees = this.availableEmployees.slice();
+      }
+
       this.userId = userToEdit.id;
     }
   }

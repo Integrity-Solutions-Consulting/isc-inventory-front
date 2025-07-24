@@ -199,7 +199,7 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
       }
     );
     /*
-    
+
     this.loading.show();
     this.equipmentAssingmentService.revoke(equipment.id).subscribe({
       next: (resp) => {

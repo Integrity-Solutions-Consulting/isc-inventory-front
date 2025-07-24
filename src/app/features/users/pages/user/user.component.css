@@ -68,3 +68,34 @@ button.mat-flat-button {
 ::ng-deep .mat-mdc-text-field-wrapper.search-input {
   flex: none !important;
 }
+
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot-active {
+  background-color: #4CAF50; /* Verde para activo */
+}
+
+.dot-inactive {
+  background-color: #F44336; /* Rojo para inactivo */
+}
+
+/* Asegurar que las filas tengan altura consistente */
+.mat-row {
+  height: auto !important;
+}
+
+.mat-cell {
+  padding: 8px 16px;
+}

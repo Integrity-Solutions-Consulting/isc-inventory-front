@@ -172,7 +172,7 @@ export class EquipmentRepairComponent implements OnInit {
 
             const newStatus = this.equipmentStatuses.find((s) => s.id === status);
 
-            if (newStatus&&newStatus?.id==3)
+            if (newStatus&&newStatus?.id!=1)
               {
               item.repairStatus = {
                 id: newStatus.id,

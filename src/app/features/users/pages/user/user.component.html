@@ -38,27 +38,27 @@
         <td mat-cell *matCellDef="let user">{{ user.email }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="active">
-        <th mat-header-cell *matHeaderCellDef>Estado</th>
-        <td mat-cell *matCellDef="let user">
-          <span
-            class="status-dot"
-            [ngClass]="user.active ? 'dot-active' : 'dot-inactive'"
-          ></span>
-          {{ user.active ? "Activo" : "Inactivo" }}
-        </td>
-      </ng-container>
+      <!-- Estado -->
+<ng-container matColumnDef="active">
+  <th mat-header-cell *matHeaderCellDef>Estado</th>
+  <td mat-cell *matCellDef="let user">
+    <div class="status-line">
+      <span class="status-dot" [ngClass]="user.active ? 'dot-active' : 'dot-inactive'"></span>
+      {{ user.active ? "Activo" : "Inactivo" }}
+    </div>
+  </td>
+</ng-container>
 
-      <ng-container matColumnDef="suspended">
-        <th mat-header-cell *matHeaderCellDef>Suspensión</th>
-        <td mat-cell *matCellDef="let user">
-          <span
-            class="status-dot"
-            [ngClass]="!user.suspended ? 'dot-active' : 'dot-inactive'"
-          ></span>
-          {{ user.suspended ? "Suspendido" : "Habilitado" }}
-        </td>
-      </ng-container>
+<!-- Suspensión -->
+<ng-container matColumnDef="suspended">
+  <th mat-header-cell *matHeaderCellDef>Suspensión</th>
+  <td mat-cell *matCellDef="let user">
+    <div class="status-line">
+      <span class="status-dot" [ngClass]="!user.suspended ? 'dot-active' : 'dot-inactive'"></span>
+      {{ user.suspended ? "Suspendido" : "Habilitado" }}
+    </div>
+  </td>
+</ng-container>
 
       <ng-container matColumnDef="roles">
         <th mat-header-cell *matHeaderCellDef>Roles</th>
