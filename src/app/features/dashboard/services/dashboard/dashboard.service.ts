@@ -14,8 +14,16 @@ export class DashboardService {
   constructor(private httpClient: HttpClient) {}
 
   public getAll(): Observable<ResponseDTO<any[]>> {
-    return this.httpClient.get<ResponseDTO<any[]>>(
-      `${this.apiUrl}/cards`
-    );
+    return this.httpClient.get<ResponseDTO<any[]>>(`${this.apiUrl}/cards`);
+  }
+
+  public getBar(): Observable<ResponseDTO<any[]>> {
+    return this.httpClient.get<ResponseDTO<any[]>>(`${this.apiUrl}/barChart`);
+  }
+  public getPie(): Observable<ResponseDTO<any[]>> {
+    return this.httpClient.get<ResponseDTO<any[]>>(`${this.apiUrl}/pieChart`);
+  }
+  public getLine(): Observable<ResponseDTO<any[]>> {
+    return this.httpClient.get<ResponseDTO<any[]>>(`${this.apiUrl}/lineChart`);
   }
 }

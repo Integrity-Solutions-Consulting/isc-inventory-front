@@ -34,5 +34,29 @@ export class HomeComponent implements OnInit {
         console.error('Error fetching dashboard data:', error);
       },
     });
+        this.dashboardService.getBar().subscribe({
+      next: (response) => {
+      console.log(response.data)
+      },
+      error: (error) => {
+        console.error('Error fetching dashboard data:', error);
+      },
+    });
+        this.dashboardService.getPie().subscribe({
+      next: (response) => {
+      console.log(response.data)
+      },
+      error: (error) => {
+        console.error('Error fetching dashboard data:', error);
+      },
+    });
+        this.dashboardService.getLine().subscribe({
+      next: (response) => {
+      console.log(response.data)
+      },
+      error: (error) => {
+        console.error('Error fetching dashboard data:', error);
+      },
+    });
   }
 }
