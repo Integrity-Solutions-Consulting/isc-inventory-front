@@ -178,7 +178,7 @@ export class EmployeeComponent implements OnInit, AfterViewInit {
 
   edit(user: EmployeeTableResponseDTO): void {
     this.formService.open(
-      'Editar Rol',
+      'Editar Empleado',
       'edit',
       EmployeeFormComponent,
       user,

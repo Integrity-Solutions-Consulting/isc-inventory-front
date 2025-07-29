@@ -167,23 +167,22 @@ export class EquipmentRepairComponent implements OnInit {
         const newStatus = this.equipmentStatuses.find((s) => s.id === status);
 
         // Recorre todos los elementos que coincidan con equipmentId
-        this.dataSource.data.forEach((item) => {
-          if (item.equipment === equipmentId) {
+        const updatedRepair = this.dataSource.data.find(item => item.id === idRepair);
 
-            const newStatus = this.equipmentStatuses.find((s) => s.id === status);
+        if (updatedRepair && newStatus && newStatus.id !== 1)
+          {
+            updatedRepair.repairStatus =
+            {
+            id: newStatus.id,
+            name: newStatus.name,
+            };
 
-            if (newStatus&&newStatus?.id!=1)
-              {
-              item.repairStatus = {
-                id: newStatus.id,
-                name: newStatus.name,
-              };
-              if (status === 6) {
-                item.repairDate = new Date().toISOString(); // o usa date pipe si es necesario
-              }
-            }
-          }
-        });
+        if (status === 6)
+          {
+              updatedRepair.repairDate = new Date().toISOString();
+           }
+}
+
 
         // Forzar actualización del datasource
         this.dataSource.data = [...this.dataSource.data];
@@ -263,8 +262,6 @@ export class EquipmentRepairComponent implements OnInit {
         return 'dot-bug-reported bug-reported';
       case 'reparado':
         return 'dot-repaired repaired';
-      case 'en proceso':
-        return 'dot-in-progress in-progress';
       case 'fuera de servicio':
         return 'dot-out-of-service out-of-service';
       default:

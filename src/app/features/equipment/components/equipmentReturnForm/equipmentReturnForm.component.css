@@ -57,6 +57,7 @@
 .form-field {
   display: flex;
   flex-direction: column;
+  margin-top: 100 px;
 }
 
 mat-form-field {
@@ -125,7 +126,7 @@ label {
 .select-with-search .mat-select-trigger {
   padding: 0;
 }
- 
+
 .select-search-header {
   width: 100%;
   box-sizing: border-box;
@@ -138,8 +139,8 @@ label {
   color: #1976d2;
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 4px;
+  gap: 1px;
+  margin-top: -15px;
 }
 
 .info-icon {

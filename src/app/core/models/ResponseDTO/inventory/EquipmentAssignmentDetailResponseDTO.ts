@@ -1,5 +1,6 @@
 import { EmployeeCatalogResponseDTO } from "../administration/EmployeeCatalogResponseDTO";
 import { CompanyResponseDTO } from "./CompanyResponseDTO";
+import { ConditionResponseDTO } from "./ConditionResponseDTO";
 import { EquipmentResponseDTO } from "./EquipmentResponseDTO";
 
 export interface EquipmentAssignmentDetailResponseDTO{
@@ -11,6 +12,7 @@ export interface EquipmentAssignmentDetailResponseDTO{
     returnDate: string,
     status:boolean
     statusId: number;
+    condition?: ConditionResponseDTO,
 
 
 }

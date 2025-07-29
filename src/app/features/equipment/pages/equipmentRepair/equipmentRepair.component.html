@@ -128,7 +128,7 @@
                 mat-menu-item
                 (click)="setRepairStatus(item.equipment, 3, item.id)"
                 *ngIf="item.repairStatus !== 4"
-                [disabled]="item.repairStatus.id == 1 || item.repairStatus.id == 2"
+                [disabled]="item.repairStatus.id == 1 || item.repairStatus.id !== 4"
               >
                 <mat-icon>visibility</mat-icon>
                 <span>Marcar como En Reparación</span>
