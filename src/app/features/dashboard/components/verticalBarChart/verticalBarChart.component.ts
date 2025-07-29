@@ -1,6 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  input,
+  InputSignal,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
+import { DashboardEquipmentAssignedByCategoryResponseDTO } from '../../../../core/models/ResponseDTO/inventory/DashboardEquipmentAssignedByCategoryResponseDTO ';
 
 @Component({
   selector: 'app-verticalBarChart',
@@ -10,6 +18,13 @@ import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
   styleUrls: ['./verticalBarChart.component.css'],
 })
 export class VerticalBarChartComponent implements OnInit {
+  data = input<DashboardEquipmentAssignedByCategoryResponseDTO[]>([]); // Input signal for data
+  readonly barChartData = computed(() =>
+    this.data().map((item) => ({
+      name: item.categoria,
+      value: item.total,
+    }))
+  );
   barWidth = 400;
 
   colorScheme: Color = {
@@ -19,18 +34,10 @@ export class VerticalBarChartComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C7B42C'],
   };
 
-  data = [
-    { name: '2021', value: 150 },
-    { name: '2022', value: 200 },
-    { name: '2023', value: 180 },
-    { name: '2024', value: 220 },
-    { name: '2025', value: 240 },
-  ];
-
   constructor() {}
 
   ngOnInit() {
-    const barCount = this.data.length;
+    const barCount = this.data().length;
     const barSpacing = 80; // ancho estimado por barra
     this.barWidth = Math.max(barCount * barSpacing, 400);
   }
