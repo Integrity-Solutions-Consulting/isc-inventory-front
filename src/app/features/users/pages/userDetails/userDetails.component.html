@@ -1,78 +1,31 @@
-<div class="user-detail-container" *ngIf="userDetails">
+
+<!-- Detalle del usuario -->
+<div class="user-detail-container" *ngIf="!loading && userDetails">
   <!-- Encabezado -->
   <div class="user-header">
-  <div class="avatar-border-container">
-    <svg class="gear-avatar" viewBox="0 0 120 120">
-  <!-- Engranaje externo (rojo) -->
-  <g class="outer-gear">
-    <!-- Dientes trapezoidales (base menor hacia afuera) -->
-    <g class="outer-teeth">
-      <!-- Diente trapezoidal superior modificado -->
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1"/>
-      <!-- Dientes rotados cada 30 grados -->
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(30 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(60 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(90 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(120 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(150 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(180 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(210 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(240 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(270 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(300 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#0d0d0d" stroke="#0d0d0d" stroke-width="1" transform="rotate(330 60 60)"/>
-    </g>
-    <!-- Círculo base del engranaje externo -->
-    <circle cx="60" cy="60" r="48" fill="#e53e3e" stroke="#c53030" stroke-width="2"/>
-  </g>
+    <div class="avatar-border-container">
+      <div class="avatar-circle">
+        <mat-icon class="gear-icon">person</mat-icon>
+      </div>
+    </div>
 
-  <!-- Engranaje interno (azul) -->
-  <g class="inner-gear">
-    <!-- Dientes trapezoidales (base menor hacia afuera) -->
-    <g class="inner-teeth">
-      <!-- Diente trapezoidal superior modificado -->
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#3182ce" stroke="#2c5aa0" stroke-width="1"/>
-      <!-- Dientes rotados cada 45 grados -->
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#3182ce" stroke="#2c5aa0" stroke-width="1" transform="rotate(45 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#3182ce" stroke="#2c5aa0" stroke-width="1" transform="rotate(90 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#3182ce" stroke="#2c5aa0" stroke-width="1" transform="rotate(135 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#3182ce" stroke="#2c5aa0" stroke-width="1" transform="rotate(180 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#3182ce" stroke="#2c5aa0" stroke-width="1" transform="rotate(225 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#3182ce" stroke="#2c5aa0" stroke-width="1" transform="rotate(270 60 60)"/>
-      <path d="M 52 5 L 64 5 L 68 25 L 48 25 Z" fill="#3182ce" stroke="#2c5aa0" stroke-width="1" transform="rotate(315 60 60)"/>
-    </g>
-    <!-- Círculo base del engranaje interno -->
-    <circle cx="60" cy="60" r="48" fill="#3182ce" stroke="#2c5aa0" stroke-width="2"/>
-  </g>
-
-  <!-- Círculo central para el ícono -->
-  <circle cx="60" cy="60" r="45" fill="#f7fafc" stroke="#e2e8f0" stroke-width="2"/>
-
-  <!-- Ícono de usuario centrado -->
-  <foreignObject x="42" y="42" width="36" height="36">
-    <mat-icon class="gear-icon" xmlns="http://www.w3.org/1999/xhtml">person</mat-icon>
-  </foreignObject>
-</svg>
+    <div class="user-summary">
+      <h2>{{ userDetails.username }}</h2>
+      <p><strong>Email:</strong> {{ userDetails.email }}</p>
+      <p><strong>Nombres:</strong> {{ userDetails.firstNames }}</p>
+      <p>
+        <span class="status-dot" [ngClass]="userDetails.active ? 'dot-active' : 'dot-inactive'"></span>
+        {{ userDetails.active ? 'Activo' : 'Inactivo' }}
+      </p>
+      <p *ngIf="userDetails.suspended" style="color: var(--status-bug-reported)">
+        <mat-icon>warning</mat-icon> Usuario suspendido
+      </p>
+      <p>
+        <strong>Última conexión:</strong>
+        {{ userDetails.lastConnection ? (userDetails.lastConnection | date: 'dd/MM/yyyy HH:mm') : 'Nunca' }}
+      </p>
+    </div>
   </div>
-
-  <div class="user-summary">
-    <h2>{{ userDetails.username }}</h2>
-    <p><strong>Email:</strong> {{ userDetails.email }}</p>
-    <p><strong>Nombres:</strong> {{ userDetails.firstNames }}</p>
-    <p>
-      <span class="status-dot" [ngClass]="userDetails.active ? 'dot-active' : 'dot-inactive'"></span>
-      {{ userDetails.active ? 'Activo' : 'Inactivo' }}
-    </p>
-    <p *ngIf="userDetails.suspended" style="color: var(--status-bug-reported)">
-      <mat-icon>warning</mat-icon> Usuario suspendido
-    </p>
-    <p>
-      <strong>Última conexión:</strong>
-      {{ userDetails.lastConnection ? (userDetails.lastConnection | date: 'dd/MM/yyyy HH:mm') : 'Nunca' }}
-    </p>
-  </div>
-</div>
-
 
   <!-- Botón volver -->
   <div class="itg-button-group">
@@ -82,7 +35,7 @@
     </button>
   </div>
 
-  <!-- Detalles del usuario -->
+  <!-- Información general -->
   <mat-card class="equipment-info-card">
     <mat-card-title>
       <mat-icon color="primary">person_search</mat-icon>
@@ -90,8 +43,7 @@
     </mat-card-title>
     <mat-card-content>
       <div class="detail-grid">
-        <div><strong>ID Empleado:</strong> {{ userDetails.employeeId || 'No asignado' }}</div>
-        <div><strong>Última modificación:</strong> {{ userDetails.lastModificationDate | date: 'dd/MM/yyyy HH:mm' }}</div>
+        <div><strong>Última modificación:</strong> {{ userDetails.lastModificationDate | date: 'dd/MM/yyyy' }}</div>
         <div><strong>Conectado actualmente:</strong> {{ userDetails.isLoggedIn ? 'Sí' : 'No' }}</div>
         <div><strong>Estado de cuenta:</strong> {{ userDetails.suspended ? 'Suspendido' : (userDetails.active ? 'Activo' : 'Inactivo') }}</div>
       </div>
@@ -106,30 +58,27 @@
     </mat-card-title>
     <mat-card-content>
       <ul>
-        <li *ngFor="let role of (userDetails.roles)">
-          {{ role.name }}
-        </li>
+        <li *ngFor="let role of userDetails.roles">{{ role.name }}</li>
       </ul>
     </mat-card-content>
   </mat-card>
 
-  <!-- Privilegios -->
-  <mat-card *ngIf="userDetails.privileges?.length" class="equipment-info-card">
+  <!-- Todos los privilegios (rol + directos) -->
+  <mat-card *ngIf="allUserPrivileges?.length" class="equipment-info-card">
     <mat-card-title>
       <mat-icon color="primary">lock_person</mat-icon>
-      Privilegios personalizados
+      Privilegios del usuario
     </mat-card-title>
     <mat-card-content>
       <ul>
-        <li *ngFor="let privilege of userDetails.privileges" class="privilege-item">
+        <li *ngFor="let privilege of allUserPrivileges" class="privilege-item">
           <div class="privilege-header">
             <mat-icon color="primary">vpn_key</mat-icon>
-            <strong>{{ privilege.key }}</strong>
+            <strong>{{ getPrivilegeDisplayName(privilege.key) }}</strong>
+            <span class="role-badge">({{ getRoleForPrivilege(privilege.key) }})</span>
           </div>
           <div class="privilege-details">
             <div><strong>Estado:</strong> {{ privilege.active ? 'Activo' : 'Inactivo' }}</div>
-            <div><strong>Aplicación ID:</strong> {{ privilege.applicationId }}</div>
-            <div><strong>Creado:</strong> {{ privilege.creationDate | date:'dd/MM/yyyy' }}</div>
             <div *ngIf="privilege.lastModificationDate">
               <strong>Modificado:</strong> {{ privilege.lastModificationDate | date:'dd/MM/yyyy' }}
             </div>
@@ -141,18 +90,18 @@
 
   <!-- Menús -->
   <mat-card *ngIf="userDetails.menus?.length" class="user-info-card">
-  <mat-card-title>Accesos a menús</mat-card-title>
-  <mat-card-content>
-    <div class="menu-list">
-      <div class="menu-item" *ngFor="let menu of userDetails.menus">
-        <mat-icon class="menu-icon">{{ menu.icon }}</mat-icon>
-        <div class="menu-info">
-          <div class="menu-label">{{ menu.label }}</div>
+    <mat-card-title>Accesos a menús</mat-card-title>
+    <mat-card-content>
+      <div class="menu-list">
+        <div class="menu-item" *ngFor="let menu of userDetails.menus">
+          <mat-icon class="menu-icon">{{ menu.icon }}</mat-icon>
+          <div class="menu-info">
+            <div class="menu-label">{{ menu.label }}</div>
+          </div>
         </div>
       </div>
-    </div>
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
 </div>
 
 <!-- Cargando -->
