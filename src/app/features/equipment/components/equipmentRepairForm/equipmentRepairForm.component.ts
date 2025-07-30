@@ -72,7 +72,7 @@ export class EquipmentRepairFormComponent implements OnInit {
   initForm() {
     this.repairForm = this.fb.group({
       description: [null, Validators.required],
-      serviceProvider: [null],
+      serviceProvider: [null, Validators.required],
       cost: [0.0, [Validators.min(0)]],
     });
     this.loadData();

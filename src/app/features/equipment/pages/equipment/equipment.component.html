@@ -10,7 +10,7 @@
         matInput
         [(ngModel)]="searchTerm"
         placeholder="Buscar por nombre"
-        (keyup.enter)="search()"
+        (keyup)="search()"
       />
       <button mat-icon-button matPrefix (click)="search()" tabindex="-1">
         <mat-icon>search</mat-icon>

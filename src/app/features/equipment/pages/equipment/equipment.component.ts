@@ -50,7 +50,6 @@ import { EquipmentRepairDetailResponseDTO } from '../../../../core/models/Respon
   styleUrls: ['./equipment.component.css'],
 })
 export class EquipmentComponent implements OnInit {
-  searchTerm: string = '';
   displayedColumns: string[] = [
     'name',
     'identificacion_equipo',
@@ -63,6 +62,7 @@ export class EquipmentComponent implements OnInit {
     'actions',
   ];
   dataSource = new MatTableDataSource<EquipmentDetailResponseDTO>();
+  public searchTerm: string = '';
   total = 0;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -82,6 +82,7 @@ export class EquipmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTable();
+
     this.breakpointObserver
       .observe([Breakpoints.Handset, '(max-width: 920px)'])
       .subscribe((result) => {
@@ -101,6 +102,20 @@ export class EquipmentComponent implements OnInit {
           this.dataSource.data = response.data;
           this.total = this.dataSource.data.length;
           this.dataSource.paginator = this.paginator;
+          this.dataSource.filterPredicate = (data, filter) => {
+  const term = filter.trim().toLowerCase();
+  return (
+    data.categoryName?.toLowerCase().includes(term) ||
+    data.brand?.toLowerCase().includes(term) ||
+    data.model?.toLowerCase().includes(term) ||
+    data.serialNumber?.toLowerCase().includes(term) ||
+    data.itemCode?.toLowerCase().includes(term) ||
+    data.companyName?.toLowerCase().includes(term) ||
+    data.equipmentStatusName?.toLowerCase().includes(term) ||
+    data.equipmentConditionName?.toLowerCase().includes(term)
+  );
+};
+
         },
         error: (err) => {
           console.error('Error loading table', err);
@@ -274,10 +289,7 @@ export class EquipmentComponent implements OnInit {
     // Implementar lógica si los datos vienen paginados desde el servidor
   }
 
-  search(): void {
-    // Implementa lógica real para buscar desde backend si es necesario
-    console.log('Buscando:', this.searchTerm);
-  }
+
 
   /**
    * Retorna las clases CSS para el punto y el fondo del estado funcional del equipo de forma simplificada.
@@ -326,4 +338,7 @@ export class EquipmentComponent implements OnInit {
         return 'dot-inactive out-of-service';
     }
   }
+  search(): void {
+  this.dataSource.filter = this.searchTerm.trim().toLowerCase();
+}
 }

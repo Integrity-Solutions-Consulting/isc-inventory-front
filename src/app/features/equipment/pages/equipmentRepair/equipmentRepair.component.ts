@@ -100,7 +100,7 @@ export class EquipmentRepairComponent implements OnInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.sort.active = 'repairDate';
-      this.sort.direction = 'asc';
+      this.sort.direction = 'desc';
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = (item, property) => {
         switch (property) {
