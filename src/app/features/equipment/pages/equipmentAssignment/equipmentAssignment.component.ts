@@ -264,7 +264,10 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
   }
 
   generatePdf(item: any): void {
-    this.equipmentAssingmentService.generatePdf(item.id).subscribe((response) => {
+    this.loading.show();
+    this.equipmentAssingmentService.generatePdf(item.id).pipe(
+    finalize(() => this.loading.hide())
+  ).subscribe((response) => {
       const blob = new Blob([response], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
 
