@@ -25,11 +25,10 @@ jobs:
         run: |
           rsync -avz --exclude '.git' ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }}:${{ secrets.VPS_DEPLOY_PATH }}
           
-      - name: Build and run Docker on VPS
+      - name: Deploy Docker containers
         run: |
-          ssh root@147.93.181.146 << 'EOF'
-            cd /opt/angular_app
-            docker compose down
-            docker compose build --no-cache
-            docker compose up -d
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} << 'EOF'
+            cd ${{ secrets.VPS_DEPLOY_PATH }}
+            docker compose down || true
+            docker compose up -d --build
           EOF
