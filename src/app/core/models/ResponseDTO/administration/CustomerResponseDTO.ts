@@ -4,4 +4,5 @@ export interface CustomerResponseDTO {
   address: string;
   email: string;
   phone: string;
+  ruc:string;
 }

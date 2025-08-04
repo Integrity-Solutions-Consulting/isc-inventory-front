@@ -151,6 +151,7 @@ export class EquipmentComponent implements OnInit {
             'El equipo fue registrado correctamente.'
           );
         }
+        this.loadTable();
       },
       (error) => {
         console.error('Ocurrió un error al guardar', error);

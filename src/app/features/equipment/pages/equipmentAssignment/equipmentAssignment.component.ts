@@ -89,7 +89,7 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.sort.active = 'returnDate';
-      this.sort.direction = 'asc';
+      this.sort.direction = 'desc';
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = (item, property) => {
         switch (property) {

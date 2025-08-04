@@ -57,6 +57,7 @@ export class CustomerFormComponent implements OnInit {
       address: ['', [Validators.maxLength(255)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
       phone: ['', [Validators.pattern(/^\+?[0-9\s\-]{7,20}$/)]],
+      ruc: ['', [Validators.required, Validators.maxLength(13)]],
     });
   }
 
@@ -68,6 +69,7 @@ export class CustomerFormComponent implements OnInit {
         address: customerToEdit.address,
         email: customerToEdit.email,
         phone: customerToEdit.phone,
+        ruc: customerToEdit.ruc,
       });
       this.entityId = customerToEdit.id;
     }
@@ -98,6 +100,7 @@ export class CustomerFormComponent implements OnInit {
         next: (resp) => {
           this.isSubmitting = false;
           this.formService.close(resp.data);
+
         },
         error: (err) => {
           this.isSubmitting = false;

@@ -52,6 +52,9 @@
             <div class="text-muted">
               {{ item.equipment.serialNumber }} / {{ item.equipment.itemCode }}
             </div>
+          <div class="text-muted">
+      Estado ID: <span>{{ item.equipmentStatusId }}</span>
+    </div>
           </td>
         </ng-container>
 
@@ -139,7 +142,7 @@
               <button
   mat-menu-item
   (click)="sendToRepair(item)"
-  [disabled]="item.equipmentStatusId != 2"
+  [disabled]="item.equipmentStatusId !== 2"
 >
   <mat-icon>build</mat-icon>
   <span>Enviar a reparación</span>
