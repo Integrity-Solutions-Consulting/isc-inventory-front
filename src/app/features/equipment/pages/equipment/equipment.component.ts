@@ -1,16 +1,345 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatCardModule } from '@angular/material/card';
+import { LoadingService } from '../../../../core/services/modals/loading/loading.service';
+import { finalize } from 'rxjs';
+import { FormService } from '../../../../core/services/modals/form/form.service';
+
+import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
+import { WarningService } from '../../../../core/services/modals/warning/warning.service';
+import { EmployeeTableResponseDTO } from '../../../../core/models/ResponseDTO/administration/EmployeeTableResponseDTO';
+import { EquipmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentDetailResponseDTO';
+import { EquipmentService } from '../../services/equipment/equipment.service';
+import { EquipmentFormComponent } from '../../components/equipmentForm/equipmentForm.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { Router } from '@angular/router';
+import { WarrantyTypeFormComponent } from '../../components/warranty-type-form/warranty-type-form.component';
+import { MatDialog } from '@angular/material/dialog';
+import { EquipmentRepairFormComponent } from '../../components/equipmentRepairForm/equipmentRepairForm.component';
+import { EquipmentRepairDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentRepairDetailResponseDTO';
 
 @Component({
   selector: 'app-equipment',
-  standalone:true,
+  standalone: true,
+  imports: [
+    MatTableModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    FormsModule,
+    CommonModule,
+    LayoutModule,
+    MatCardModule,
+    MatMenuModule,
+  ],
   templateUrl: './equipment.component.html',
-  styleUrls: ['./equipment.component.css']
+  styleUrls: ['./equipment.component.css'],
 })
 export class EquipmentComponent implements OnInit {
+  displayedColumns: string[] = [
+    'name',
+    'identificacion_equipo',
+    'estado',
+    'condicion',
+    'stock',
+    'buyDate',
+    'invoice',
+    'ubicacion',
+    'actions',
+  ];
+  dataSource = new MatTableDataSource<EquipmentDetailResponseDTO>();
+  public searchTerm: string = '';
+  total = 0;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor() { }
+  isSmallScreen: boolean = false;
 
-  ngOnInit() {
+  constructor
+  (
+    private breakpointObserver: BreakpointObserver,
+    private loading: LoadingService,
+    private formService: FormService,
+    private modalDialogService: ModalDialogService,
+    private warningService: WarningService,
+    private equipmentService: EquipmentService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
+
+  ngOnInit(): void {
+    this.loadTable();
+
+    this.breakpointObserver
+      .observe([Breakpoints.Handset, '(max-width: 920px)'])
+      .subscribe((result) => {
+        this.isSmallScreen = result.matches;
+      });
   }
 
+  loadTable(): void {
+    this.loading.show(); // Show loading spinner
+    this.equipmentService
+      .getTable()
+      .pipe(
+        finalize(() => this.loading.hide()) // Siempre se ejecuta al final
+      )
+      .subscribe({
+        next: (response) => {
+          this.dataSource.data = response.data;
+          this.total = this.dataSource.data.length;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.filterPredicate = (data, filter) => {
+  const term = filter.trim().toLowerCase();
+  return (
+    data.categoryName?.toLowerCase().includes(term) ||
+    data.brand?.toLowerCase().includes(term) ||
+    data.model?.toLowerCase().includes(term) ||
+    data.serialNumber?.toLowerCase().includes(term) ||
+    data.itemCode?.toLowerCase().includes(term) ||
+    data.companyName?.toLowerCase().includes(term) ||
+    data.equipmentStatusName?.toLowerCase().includes(term) ||
+    data.equipmentConditionName?.toLowerCase().includes(term)
+  );
+};
+
+        },
+        error: (err) => {
+          console.error('Error loading table', err);
+          this.loading.hide(); // Hide loading spinner on error
+        },
+        complete: () => {
+          this.loading.hide(); // Hide loading spinner on complete
+        },
+      });
+  }
+
+  create(): void {
+    this.formService.open(
+      'Nuevo Equipo',
+      'add',
+      EquipmentFormComponent,
+      null,
+      (result: EquipmentDetailResponseDTO) => {
+        if (result) {
+          this.dataSource.data = this.dataSource.data.map((item) => {
+            if (item.categoryId === result.categoryId) {
+              return {
+                ...item,
+                categoryStock: result.categoryStock,
+              };
+            }
+            return item;
+          });
+          this.dataSource.data = [...this.dataSource.data, result];
+          this.modalDialogService.open(
+            'success',
+            'Equipo creado',
+            'El equipo fue registrado correctamente.'
+          );
+        }
+        this.loadTable();
+      },
+      (error) => {
+        console.error('Ocurrió un error al guardar', error);
+        this.modalDialogService.open(
+          'error',
+          'Error al guardar',
+          'Ocurrió un error al guardar el equipo.'
+        );
+      }
+    );
+  }
+
+  edit(entity: EquipmentDetailResponseDTO): void {
+    this.formService.open(
+      'Editar Rol',
+      'edit',
+      EquipmentFormComponent,
+      entity,
+      (result: EquipmentDetailResponseDTO) => {
+        if (result) {
+          const index = this.dataSource.data.findIndex(
+            (u) => u.id === result.id
+          );
+          if (index !== -1) {
+            this.dataSource.data[index] = result;
+            this.dataSource.data = [...this.dataSource.data]; // Reasignar para que se actualice la tabla
+          }
+          this.modalDialogService.open(
+            'success',
+            'Equipo actualizado',
+            'El equipo fue actualizado correctamente.'
+          );
+        }
+      },
+      (error) => {
+        console.error('Error al editar el rol', error);
+        this.modalDialogService.open(
+          'error',
+          'Error al editar',
+          'No se pudo actualizar el empleado.'
+        );
+      }
+    );
+  }
+
+  view(item: any)
+  {
+    this.router.navigate(['dashboard/equipment/detail'], {
+      queryParams: { id: item.id },
+      state: { equipment: item }, // <-- Esto pasa el objeto completo
+    });
+  }
+
+  sendToRepair(entity: EquipmentDetailResponseDTO): void {
+    this.formService.open(
+      'Reparar Equipo',
+      'engineering',
+      EquipmentRepairFormComponent,
+      entity,
+      (result: EquipmentRepairDetailResponseDTO) => {
+        if (result) {
+          this.dataSource.data = this.dataSource.data.map((item) => {
+            if (item.id === result.equipment) {
+              return {
+                ...item,
+                 equipmentConditionId: 3,
+                equipmentStatusName: 'En reparación',
+              };
+            }
+            return item;
+          });
+
+          this.modalDialogService.open(
+            'success',
+            'Equipo enviado a reparación',
+            'El equipo fue registrado correctamente.'
+          );
+        }
+      },
+      (error) => {
+        console.error('Ocurrió un error al guardar', error);
+        this.modalDialogService.open(
+          'error',
+          'Error al guardar',
+          'Ocurrió un error al registrar la reparacion del equipo.'
+        );
+      }
+    );
+  }
+
+  warningDelete(entity: EquipmentDetailResponseDTO) {
+    this.warningService.open(
+      'Confirmar eliminación',
+      '¿Estás seguro que deseas eliminar este elemento? Esta acción no se puede deshacer.',
+      () => {
+        this.delete(entity);
+      }
+    );
+  }
+
+  delete(entity: EquipmentDetailResponseDTO): void {
+    this.loading.show();
+    this.equipmentService.delete(entity.id).subscribe({
+      next: (resp) => {
+        const index = this.dataSource.data.findIndex((u) => u.id === entity.id);
+        if (index !== -1) {
+          this.dataSource.data[index].status = false;
+          this.dataSource.data[index].equipmentStatusName = 'Fuera de servicio';
+          this.dataSource.data = this.dataSource.data.map((item) => {
+            if (item.categoryId === entity.categoryId) {
+              return {
+                ...item,
+                categoryStock: entity.categoryStock - 1,
+              };
+            }
+            return item;
+          });
+          this.dataSource.data = [...this.dataSource.data];
+        }
+        this.loading.hide();
+        this.modalDialogService.open(
+          'success',
+          'Equipo Desactivado',
+          'El Equipo fue desactivado correctamente.'
+        );
+      },
+      error: (error) => {
+        this.loading.hide();
+        this.modalDialogService.open('error', 'Error', error.error.message);
+      },
+    });
+  }
+
+  onPageChange(event: PageEvent): void {
+    console.log('Página cambiada:', event);
+    // Implementar lógica si los datos vienen paginados desde el servidor
+  }
+
+
+
+  /**
+   * Retorna las clases CSS para el punto y el fondo del estado funcional del equipo de forma simplificada.
+   */
+  getStatusClasses(statusName: string | undefined): string {
+    if (!statusName) return 'dot-inactive out-of-service';
+    switch (statusName.trim().toLowerCase()) {
+      case 'disponible':
+        return 'dot-available available';
+      case 'asignado':
+        return 'dot-assigned assigned';
+      case 'en reparación':
+        return 'dot-under-repair under-repair';
+      case 'en revisión':
+        return 'dot-under-review under-review';
+      case 'falla reportada':
+        return 'dot-bug-reported bug-reported';
+      case 'reparado':
+        return 'dot-repaired repaired';
+      case 'fuera de servicio':
+        return 'dot-out-of-service out-of-service';
+      default:
+        return 'dot-inactive out-of-service';
+    }
+  }
+
+  getConditions(statusName: string | undefined): string {
+    if (!statusName) return 'dot-inactive out-of-service';
+
+    switch (statusName.trim().toLowerCase()) {
+      case 'nuevo':
+        return 'dot-new new';
+      case 'como nuevo':
+        return 'dot-like-new like-new';
+      case 'usado':
+        return 'dot-used used';
+      case 'desgastado':
+        return 'dot-worn-out worn-out';
+      case 'Falla menor':
+        return 'dot-minor-issue minor-issue';
+      case 'Falla mayor':
+        return 'dot-major-issue major-issue';
+      case 'irreparable':
+        return 'dot-unrepairable unrepairable';
+      default:
+        return 'dot-inactive out-of-service';
+    }
+  }
+  search(): void {
+  this.dataSource.filter = this.searchTerm.trim().toLowerCase();
+}
 }

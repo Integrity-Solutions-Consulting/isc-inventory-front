@@ -1,7 +1,8 @@
+import { MenuResponseDTO } from "./MenuResponseDTO";
 import { PrivilegeResponseDTO } from "./PrivilegeResponseDTO";
 import { RolesResponseDTO } from "./RolesResponseDTO";
 
-export interface UserResponseDTO { 
+export interface UserResponseDTO {
     id: number;
     username: string;
     email: string;
@@ -13,5 +14,6 @@ export interface UserResponseDTO {
     suspended?: boolean;
     roles?: Set<RolesResponseDTO>;
     privileges?: Set<PrivilegeResponseDTO>;
+    menus?: Set<MenuResponseDTO>;
     loggedIn?: boolean;
 }

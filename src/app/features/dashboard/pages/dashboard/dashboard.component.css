@@ -4,7 +4,7 @@
 
 .sidenav {
   width: 15rem;
-  background-color: #ffffff;
+  background-color: white;
 
   @media (max-width: 960px) {
     width: 25rem;

@@ -1,39 +1,39 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ModalDialogService } from '../../../core/services/modals/modalDialog/modalDialog.service';
 
 @Component({
   selector: 'app-message-dialog',
   standalone: true,
-  imports: [MatButtonModule, CommonModule,MatIcon,MatDialogModule],
+  imports: [MatButtonModule, CommonModule,MatIconModule,MatDialogModule],
   templateUrl: './message-dialog.component.html',
   styleUrls: ['./message-dialog.component.css'],
 })
 export class MessageDialogComponent implements OnInit {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {
-    type: 'success' | 'error',
-    title: string,
-    message: string
-  }) {}
-
-  get icon() {
-    return this.data.type === 'success' ? 'check_circle' : 'error';
-  }
+ constructor( public modalDialog: ModalDialogService) {}
 
   get type() {
-    return this.data.type;
+    return this.modalDialog.type();
   }
 
   get title() {
-    return this.data.title;
+    return this.modalDialog.title();
   }
 
   get message() {
-    return this.data.message;
+    return this.modalDialog.message();
   }
 
-  ngOnInit() {}
+  get icon() {
+    return this.type === 'success' ? 'check_circle' : 'error';
+  }
+
+  close() {
+    this.modalDialog.close();
+  }
+
+  ngOnInit(): void {}
 }

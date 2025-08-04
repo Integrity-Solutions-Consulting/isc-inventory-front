@@ -1,3 +1,4 @@
+import { LoadingService } from './../../../../core/services/modals/loading/loading.service';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormBuilder,
@@ -12,13 +13,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageDialogComponent } from '../../../../shared/components/message-dialog/message-dialog.component';
-import { LoginRequestDTO } from '../../../../api';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { AuthService } from '../../services/auth.service';
-import { ErrorResponseDTO } from '../../../../core/models/ResponseDTO/ErrorResponseDTO';
 import { SessionService } from '../../../../core/services/session/session.service';
-
+import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
+import { LoginRequestDTO } from '../../../../core/models/RequestDTO/LoginRequestDTO';
 
 @Component({
   selector: 'app-login',
@@ -44,7 +42,9 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private authService: AuthService,
-    private session: SessionService
+    private session: SessionService,
+    private loading: LoadingService,
+    private modalDialogService: ModalDialogService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -55,22 +55,18 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.loginForm.valid) {
       const loginData: LoginRequestDTO = this.loginForm.value;
-      const loadingRef = this.dialog.open(LoadingComponent, {
-        disableClose: true,
-        panelClass: 'transparent-dialog',
-      });
+      this.loading.show();
       this.authService.login(loginData).subscribe({
         next: (resp) => {
           this.session.startSession(resp.data);
           console.log(resp);
         },
         error: (error) => {
-          loadingRef.close();
-          console.log(error)
-          this.onError("Error",error.error.message)
+          this.loading.hide();
+          this.modalDialogService.open('error', 'Error', error.error.message);
         },
         complete: () => {
-          loadingRef.close();
+          this.loading.hide();
           this.router.navigate(['/dashboard']);
         },
       });
@@ -83,13 +79,4 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/auth/forgot-password']);
   }
 
-  onError(_title:string, _message:string) {
-    this.dialog.open(MessageDialogComponent, {
-      data: {
-        type: 'error',
-        title: _title,
-        message: _message,
-      },
-    });
-  }
 }

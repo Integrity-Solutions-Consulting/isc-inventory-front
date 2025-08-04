@@ -1,21 +1,20 @@
- <div class="section-title">
- <h3>Usuarios</h3>
- <p>Gestion de usuarios con acceso al portal</p>
- </div>
+<div class="section-title">
+  <h3>Usuarios</h3>
+  <p>Gestion de usuarios con acceso al portal</p>
+</div>
 
-<div class="user-panel-container">
-  <div class="user-toolbar">
+<div class="panel-container">
+  <div class="toolbar">
     <mat-form-field appearance="outline" class="search-input">
       <input
         matInput
-        [(ngModel)]="searchTerm"
         placeholder="Buscar por nombres o email"
-        (keyup.enter)="searchUsers()"
+        (keyup)="applyFilter($event)"
       />
+      <button mat-icon-button matPrefix (click)="searchUsers()" tabindex="-1">
+        <mat-icon>search</mat-icon>
+      </button>
     </mat-form-field>
-    <button mat-icon-button color="primary" (click)="searchUsers()">
-      <mat-icon>search</mat-icon>
-    </button>
     <span class="spacer"></span>
     <button mat-flat-button (click)="createUser()">
       <mat-icon>person_add</mat-icon>
@@ -38,27 +37,27 @@
         <td mat-cell *matCellDef="let user">{{ user.email }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="active">
-        <th mat-header-cell *matHeaderCellDef>Estado</th>
-        <td mat-cell *matCellDef="let user">
-          <span
-            class="status-dot"
-            [ngClass]="user.active ? 'dot-active' : 'dot-inactive'"
-          ></span>
-          {{ user.active ? "Activo" : "Inactivo" }}
-        </td>
-      </ng-container>
+      <!-- Estado -->
+<ng-container matColumnDef="active">
+  <th mat-header-cell *matHeaderCellDef>Estado</th>
+  <td mat-cell *matCellDef="let user">
+    <div class="status-line">
+      <span class="status-dot" [ngClass]="user.active ? 'dot-active' : 'dot-inactive'"></span>
+      {{ user.active ? "Activo" : "Inactivo" }}
+    </div>
+  </td>
+</ng-container>
 
-      <ng-container matColumnDef="suspended">
-        <th mat-header-cell *matHeaderCellDef>Suspensión</th>
-        <td mat-cell *matCellDef="let user">
-          <span
-            class="status-dot"
-            [ngClass]="!user.suspended ? 'dot-active' : 'dot-inactive'"
-          ></span>
-          {{ user.suspended ? "Suspendido" : "Habilitado" }}
-        </td>
-      </ng-container>
+<!-- Suspensión -->
+<ng-container matColumnDef="suspended">
+  <th mat-header-cell *matHeaderCellDef>Suspensión</th>
+  <td mat-cell *matCellDef="let user">
+    <div class="status-line">
+      <span class="status-dot" [ngClass]="!user.suspended ? 'dot-active' : 'dot-inactive'"></span>
+      {{ user.suspended ? "Suspendido" : "Habilitado" }}
+    </div>
+  </td>
+</ng-container>
 
       <ng-container matColumnDef="roles">
         <th mat-header-cell *matHeaderCellDef>Roles</th>
@@ -68,16 +67,29 @@
       <!-- Acciones -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let user" class="actions-cell" justify="end">
-          <button mat-icon-button (click)="viewUser(user)">
-            <mat-icon>visibility</mat-icon>
-          </button>
-          <button mat-icon-button (click)="editUser(user)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button (click)="deleteUser(user)">
-            <mat-icon>delete</mat-icon>
-          </button>
+        <td mat-cell *matCellDef="let user" class="actions-cell">
+          <button
+              mat-icon-button
+              [matMenuTriggerFor]="menu"
+              aria-label="Opciones"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="viewUser(user)">
+              <mat-icon>visibility</mat-icon>
+              <span>Ver</span>
+            </button>
+            <button mat-menu-item (click)="editUser(user)">
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
+            </button>
+            <button mat-menu-item (click)="warningDelete(user)" [disabled]="!user.active">
+              <mat-icon [class.inactive-icon]="!user.active">delete</mat-icon>
+              <span>Eliminar</span>
+            </button>
+          </mat-menu>
         </td>
       </ng-container>
 
@@ -87,42 +99,42 @@
   </div>
   }@else {
   <div class="card-container">
-  <mat-card *ngFor="let user of dataSource.data" class="user-card">
-    <mat-card-title>{{ user.firstNames }}</mat-card-title>
+    <ng-container *ngIf="dataSource.connect() | async as users">
+      <mat-card *ngFor="let user of users" class="user-card">
+        <mat-card-title>{{ user.firstNames }}</mat-card-title>
+        <mat-card-content>
+          <p>{{ user.email }}</p>
+          <p>
+            <span
+              class="status-dot"
+              [ngClass]="user.active ? 'dot-active' : 'dot-inactive'"
+            ></span>
+            {{ user.active ? "Activo" : "Inactivo" }}
+          </p>
+          <p>
+            <span
+              class="status-dot"
+              [ngClass]="!user.suspended ? 'dot-active' : 'dot-inactive'"
+            ></span>
+            {{ user.suspended ? "Suspendido" : "Habilitado" }}
+          </p>
+          <p>Roles: {{ getRoleNames(user) }}</p>
+        </mat-card-content>
 
-    <mat-card-content>
-      <p>{{ user.email }}</p>
-      <p>
-        <span
-          class="status-dot"
-          [ngClass]="user.active ? 'dot-active' : 'dot-inactive'"
-        ></span>
-        {{ user.active ? "Activo" : "Inactivo" }}
-      </p>
-      <p>
-        <span
-          class="status-dot"
-          [ngClass]="!user.suspended ? 'dot-active' : 'dot-inactive'"
-        ></span>
-        {{ user.suspended ? "Suspendido" : "Habilitado" }}
-      </p>
-      <p>Roles: {{ getRoleNames(user) }}</p>
-    </mat-card-content>
-
-    <!-- Acciones -->
-    <mat-card-actions align="end">
-      <button mat-icon-button (click)="viewUser(user)">
-        <mat-icon>visibility</mat-icon>
-      </button>
-      <button mat-icon-button (click)="editUser(user)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button (click)="deleteUser(user)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</div>
+        <mat-card-actions align="end">
+          <button mat-icon-button (click)="viewUser(user)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button (click)="editUser(user)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="warningDelete(user)" [disabled]="!user.active">
+            <mat-icon [class.inactive-icon]="!user.active">delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </div>
 
   }
 
