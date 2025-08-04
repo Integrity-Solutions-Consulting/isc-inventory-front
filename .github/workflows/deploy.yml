@@ -18,10 +18,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
-      - name: Copy project to VPS
+      - name: Add VPS to known_hosts
+        run: ssh-keyscan -H ${{ secrets.VPS_IP }} >> ~/.ssh/known_hosts
+
+      - name: Copy files to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no root@147.93.181.146 "rm -rf /opt/angular_app && mkdir -p /opt/angular_app"
-          scp -r . root@147.93.181.146:/opt/angular_app
+          rsync -avz --exclude '.git' ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }}:${{ secrets.VPS_DEPLOY_PATH }}
+          
       - name: Build and run Docker on VPS
         run: |
           ssh root@147.93.181.146 << 'EOF'
