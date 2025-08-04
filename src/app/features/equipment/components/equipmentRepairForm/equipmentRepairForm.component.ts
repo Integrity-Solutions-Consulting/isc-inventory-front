@@ -63,7 +63,7 @@ export class EquipmentRepairFormComponent implements OnInit {
     private warningService: WarningService,
     private repairSearvice: RepairService
   ) {}
-  
+
 
   ngOnInit() {
     this.initForm();
@@ -72,7 +72,7 @@ export class EquipmentRepairFormComponent implements OnInit {
   initForm() {
     this.repairForm = this.fb.group({
       description: [null, Validators.required],
-      serviceProvider: [null],
+      serviceProvider: [null, Validators.required],
       cost: [0.0, [Validators.min(0)]],
     });
     this.loadData();
@@ -129,8 +129,8 @@ export class EquipmentRepairFormComponent implements OnInit {
   submitAndRepair() {
     if (this.equipment.equipmentStatusId == 2) {
       this.warningService.open(
-        'Confirmar devolucion',
-        'Este equipoe se encuentra asignado a un usuario, ¿desea realizar la devolución automaática?',
+        'Confirmar devolución',
+        'Este equipo está asignado a un usuario. ¿Desea realizar la devolución automática?',
         () => {
           this.revoke = true;
           this.onSubmit();

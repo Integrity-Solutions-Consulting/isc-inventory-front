@@ -102,7 +102,14 @@ export class UserComponent implements OnInit {
           this.loading.hide(); // Hide loading spinner on error
         },
         complete: () => {
-          this.loading.hide(); // Hide loading spinner on complete
+          this.loading.hide();
+          this.dataSource.filterPredicate = (data, filter) => {
+          const term = filter.trim().toLowerCase();
+          return (
+            data.username?.toLowerCase().includes(term) ||
+            data.email?.toLowerCase().includes(term)
+          );
+        };
         },
       });
   }
@@ -218,6 +225,11 @@ export class UserComponent implements OnInit {
 
       },
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   onPageChange(event: PageEvent): void {

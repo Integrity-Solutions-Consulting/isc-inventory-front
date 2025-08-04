@@ -220,3 +220,34 @@
   color: var(--itg-text-mutedr);
 }
 
+.avatar-border-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin-right: 16px;
+}
+
+
+.avatar-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+}
+
+.gear-icon {
+  position: absolute;
+  bottom: 0; /* lo baja al fondo del contenedor */
+  left: 50%; /* centrado horizontal */
+  transform: translateX(-50%); /* corrige el centrado horizontal */
+  font-size: 48px; /* o el tamaño que desees */
+  color: #4a5568;
+}
+

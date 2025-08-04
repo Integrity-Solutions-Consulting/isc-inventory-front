@@ -1,6 +1,7 @@
 export interface CustomerRequestDTO {
   name: string;
-  address?: string; // No es obligatorio
+  address?: string; //opcional
   email: string;
   phone: string;
+  ruc: string;
 }

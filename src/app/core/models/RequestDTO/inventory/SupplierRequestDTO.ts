@@ -2,11 +2,11 @@ import { SupplierTypeResponseDTO } from "../../ResponseDTO/inventory/SupplierTyp
 
 export interface SupplierRequestDTO
 {
-    id?: number,
+  id?: number,
 	businessName: string,
 	address: string,
 	phone: string,
+  ruc: string,
 	email: string,
-	taxId: string,
   supplierType:SupplierTypeResponseDTO,
 }

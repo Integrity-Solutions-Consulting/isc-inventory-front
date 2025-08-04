@@ -50,8 +50,9 @@ export class CustomerComponent implements OnInit {
     'name',
     'email',
     'phone',
+    'ruc',
     'address',
-    'actions',
+
   ];
   dataSource = new MatTableDataSource<CustomerDetailResponseDTO>();
   total = 0;
@@ -111,6 +112,7 @@ export class CustomerComponent implements OnInit {
             data.name.toLowerCase().includes(term) ||
             (data.email?.toLowerCase() || '').includes(term) ||
             (data.phone?.toLowerCase() || '').includes(term) ||
+            (data.ruc?.toLowerCase() || '').includes(term) ||
             (data.address?.toLowerCase() || '').includes(term)
           );
         };

@@ -40,6 +40,10 @@ export class UserDetailsComponent implements OnInit {
   menu?: MenuResponseDTO;
   roleDetails?: RoleDetailResponseDTO;
   loading: boolean = true;
+  allUserPrivileges: PrivilegeResponseDTO[] = [];
+  privilegeRoleMap: Map<string, string> = new Map();
+
+
 
   Math = Math;
 
@@ -64,10 +68,13 @@ export class UserDetailsComponent implements OnInit {
           next: (resp) => {
             this.userDetails = resp.data;
 
-            console.log('Menús obtenidos:', this.userDetails?.menus);
-console.log('Tamaño:', this.userDetails?.menus instanceof Set ? this.userDetails.menus.size : this.userDetails?.menus?.length);
+            this.extractAllPrivileges();
 
+            console.log('Menús obtenidos:', this.userDetails?.menus);
+            console.log('Tamaño:', this.userDetails?.menus instanceof Set ? this.userDetails.menus.size : this.userDetails?.menus?.length);
             console.log('Usuario obtenido:', this.userDetails);
+            console.log('Privilegios extraídos:', this.allUserPrivileges);
+
             this.loading = false;
           },
           error: (err) => {
@@ -82,6 +89,68 @@ console.log('Tamaño:', this.userDetails?.menus instanceof Set ? this.userDetail
     });
   }
 
+  // Método para extraer todos los privilegios únicos de los roles del usuario
+  private extractAllPrivileges(): void {
+    if (!this.userDetails?.roles) return;
+
+    const privilegesMap = new Map<string, PrivilegeResponseDTO>();
+    this.privilegeRoleMap.clear();
+
+    // Recorrer todos los roles del usuario
+    this.userDetails.roles.forEach(role => {
+      if (role.rolePrivileges) {
+        // Convertir Set a Array si es necesario
+        const privileges = role.rolePrivileges instanceof Set
+          ? Array.from(role.rolePrivileges)
+          : role.rolePrivileges;
+
+        privileges.forEach(privilege => {
+          // Usar el key como identificador único para evitar duplicados
+          if (!privilegesMap.has(privilege.key)) {
+            privilegesMap.set(privilege.key, privilege);
+            // Mapear el privilegio con el nombre del rol que lo otorga
+            this.privilegeRoleMap.set(privilege.key, role.name);
+          }
+        });
+      }
+    });
+
+    // Agregar privilegios directos del usuario (si los hay)
+    if (this.userDetails.privileges && this.userDetails.privileges.length > 0) {
+      this.userDetails.privileges.forEach(privilege => {
+        if (!privilegesMap.has(privilege.key)) {
+          privilegesMap.set(privilege.key, privilege);
+          this.privilegeRoleMap.set(privilege.key, 'Privilegio directo');
+        }
+      });
+    }
+
+    // Convertir el Map a array
+    this.allUserPrivileges = Array.from(privilegesMap.values());
+  }
+
+  // Método para obtener el nombre legible del privilegio
+  getPrivilegeDisplayName(key: string): string {
+    const privilegeNames: { [key: string]: string } = {
+      'equipment_management': 'Gestión de Equipos',
+      'equipment_request': 'Solicitud de Equipos',
+      'request_approval': 'Aprobación de Solicitudes',
+      'employee_management': 'Gestión de Empleados',
+      'time_tracking': 'Control de Tiempo',
+      'report_generation': 'Generación de Reportes',
+      'user_management': 'Gestión de Usuarios',
+      'profile_management': 'Gestión de Perfil',
+      'role_management': 'Gestión de Roles',
+      'full_access': 'Acceso Completo'
+    };
+
+    return privilegeNames[key] || key;
+  }
+
+   // Método para obtener el rol que otorga un privilegio específico
+  getRoleForPrivilege(privilegeKey: string): string {
+    return this.privilegeRoleMap.get(privilegeKey) || 'Desconocido';
+  }
 
   onClose():void{
     this.close.emit();

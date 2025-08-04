@@ -22,6 +22,7 @@
           [matDatepicker]="picker"
           formControlName="dateReturn"
           placeholder="dd/mm/yyyy"
+          (focus)="picker.open()" readonly
         />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
@@ -30,6 +31,28 @@
         <mat-icon class="info-icon-inline">info</mat-icon>
         Si no se selecciona una fecha, se utilizará la fecha actual.
       </div>
+
+       <div class="form-field">
+  <label>Condición del equipo</label>
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-select formControlName="condition">
+      <mat-option>
+        <ngx-mat-select-search
+          [formControl]="conditionFilterCtrl"
+          placeholderLabel="Buscar condición..."
+          noEntriesFoundLabel="No se encontraron resultados">
+        </ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let condition of filteredConditions" [value]="condition">
+        {{ condition.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="info-text">
+    <mat-icon class="info-icon-inline">info</mat-icon>
+    La condición del equipo es opcional al devolverlo.
+  </div>
+</div>
     </div>
 
     <!-- Botones -->

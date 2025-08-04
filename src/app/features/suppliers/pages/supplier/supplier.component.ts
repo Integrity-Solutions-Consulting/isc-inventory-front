@@ -49,7 +49,7 @@ export class SupplierComponent implements OnInit {
     'address',
     'phone',
     'email',
-    'taxId',
+    'ruc',
   ];
   dataSource = new MatTableDataSource<SupplierResponseDTO>();
   totalSupplier = 0;
@@ -91,7 +91,18 @@ export class SupplierComponent implements OnInit {
           this.loading.hide();
         },
         complete: () => {
-          this.loading.hide(); // Hide loading spinner on complete
+          this.loading.hide();
+          this.dataSource.filterPredicate = (data, filter) => {
+          const term = filter.trim().toLowerCase();
+          return (
+            data.businessName?.toLowerCase().includes(term) ||
+            (data.email?.toLowerCase() || '').includes(term) ||
+            (data.phone?.toLowerCase() || '').includes(term) ||
+
+            (data.ruc?.toLowerCase() || '').includes(term) ||
+            (data.address?.toLowerCase() || '').includes(term)
+          );
+        };
         },
       });
   }
@@ -110,6 +121,7 @@ export class SupplierComponent implements OnInit {
             'Proveedor creado',
             'El proveedor fue registrado correctamente.'
           );
+          this.loadSuppliers();
         }
       },
       (error) => {
@@ -197,6 +209,11 @@ export class SupplierComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     console.log('Página cambiada:', event);
     // Lógica si necesitas paginar desde backend
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 

@@ -39,6 +39,7 @@ import { validateHorizontalPosition } from '@angular/cdk/overlay';
 import { EquipmentAssignmentDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentAssignmentDetailResponseDTO';
 import { EquipmentRevokeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRevokeRequestDTO';
 import { ConditionResponseDTO } from '../../../../core/models/ResponseDTO/inventory/ConditionResponseDTO';
+import { ConditionsService } from '../../../../core/services/conditions/conditions.service';
 
 @Component({
   selector: 'app-equipmentReturnForm',
@@ -78,7 +79,8 @@ export class EquipmentReturnFormComponent implements OnInit, OnDestroy {
     private formService: FormService,
     private assignamentService: AssaingmentService,
     public modalDialog: ModalDialogService,
-    private location: Location
+    private location: Location,
+    private conditionService: ConditionsService
   ) {}
 
   ngOnInit() {
@@ -94,13 +96,29 @@ export class EquipmentReturnFormComponent implements OnInit, OnDestroy {
   initForm() {
     this.equipmentReturnForm = this.fb.group({
       dateReturn: [null],
+      condition: [null],
     });
   }
 
-  loadData() {
-    this.entityId = this.formService.modalDataValue;
-    this.loading = false;
-  }
+loadData() {
+  this.entityId = this.formService.modalDataValue;
+
+  this.conditionService.getAll().subscribe({
+    next: (resp) => {
+      this.conditions = resp.data;
+      this.filteredConditions = [...this.conditions];
+      this.conditionFilterCtrl.valueChanges
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(() => this.filterConditions());
+    },
+    error: (err) => {
+      console.error('Error al cargar condiciones:', err);
+    },
+    complete: () => {
+      this.loading = false;
+    },
+  });
+}
 
   onSubmit() {
     this.isSubmitting = true;
@@ -108,13 +126,14 @@ export class EquipmentReturnFormComponent implements OnInit, OnDestroy {
     // Convertimos el objeto Date a string yyyy-MM-dd
     const dateReturn = this.equipmentReturnForm.value.dateReturn;
 
-    const revokeDate: string = dateReturn 
+    const revokeDate: string = dateReturn
       ? dateReturn.format('YYYY-MM-DD')
       : '';
 
     const revokeRequest: EquipmentRevokeRequestDTO = {
-      revokeDate: revokeDate,
-    };
+  revokeDate: revokeDate,
+  condition: this.equipmentReturnForm.value.condition,
+};
 
     this.assignamentService.revoke(this.entityId, revokeRequest).subscribe({
       next: (response) => {
@@ -127,6 +146,14 @@ export class EquipmentReturnFormComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  filterConditions() {
+  const search = this.conditionFilterCtrl.value?.toLowerCase() || '';
+  this.filteredConditions = this.conditions.filter(c =>
+    c.name.toLowerCase().includes(search)
+  );
+}
+
 
   onCancel() {
     this.formService.close();

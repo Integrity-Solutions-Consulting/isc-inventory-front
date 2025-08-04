@@ -4,6 +4,7 @@ export interface CustomerDetailResponseDTO {
   address: string;
   email: string;
   phone: string;
+  ruc: string;
   status: boolean;
   cretionDate: string;
   modificationDate: string;

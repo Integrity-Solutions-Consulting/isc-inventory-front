@@ -56,11 +56,19 @@ export class SupplierFormComponent implements OnInit {
 
   initForm(): void {
     this.supplierForm = this.fb.group({
-      businessName: ['', Validators.required],
-      address: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      taxId: ['', [Validators.required, Validators.pattern(/^\d{10,13}$/)]],
+      businessName: ['', [Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(150),
+      Validators.pattern(/^[\p{L}\p{N}\s\.,\-#áéíóúÁÉÍÓÚñÑ]*$/u)]],
+      address: ['', [Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(200),
+      Validators.pattern(/^[\p{L}\p{N}\s\.,\-#áéíóúÁÉÍÓÚñÑ]*$/u)]],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]],
+      ruc: ['', [Validators.required, Validators.pattern(/^\d{10}001$/)]],
+      email: ['', [Validators.required,
+      Validators.maxLength(100),
+      Validators.pattern(/^[A-Za-z0-9+_.-]+@(.+)\.(com|ec|net|org|edu|gob|mil|co|info|xyz)$/)]],
       supplierType: ['', Validators.required]
     });
   }
@@ -88,8 +96,6 @@ export class SupplierFormComponent implements OnInit {
     });
   }
 
-
-
   onSubmit(): void {
   if (this.supplierForm.invalid) {
     this.supplierForm.markAllAsTouched();
@@ -115,7 +121,7 @@ export class SupplierFormComponent implements OnInit {
     address: formValue.address,
     phone: formValue.phone,
     email: formValue.email,
-    taxId: formValue.taxId,
+    ruc:formValue.ruc,
     supplierType: selectedSupplierType // Enviamos el objeto completo
   };
 
@@ -141,6 +147,13 @@ export class SupplierFormComponent implements OnInit {
       this.formService.error(err.error?.message || 'Error al guardar el proveedor');
     }
   });
+}
+
+allowOnlyNumbers(event: KeyboardEvent): void {
+  const charCode = event.key;
+  if (!/^\d$/.test(charCode)) {
+    event.preventDefault();
+  }
 }
 
   onCancel(): void {

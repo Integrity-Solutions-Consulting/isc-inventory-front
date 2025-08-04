@@ -54,8 +54,9 @@ export class AssaingmentService {
   }
 
   public delete(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {
-    return this.httpClient.delete<ResponseDTO<MessageResponseDTO[]>>(
-      `${this.apiUrl}/inactive/${id}`
+    return this.httpClient.patch<ResponseDTO<MessageResponseDTO[]>>(
+      `${this.apiUrl}/inactive/${id}`,
+      null
     );
   }
 

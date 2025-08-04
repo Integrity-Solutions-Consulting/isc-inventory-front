@@ -1,3 +1,6 @@
+import { ConditionResponseDTO } from "../../ResponseDTO/inventory/ConditionResponseDTO";
+
 export interface EquipmentRevokeRequestDTO{
-    revokeDate:string
+    revokeDate:string,
+    condition: ConditionResponseDTO| null,
 }

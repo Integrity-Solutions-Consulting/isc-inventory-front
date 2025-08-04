@@ -8,9 +8,8 @@
     <mat-form-field appearance="outline" class="search-input">
       <input
         matInput
-        [(ngModel)]="searchTerm"
         placeholder="Buscar por nombres o email"
-        (keyup.enter)="searchUsers()"
+        (keyup)="applyFilter($event)"
       />
       <button mat-icon-button matPrefix (click)="searchUsers()" tabindex="-1">
         <mat-icon>search</mat-icon>

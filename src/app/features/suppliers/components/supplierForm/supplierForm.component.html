@@ -13,7 +13,7 @@
       <div class="form-field">
         <label>Nombre Empresa <span class="required-asterisk">*</span> </label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="businessName" />
+          <input matInput formControlName="businessName" minlength="3" />
           <mat-error *ngIf="supplierForm.get('businessName')?.hasError('required')">
             El nombre de la empresa es obligatoria
           </mat-error>
@@ -21,12 +21,14 @@
       </div>
 
       <!-- RUC -->
+
       <div class="form-field">
         <label>RUC <span class="required-asterisk">*</span> </label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="taxId" />
-          <mat-error *ngIf="supplierForm.get('taxId')?.hasError('required')">
-            El RUC es obligatorio
+          <input matInput formControlName="ruc" maxlength="13"
+              (keypress)="allowOnlyNumbers($event)" placeholder="Ingrese el RUC"/>
+          <mat-error *ngIf="supplierForm.get('ruc')?.hasError('required')">
+            Máximo 13 números, termina en 001
           </mat-error>
         </mat-form-field>
       </div>
@@ -37,7 +39,7 @@
       <div class="form-field">
         <label>Dirección <span class="required-asterisk">*</span> </label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="address" />
+          <input matInput formControlName="address" minlength="3" />
           <mat-error *ngIf="supplierForm.get('address')?.hasError('required')">
             La dirección es obligatoria
           </mat-error>
@@ -48,7 +50,7 @@
       <div class="form-field">
         <label>Teléfono <span class="required-asterisk">*</span> </label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="phone" />
+          <input matInput formControlName="phone" maxlength="10" (keypress)="allowOnlyNumbers($event)"/>
           <mat-error *ngIf="supplierForm.get('phone')?.hasError('required')">
             El teléfono es obligatorio
           </mat-error>
@@ -57,24 +59,23 @@
     </div>
 
     <div class="form-row">
-      <!-- Email -->
-      <div class="form-field">
-        <label>Email <span class="required-asterisk">*</span> </label>
-        <mat-form-field appearance="outline" class="w-100">
-          <input matInput type="email" formControlName="email" />
-          <mat-error *ngIf="supplierForm.get('email')?.hasError('required')">
-            El email es obligatorio
-          </mat-error>
-          <mat-error *ngIf="supplierForm.get('email')?.hasError('email')">
-            Ingresa un email válido
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </div>
+  <!-- Email -->
+  <div class="form-field">
+    <label>Email <span class="required-asterisk">*</span> </label>
+    <mat-form-field appearance="outline" class="w-100">
+      <input matInput type="email" formControlName="email"/>
+      <mat-error *ngIf="supplierForm.get('email')?.hasError('required')">
+        El email es obligatorio
+      </mat-error>
+      <mat-error *ngIf="supplierForm.get('email')?.hasError('email')">
+        Ingresa un email válido
+      </mat-error>
+    </mat-form-field>
+  </div>
 
   <!-- Tipo de proveedor -->
   <div class="form-field">
-    <label>Tipo de proveedor</label>
+    <label>Tipo de proveedor <span class="required-asterisk">*</span></label>
     <mat-form-field appearance="outline" class="w-100">
       <mat-select formControlName="supplierType">
         <mat-option *ngFor="let type of supplierTypes" [value]="type.id">
@@ -87,6 +88,8 @@
     </mat-form-field>
   </div>
 </div>
+
+
     <div class="itg-button-group">
       <button mat-flat-button class="itg-cancel-button" type="button" (click)="onCancel()">
         Cancelar
