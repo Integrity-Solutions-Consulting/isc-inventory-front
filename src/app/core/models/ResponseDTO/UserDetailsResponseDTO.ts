@@ -16,4 +16,9 @@ export interface UserDetailsResponseDTO {
       roles: RoleDetailResponseDTO[],
       privileges: PrivilegeResponseDTO[],
       menus: MenuResponseDTO[]
+      employee?: {
+        identificationType?: {
+          name: string,} 
+      }
+
 }

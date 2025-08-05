@@ -7,6 +7,7 @@ import { EquipmentComponent } from '../../equipment/pages/equipment/equipment.co
 import { EquipmentAssignmentComponent } from '../../equipment/pages/equipmentAssignment/equipmentAssignment.component';
 import { EquipmentRepairComponent } from '../../equipment/pages/equipmentRepair/equipmentRepair.component';
 import { SupplierComponent } from '../../suppliers/pages/supplier/supplier.component';
+import { EquipmentDismissalComponent } from '../../equipment/pages/equipmentDismissal/equipmentDismissal.component';
 
 export const dashboard_routes: Routes = [
   {
@@ -17,8 +18,8 @@ export const dashboard_routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'equipment-repair', component: EquipmentRepairComponent },
       { path: 'equipment-assignment', component: EquipmentAssignmentComponent },
-      {
-        path: 'equipment',
+      { path: 'equipment-dismissal', component: EquipmentDismissalComponent },
+      { path: 'equipment',
         children: [
           { path: '', component: EquipmentComponent },
           {
