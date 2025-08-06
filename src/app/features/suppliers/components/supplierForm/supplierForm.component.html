@@ -28,6 +28,9 @@
           <input matInput formControlName="ruc" maxlength="13"
               (keypress)="allowOnlyNumbers($event)" placeholder="Ingrese el RUC"/>
           <mat-error *ngIf="supplierForm.get('ruc')?.hasError('required')">
+            El RUC es obligatorio
+          </mat-error>
+          <mat-error *ngIf="supplierForm.get('ruc')?.hasError('required')">
             Máximo 13 números, termina en 001
           </mat-error>
         </mat-form-field>
