@@ -29,12 +29,6 @@ export class NavComponent implements OnInit {
 
   userName = 'Adrián'; // o recuperarlo de tu servicio auth
   userPhotoUrl = ''; // url de la foto de perfil, o cadena vacía si no hay
-  notificationsCount = 3; // Ejemplo, actualízalo dinámicamente
-  notifications = [
-    { message: 'Nuevo mensaje recibido' },
-    { message: 'Actualización disponible' },
-    { message: 'Tu pedido ha sido enviado' },
-  ];
 
   onToggleSidenav() {
     this.toggleSidenav.emit();

@@ -12,15 +12,6 @@
   <h4 class="title">InventorySoft</h4>
   <span class="spacer"></span>
 
-  <button
-    mat-icon-button
-    [matBadge]="notificationsCount"
-    aria-label="Notificaciones"
-    [ngClass]="{ 'has-notifications': notificationsCount > 0 }"
-    [matMenuTriggerFor]="notificationsMenu"
-  >
-    <mat-icon>notifications</mat-icon>
-  </button>
 
   <!-- Barra separadora -->
   <div class="separator"></div>
@@ -45,17 +36,8 @@
     </button>
   </div>
 
-  <!-- Menú de notificaciones -->
-  <mat-menu #notificationsMenu="matMenu">
-    <ng-container *ngIf="notifications?.length; else noNotifications">
-      <button mat-menu-item *ngFor="let notif of notifications">
-        {{ notif.message }}
-      </button>
-    </ng-container>
-    <ng-template #noNotifications>
-      <button mat-menu-item disabled>No hay notificaciones</button>
-    </ng-template>
-  </mat-menu>
+
+
 
   <!-- Menú de usuario -->
   <mat-menu #userMenu="matMenu">

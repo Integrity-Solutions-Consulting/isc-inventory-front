@@ -3,12 +3,14 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ResponseDTO } from "../../../../core/models/ResponseDTO/ResponseDTO";
 import { EquipmentDismissalResponseDTO } from "../../../../core/models/ResponseDTO/inventory/EquipmentDismissalResponseDTO";
+import { environment } from "../../../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class EquipmentDismissalService {
-  private apiUrl = 'http://localhost:8080/api/v1/equipment-dismissal'; // Ajusta el endpoint base si es distinto
+  private baseUrl = environment.apiBaseUrl;
+  private apiUrl =  `${this.baseUrl}/equipment-dismissal`;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -17,4 +19,10 @@ export class EquipmentDismissalService {
       `${this.apiUrl}`
     );
   }
+
+  public getTable(): Observable<ResponseDTO<EquipmentDismissalResponseDTO[]>> {
+      return this.httpClient.get<ResponseDTO<EquipmentDismissalResponseDTO[]>>(
+        `${this.apiUrl}`
+      );
+    }
 }
