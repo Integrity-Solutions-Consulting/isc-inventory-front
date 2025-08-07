@@ -15,18 +15,23 @@
   </mat-form-field>
 </div>
 
-@if(chartData()){
+@if(chartData() && !noData){
 <ngx-charts-pie-chart
   [results]="chartData()"
   [legend]="true"
-  [labels]="false"
+  [labels]="true"
   [legendPosition]="legendPosition"
   [doughnut]="true"
   [explodeSlices]="false"
   [scheme]="'cool'"
-  [view]="[400, 200 ]"
+  [view]="[400, 200]"
   [tooltipDisabled]="true"
 >
 </ngx-charts-pie-chart>
 
+} @else{
+<div class="no-data-placeholder">
+  <img src="assets/No_data.png" alt="No hay datos" />
+  <p>No hay datos disponibles para mostrar</p>
+</div>
 }

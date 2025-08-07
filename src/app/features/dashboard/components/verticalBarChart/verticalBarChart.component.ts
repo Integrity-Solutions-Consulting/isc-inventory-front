@@ -19,7 +19,7 @@ import { DashboardEquipmentAssignedByCategoryResponseDTO } from '../../../../cor
 })
 export class VerticalBarChartComponent implements OnInit {
   data = input<DashboardEquipmentAssignedByCategoryResponseDTO[]>([]); // Input signal for data
-  readonly barChartData = computed(() =>
+  readonly barChartData = computed(() => 
     this.data().map((item) => ({
       name: item.categoria,
       value: item.total,
@@ -34,11 +34,21 @@ export class VerticalBarChartComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C7B42C'],
   };
 
-  constructor() {}
+  noData:boolean = false;
+
+  constructor() {
+    effect(() => {
+      const newData = this.data();
+      console.log("Nueva data recibida:", newData);
+
+      const barCount = newData.length;
+      this.noData = barCount === 0;
+
+      const barSpacing = 80;
+      this.barWidth = Math.max(barCount * barSpacing, 400);
+    });
+  }
 
   ngOnInit() {
-    const barCount = this.data().length;
-    const barSpacing = 80; // ancho estimado por barra
-    this.barWidth = Math.max(barCount * barSpacing, 400);
   }
 }
