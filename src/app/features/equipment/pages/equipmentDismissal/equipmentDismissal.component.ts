@@ -52,8 +52,6 @@ export class EquipmentDismissalComponent implements OnInit
     'categoryName',
     'equipmentItemCode',
     'dismissalType',
-    'statusName',//
-    'conditionName',
     'creationDate',
     'companyName',
   ];
@@ -105,12 +103,10 @@ public searchTerm: string = '';
   return (
     data.categoryName?.toLowerCase().includes(term) ||
     data.companyName?.toLowerCase().includes(term) ||
-    data.conditionName?.toLowerCase().includes(term) ||
     data.dismissalTypeName?.toLowerCase().includes(term) ||
     data.equipmentBrand?.toLowerCase().includes(term) ||
     data.equipmentItemCode?.toLowerCase().includes(term) ||
     data.equipmentSerialNumber?.toLowerCase().includes(term) ||
-    data.statusName?.toLowerCase().includes(term) ||
     data.equipmentModel?.toLowerCase().includes(term)
   );
 };
@@ -130,50 +126,6 @@ applyFilter(event: Event) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  getStatusClasses(statusName: string | undefined): string {
-    if (!statusName) return 'dot-inactive out-of-service';
-    switch (statusName.trim().toLowerCase()) {
-      case 'disponible':
-        return 'dot-available available';
-      case 'asignado':
-        return 'dot-assigned assigned';
-      case 'en reparación':
-        return 'dot-under-repair under-repair';
-      case 'en revisión':
-        return 'dot-under-review under-review';
-      case 'falla reportada':
-        return 'dot-bug-reported bug-reported';
-      case 'reparado':
-        return 'dot-repaired repaired';
-      case 'fuera de servicio':
-        return 'dot-out-of-service out-of-service';
-      default:
-        return 'dot-inactive out-of-service';
-    }
-  }
-
-  getConditions(statusName: string | undefined): string {
-    if (!statusName) return 'dot-inactive out-of-service';
-
-    switch (statusName.trim().toLowerCase()) {
-      case 'nuevo':
-        return 'dot-new new';
-      case 'como nuevo':
-        return 'dot-like-new like-new';
-      case 'usado':
-        return 'dot-used used';
-      case 'desgastado':
-        return 'dot-worn-out worn-out';
-      case 'Falla menor':
-        return 'dot-minor-issue minor-issue';
-      case 'Falla mayor':
-        return 'dot-major-issue major-issue';
-      case 'irreparable':
-        return 'dot-unrepairable unrepairable';
-      default:
-        return 'dot-inactive out-of-service';
-    }
-  }
 
    onPageChange(event: PageEvent): void {
       console.log('Página cambiada:', event);

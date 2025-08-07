@@ -28,18 +28,8 @@
           <td mat-cell *matCellDef="let item">
             <strong>{{ item.categoryName }}</strong>
             <div class="text-muted sub-info">{{ item.equipmentBrand}} {{ item.equipmentModel}}</div>
-            <div class="status-container" [ngClass]="item.statusName  ? 'active' : 'inactive'">
-              <span
-                class="status-dot"
-                [ngClass]="item.statusName ? 'dot-active' : 'dot-inactive'"
-              ></span>
-              <span [ngClass]="item.statusName ? 'estado-activo' : 'estado-inactivo'">
-                {{ item.status ? "Activo" : "Inactivo" }}
-              </span>
-            </div>
           </td>
         </ng-container>
-
 
         <!-- Detalle -->
         <ng-container matColumnDef="equipmentItemCode">
@@ -58,33 +48,10 @@
           </td>
         </ng-container>
 
-        <!-- Estado -->
-        <ng-container matColumnDef="statusName">
-          <th mat-header-cell *matHeaderCellDef class="text-center">Estado</th>
-          <td mat-cell *matCellDef="let item" class="text-center">
-            <span class="status-container" [ngClass]="getStatusClasses(item.equipmentStatusName)">
-              <span class="status-dot"></span>
-              {{ item.statusName }}
-            </span>
-          </td>
-        </ng-container>
-
-
-         <!-- Condicion -->
-        <ng-container matColumnDef="conditionName">
-         <th mat-header-cell *matHeaderCellDef class="text-center">Condición</th>
-          <td mat-cell *matCellDef="let item" class="text-center">
-            <span class="status-container" [ngClass]="getConditions(item.equipmentConditionName)">
-              <span class="status-dot"></span>
-              {{ item.conditionName }}
-            </span>
-          </td>
-        </ng-container>
-
 
         <!-- Fecha de Compra -->
         <ng-container matColumnDef="creationDate">
-          <th mat-header-cell *matHeaderCellDef>Creado</th>
+          <th mat-header-cell *matHeaderCellDef>Fecha de Baja</th>
           <td mat-cell *matCellDef="let item">
             {{ item.creationDate | date : "dd/MM/yyyy" }}
           </td>
