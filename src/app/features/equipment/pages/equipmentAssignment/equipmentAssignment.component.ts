@@ -89,7 +89,7 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.sort.active = 'returnDate';
-      this.sort.direction = 'desc';
+      this.sort.direction = 'asc';
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = (item, property) => {
         switch (property) {
@@ -102,7 +102,7 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
           case 'assignmentDate':
             return item.assignmentDate || '';
           case 'returnDate':
-            return item.returnDate || '';
+            return item.returnDate || new Date(0).toISOString();
           default:
             return (item as any)[property];
         }
