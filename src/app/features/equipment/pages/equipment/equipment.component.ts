@@ -58,7 +58,7 @@ export class EquipmentComponent implements OnInit {
     'stock',
     'buyDate',
     'invoice',
-    'ubicacion',
+    'office',
     'actions',
   ];
   dataSource = new MatTableDataSource<EquipmentDetailResponseDTO>();

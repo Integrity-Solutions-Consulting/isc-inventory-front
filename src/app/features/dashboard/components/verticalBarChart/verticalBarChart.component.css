@@ -9,3 +9,15 @@
         font-weight: bold;
     }
 }
+
+
+.no-data-placeholder {
+  text-align: center;
+  padding: 2rem;
+  color: gray;
+}
+
+.no-data-placeholder img {
+  max-width: 15rem;
+  width: 100%;
+}

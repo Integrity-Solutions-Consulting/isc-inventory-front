@@ -10,7 +10,7 @@
       <input
         matInput
         placeholder="Buscar por empleado o equipo"
-        (keyup)="applyFilter($event)"
+        (keyup)="applyFilter($event)" 
       />
       <button mat-icon-button matPrefix (click)="search()" tabindex="-1">
         <mat-icon>search</mat-icon>
@@ -126,7 +126,7 @@
               <button
                 mat-menu-item
                 (click)="generatePdf(item)"
-                [disabled]="!item.status"
+                [disabled]="item.returnDate"
               >
                 <mat-icon>picture_as_pdf</mat-icon>
                 <span>Generar PDF</span>
@@ -140,13 +140,13 @@
                 <span>Retornar</span>
               </button>
               <button
-  mat-menu-item
-  (click)="sendToRepair(item)"
-  [disabled]="item.equipmentStatusId !== 2"
->
-  <mat-icon>build</mat-icon>
-  <span>Enviar a reparación</span>
-</button>
+                mat-menu-item
+                (click)="sendToRepair(item)"
+                [disabled]="item.returnDate || !item.status"
+              >
+                <mat-icon>build</mat-icon>
+                <span>Enviar a reparación</span>
+              </button>
               <button
                 mat-menu-item
                 (click)="warningDelete(item)"
@@ -226,7 +226,7 @@
 
   <mat-paginator
     [length]="total"
-    [pageSize]="5"
+    [pageSize]="20"
     [pageSizeOptions]="[5, 10, 20]"
     (page)="onPageChange($event)"
   ></mat-paginator>

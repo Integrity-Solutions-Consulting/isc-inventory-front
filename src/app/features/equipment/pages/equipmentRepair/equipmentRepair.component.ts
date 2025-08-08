@@ -25,6 +25,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { EquipmentDismissalFormComponent } from '../../components/equipmentDismissalForm/equipmentDismissalForm.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDivider } from '@angular/material/divider';
 import { EquipmentService } from '../../services/equipment/equipment.service';
@@ -43,6 +45,7 @@ import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/R
     MatMenuModule,
     FormsModule,
     CommonModule,
+    MatDialogModule,
     LayoutModule,
     MatCardModule,
     MatSortModule,
@@ -66,6 +69,7 @@ export class EquipmentRepairComponent implements OnInit {
   dataSource = new MatTableDataSource<EquipmentRepairDetailResponseDTO>();
   total = 0;
 
+ 
   equipmentStatuses = [
     { id: 1, name: 'Disponible' },
     { id: 3, name: 'En reparación' },
@@ -82,6 +86,7 @@ export class EquipmentRepairComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private loading: LoadingService,
     private formService: FormService,
+    private dialog: MatDialog,
     private modalDialogService: ModalDialogService,
     private warningService: WarningService,
     private equipmentRepairService: RepairService,
@@ -99,8 +104,15 @@ export class EquipmentRepairComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.sort.active = 'repairDate';
-      this.sort.direction = 'desc';
+      const statusPriority: { [key: string]: number } = {
+        'en revision': 0,
+        'en reparación': 1,
+        'reparado': 2,
+        'fuera de servicio': 3,
+        'disponible': 5,
+      };
+      this.sort.active = 'repairStatus';
+      this.sort.direction = 'asc';
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = (item, property) => {
         switch (property) {
@@ -108,6 +120,9 @@ export class EquipmentRepairComponent implements OnInit {
             return item.serialNumber || '';
           case 'repairDate':
             return item.repairDate || '';
+          case 'repairStatus':
+            const name = item.repairStatus?.name?.toLowerCase() || '';
+            return statusPriority[name] ?? 99; // Valor alto para estados no definidos
           case 'description':
             return item.description || '';
           case 'cost':
@@ -127,6 +142,43 @@ export class EquipmentRepairComponent implements OnInit {
     });
   }
 
+  openDismissalForm(equipmentId: number): void {
+  const dialogRef = this.dialog.open(EquipmentDismissalFormComponent, {
+    width: '1200px',
+    data: { equipmentId }
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result === 'submitted') {
+      this.loadTable();
+    }
+  });
+}
+
+openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair: number): void {
+  const dialogRef = this.dialog.open(EquipmentDismissalFormComponent, {
+    width: '800px',
+    height: '350px',  // Altura más generosa
+    maxWidth: '90vw',
+    maxHeight: '90vh',
+    autoFocus: false,
+    panelClass: 'custom-dialog-container', // MUY IMPORTANTE: esto conecta con el CSS global
+    hasBackdrop: true,
+    disableClose: false,
+    data: { equipmentId }
+  });
+
+
+
+  dialogRef.afterClosed().subscribe(result => {
+    // esperamos que el formulario cierre con 'submitted' al guardar correctamente
+    if (result === 'submitted') {
+      this.setRepairStatus(equipmentId, status, idRepair);
+    }
+  });
+}
+
+
   loadTable(): void {
     this.loading.show(); // Show loading spinner
     this.equipmentRepairService.getAll().subscribe({
@@ -134,6 +186,10 @@ export class EquipmentRepairComponent implements OnInit {
         this.dataSource.data = response.data;
         this.total = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
+        this.sort.sortChange.emit({
+          active: this.sort.active,
+          direction: this.sort.direction,
+        });
       },
       error: (err) => {
         console.error('Error loading table', err);

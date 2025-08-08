@@ -126,6 +126,7 @@ export class WarrantyTypeFormComponent implements OnInit {
     this.equipmentService.setWarranty(payload, data.idEquipment).subscribe({
       next: (resp) => {
         this.loading.hide();
+        console.log('Garantía guardada con éxito:', resp);
         this.formService.close(resp.data);
       },
       error: (error) => {

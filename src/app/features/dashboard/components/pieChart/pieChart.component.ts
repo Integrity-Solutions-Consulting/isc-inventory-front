@@ -29,7 +29,7 @@ export class PieChartComponent implements OnInit {
     this.data()
       .filter((item) => item.equipmentCount > 0)
       .map((item) => ({
-        name: item.statusName,
+        name: `${item.statusName} (${item.equipmentCount})`,
         value: item.equipmentCount,
       }))
   );
@@ -37,6 +37,7 @@ export class PieChartComponent implements OnInit {
   selectedCategoryId = 1;
   categories = signal<EquipmentCategoryResponseDTO[]>([]);
   selectedCategory: EquipmentCategoryResponseDTO | undefined;
+  noData:boolean = false;
 
   constructor(
     private dashboardService: DashboardService,
@@ -46,7 +47,15 @@ export class PieChartComponent implements OnInit {
   ngOnInit() {
     this.equipmentCategoriesService.getAll().subscribe({
       next: (response) => {
+        console.log(response.data);
+        if (response.data.length == 0){
+          console.error('No equipment categories found');
+          this.noData = true;
+          return;
+        }
+        console.log(response.data);
         this.categories.set(response.data);
+        console.log(this.categories())
         this.selectedCategory = this.categories()[0]; // Selecciona la primera categoría por defecto
         this.dashboardService.getPie(this.selectedCategory.id).subscribe({
           next: (response) => {

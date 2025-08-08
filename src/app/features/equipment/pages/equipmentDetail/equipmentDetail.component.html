@@ -152,7 +152,9 @@
 
   <!-- Detalles de factura-->
   <mat-card class="equipment-info-card" *ngIf="invoice">
-    <mat-card-title>Detalles de Factura</mat-card-title>
+    <mat-card-title>
+      <mat-icon color="primary">verified_user</mat-icon>
+      Detalles de Factura</mat-card-title>
     <mat-card-content>
       <div class="detail-grid">
         <div><strong>Descripción:</strong> {{ invoice.description }}</div>
@@ -173,10 +175,7 @@
 
 
   <!-- Características -->
-  <mat-card
-    class="equipment-characteristics-card"
-    *ngIf="equipment.characteristics.length"
-  >
+  <mat-card class="equipment-info-card">
     <mat-card-title>Características</mat-card-title>
     <mat-card-content>
       <ul>

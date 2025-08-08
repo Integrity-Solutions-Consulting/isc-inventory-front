@@ -104,8 +104,7 @@ loadData() {
   this.entityId = this.formService.modalDataValue;
 
   this.conditionService.getAll().subscribe({
-    next: (resp) => {
-      this.conditions = resp.data;
+    next: (resp) => { this.conditions = resp.data;
       this.filteredConditions = [...this.conditions];
       this.conditionFilterCtrl.valueChanges
         .pipe(takeUntil(this._onDestroy))
@@ -130,7 +129,8 @@ loadData() {
       ? dateReturn.format('YYYY-MM-DD')
       : '';
 
-    const revokeRequest: EquipmentRevokeRequestDTO = {
+    const revokeRequest: EquipmentRevokeRequestDTO =
+    {
   revokeDate: revokeDate,
   condition: this.equipmentReturnForm.value.condition,
 };

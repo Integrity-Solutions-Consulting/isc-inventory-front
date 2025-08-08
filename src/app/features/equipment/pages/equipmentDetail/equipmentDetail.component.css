@@ -114,8 +114,9 @@
   mat-card-title {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding-left: 4px;
+    gap: 8px;
+    margin-left: 20px;
+    margin-top: 10px;
   }
   strong {
     font-weight: 600;
@@ -159,4 +160,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  margin-left: 20px;
+  margin-top: 10px;
 }

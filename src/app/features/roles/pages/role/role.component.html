@@ -67,16 +67,16 @@
             </button>
 
           <mat-menu #menu="matMenu">
-            <button mat-icon-button >
+            <button mat-menu-item >
               <mat-icon>visibility</mat-icon>
               <span>Ver</span>
             </button>
-            <button mat-icon-button (click)="edit(rol)">
+            <button mat-menu-item (click)="edit(rol)">
               <mat-icon>edit</mat-icon>
               <span>Editar</span>
             </button>
             <button
-              mat-icon-button
+              mat-menu-item
               [disabled]="!rol.active"
               (click)="warningDelete(rol)">
               <mat-icon [class.inactive-icon]="!rol.active">delete</mat-icon>
@@ -125,7 +125,7 @@
 
   <mat-paginator
     [length]="total"
-    [pageSize]="5"
+    [pageSize]="20"
     [pageSizeOptions]="[5, 10, 20]"
     (page)="onPageChange($event)"
   >

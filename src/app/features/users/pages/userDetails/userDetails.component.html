@@ -46,6 +46,7 @@
         <div><strong>Última modificación:</strong> {{ userDetails.lastModificationDate | date: 'dd/MM/yyyy' }}</div>
         <div><strong>Conectado actualmente:</strong> {{ userDetails.isLoggedIn ? 'Sí' : 'No' }}</div>
         <div><strong>Estado de cuenta:</strong> {{ userDetails.suspended ? 'Suspendido' : (userDetails.active ? 'Activo' : 'Inactivo') }}</div>
+        <div><strong>Tipo de Identificación:</strong> {{ userDetails.employee?.identificationType?.name || 'No definido' }}</div>
       </div>
     </mat-card-content>
   </mat-card>
