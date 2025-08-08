@@ -159,7 +159,8 @@
               <!-- 'Fuera de servicio' siempre está disponible -->
               <button
                mat-menu-item
-              (click)="openDismissalFormAndThenSetStatus(item.equipment, 7, item.id)">
+              (click)="openDismissalFormAndThenSetStatus(item.equipment, 7, item.id)"
+              [disabled]="item.repairStatus.id == 7">
               <mat-icon>highlight_off</mat-icon>
               <span>Fuera de servicio</span>
               </button>
