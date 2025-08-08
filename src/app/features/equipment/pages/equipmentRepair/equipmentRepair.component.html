@@ -128,7 +128,7 @@
                 mat-menu-item
                 (click)="setRepairStatus(item.equipment, 3, item.id)"
                 *ngIf="item.repairStatus !== 4"
-                [disabled]="item.repairStatus.id == 1 || item.repairStatus.id !== 4"
+                [disabled]="item.repairStatus.id == 1 || item.repairStatus.id !== 4 || !item.status"
               >
                 <mat-icon>visibility</mat-icon>
                 <span>Marcar como En Reparación</span>
@@ -138,9 +138,7 @@
               <button
                 mat-menu-item
                 (click)="setRepairStatus(item.equipment, 6,item.id)"
-                [disabled]="
-                  item.repairStatus.id !== 3
-                "
+                [disabled]=" item.repairStatus.id !== 3 || !item.status"
               >
                 <mat-icon>build_circle</mat-icon>
                 <span>Marcar como Reparado</span>
@@ -150,7 +148,7 @@
               <button
                 mat-menu-item
                 (click)="setRepairStatus(item.equipment, 1,item.id)"
-                [disabled]="item.repairStatus.id  !== 6"
+                [disabled]="item.repairStatus.id  !== 6 || !item.status"
               >
                 <mat-icon>check_circle</mat-icon>
                 <span>Marcar como Disponible</span>
@@ -160,7 +158,7 @@
               <button
                mat-menu-item
               (click)="openDismissalFormAndThenSetStatus(item.equipment, 7, item.id)"
-              [disabled]="item.repairStatus.id == 7">
+              [disabled]="item.repairStatus.id == 7 || !item.status">
               <mat-icon>highlight_off</mat-icon>
               <span>Fuera de servicio</span>
               </button>
