@@ -67,3 +67,11 @@ a.mdc-list-item.active {
 .mat-expansion-panel-header-title, .mat-expansion-panel-header-description{
   padding: 10px
 }
+
+.menu-label {
+  white-space: normal;      /* permite saltos de línea */
+  word-break: break-word;   /* permite cortar palabras largas si es necesario */
+  display: inline-block;    /* evita que colapse con el ícono */
+  max-width: 140px;         /* ajusta según el ancho de tu sidebar */
+  line-height: 1.2;         /* mejora la lectura si hay varias líneas */
+}

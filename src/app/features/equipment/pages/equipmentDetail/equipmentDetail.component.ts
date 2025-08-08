@@ -82,39 +82,27 @@ export class EquipmentDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const navigation = history.state as {
-      equipment?: EquipmentDetailResponseDTO;
-    };
-
-    if (navigation.equipment) {
-      this.equipment = navigation.equipment;
-      this.loadWarranty(this.equipment.warranty ?? 0);
-
-      if(this.equipment?.invoice){
-        this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
-      }
-      this.loading = false;
+    const id =
+      this.equipmentId ?? Number(this.route.snapshot.queryParamMap.get('id'));
+    if (id) {
+      this.equipmentService.getDetailById(id).subscribe({
+        next: (resp) => {
+          this.equipment = resp.data;
+          if (this.equipment?.warranty && this.equipment.warranty > 0) {
+            this.loadWarranty(this.equipment.warranty);
+          }
+          if (this.equipment?.invoice) {
+            this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
+          }
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar el detalle', err);
+          this.loading = false;
+        },
+      });
     } else {
-      const id =
-        this.equipmentId ?? Number(this.route.snapshot.queryParamMap.get('id'));
-      if (id) {
-        this.equipmentService.getDetailById(id).subscribe({
-          next: (resp) => {
-            this.equipment = resp.data;
-            this.loadWarranty(this.equipment?.warranty ?? 0);
-            if (this.equipment?.invoice){
-              this.loadInvoicesBySerialNumber(this.equipment.serialNumber);
-            }
-            this.loading = false;
-          },
-          error: (err) => {
-            console.error('Error al cargar el detalle', err);
-            this.loading = false;
-          },
-        });
-      } else {
-        this.loading = false;
-      }
+      this.loading = false;
     }
   }
 
@@ -191,6 +179,7 @@ export class EquipmentDetailComponent implements OnInit {
       dataWithEquipmentId,
       (result: WarrantTypeDetailResponseDTO) => {
         if (result) {
+          console.log(result);
           this.warrantyDetail = result;
           this.modalDialogService.open(
             'success',
@@ -224,8 +213,10 @@ export class EquipmentDetailComponent implements OnInit {
       invoice,
       (result: InvoiceDetailResponseDTO) => {
         if (result && this.equipment?.id) {
+          this.invoice = result;
           this.equipmentService.getDetailById(this.equipment.id).subscribe({
             next: (resp) => {
+              console.log(resp);
               this.equipment = resp.data;
               this.modalDialogService.open(
                 'success',

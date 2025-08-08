@@ -69,6 +69,7 @@ export class EquipmentRepairComponent implements OnInit {
   dataSource = new MatTableDataSource<EquipmentRepairDetailResponseDTO>();
   total = 0;
 
+ 
   equipmentStatuses = [
     { id: 1, name: 'Disponible' },
     { id: 3, name: 'En reparación' },
@@ -103,8 +104,15 @@ export class EquipmentRepairComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.sort.active = 'repairDate';
-      this.sort.direction = 'desc';
+      const statusPriority: { [key: string]: number } = {
+        'en revision': 0,
+        'en reparación': 1,
+        'reparado': 2,
+        'fuera de servicio': 3,
+        'disponible': 5,
+      };
+      this.sort.active = 'repairStatus';
+      this.sort.direction = 'asc';
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = (item, property) => {
         switch (property) {
@@ -112,6 +120,9 @@ export class EquipmentRepairComponent implements OnInit {
             return item.serialNumber || '';
           case 'repairDate':
             return item.repairDate || '';
+          case 'repairStatus':
+            const name = item.repairStatus?.name?.toLowerCase() || '';
+            return statusPriority[name] ?? 99; // Valor alto para estados no definidos
           case 'description':
             return item.description || '';
           case 'cost':
@@ -175,6 +186,10 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
         this.dataSource.data = response.data;
         this.total = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
+        this.sort.sortChange.emit({
+          active: this.sort.active,
+          direction: this.sort.direction,
+        });
       },
       error: (err) => {
         console.error('Error loading table', err);
