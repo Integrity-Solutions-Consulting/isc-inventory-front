@@ -220,11 +220,9 @@ mat-card-actions {
 }
 
 /*ajuste para el input*/
-.mat-mdc-form-field-infix {
+.custom-dialog-container .mat-mdc-form-field-infix {
   padding: 0 !important;
   height: 40px !important;
-  min-height: unset !important;
-  display: flex;
 }
 
 .mat-mdc-select {
@@ -540,7 +538,7 @@ form {
   min-height: 70px;
 }
 
-mat-form-field {
+.custom-dialog-container mat-form-field {
   background-color: white;
   border-radius: 0.5rem;
 
