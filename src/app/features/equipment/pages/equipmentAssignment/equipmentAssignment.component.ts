@@ -169,7 +169,7 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
   return(equipment: EquipmentAssignmentDetailResponseDTO) {
     this.formService.open(
       'Retornar equipo',
-      'add',
+      'computer',
       EquipmentReturnFormComponent,
       equipment.id,
       (result: EquipmentAssignmentDetailResponseDTO) => {
