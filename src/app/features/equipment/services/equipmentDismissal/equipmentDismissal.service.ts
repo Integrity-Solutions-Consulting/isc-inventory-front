@@ -4,6 +4,8 @@ import { Observable } from "rxjs";
 import { ResponseDTO } from "../../../../core/models/ResponseDTO/ResponseDTO";
 import { EquipmentDismissalResponseDTO } from "../../../../core/models/ResponseDTO/inventory/EquipmentDismissalResponseDTO";
 import { environment } from "../../../../../environments/environment";
+import { EquipmentDismissalRequestDTO } from "../../../../core/models/RequestDTO/inventory/EquipmentDismissalRequestDTO";
+import { EquipmentDismissalTypeResponseDTO } from "../../../../core/models/ResponseDTO/inventory/EquipmentDismissalTypeResponseDTO";
 
 @Injectable({
   providedIn: 'root'
@@ -25,4 +27,19 @@ export class EquipmentDismissalService {
         `${this.apiUrl}`
       );
     }
+
+  public getAllTypes(): Observable<ResponseDTO<EquipmentDismissalTypeResponseDTO[]>> {
+    return this.httpClient.get<ResponseDTO<EquipmentDismissalTypeResponseDTO[]>>(
+      `${this.apiUrl}/types`
+    );
+  }
+
+  public saveDismissal(request: EquipmentDismissalRequestDTO): Observable<ResponseDTO<EquipmentDismissalResponseDTO>> {
+    return this.httpClient.post<ResponseDTO<EquipmentDismissalResponseDTO>>(
+      `${this.apiUrl}/saveDismissal`,
+      request
+    );
+  }
+
+
 }

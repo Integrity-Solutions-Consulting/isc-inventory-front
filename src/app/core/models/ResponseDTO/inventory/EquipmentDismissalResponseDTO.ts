@@ -16,6 +16,8 @@ export interface EquipmentDismissalResponseDTO
 
   dismissalTypeId: number;
   dismissalTypeName: string;
+  reason:string;
+
   status: boolean;
   creationDate: string;
   modificationDate: string;

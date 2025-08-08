@@ -25,6 +25,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { EquipmentDismissalFormComponent } from '../../components/equipmentDismissalForm/equipmentDismissalForm.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDivider } from '@angular/material/divider';
 import { EquipmentService } from '../../services/equipment/equipment.service';
@@ -43,6 +45,7 @@ import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/R
     MatMenuModule,
     FormsModule,
     CommonModule,
+    MatDialogModule,
     LayoutModule,
     MatCardModule,
     MatSortModule,
@@ -82,6 +85,7 @@ export class EquipmentRepairComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private loading: LoadingService,
     private formService: FormService,
+    private dialog: MatDialog,
     private modalDialogService: ModalDialogService,
     private warningService: WarningService,
     private equipmentRepairService: RepairService,
@@ -126,6 +130,43 @@ export class EquipmentRepairComponent implements OnInit {
       };
     });
   }
+
+  openDismissalForm(equipmentId: number): void {
+  const dialogRef = this.dialog.open(EquipmentDismissalFormComponent, {
+    width: '1200px',
+    data: { equipmentId }
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result === 'submitted') {
+      this.loadTable();
+    }
+  });
+}
+
+openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair: number): void {
+  const dialogRef = this.dialog.open(EquipmentDismissalFormComponent, {
+    width: '800px',
+    height: '350px',  // Altura más generosa
+    maxWidth: '90vw',
+    maxHeight: '90vh',
+    autoFocus: false,
+    panelClass: 'custom-dialog-container', // MUY IMPORTANTE: esto conecta con el CSS global
+    hasBackdrop: true,
+    disableClose: false,
+    data: { equipmentId }
+  });
+
+
+
+  dialogRef.afterClosed().subscribe(result => {
+    // esperamos que el formulario cierre con 'submitted' al guardar correctamente
+    if (result === 'submitted') {
+      this.setRepairStatus(equipmentId, status, idRepair);
+    }
+  });
+}
+
 
   loadTable(): void {
     this.loading.show(); // Show loading spinner

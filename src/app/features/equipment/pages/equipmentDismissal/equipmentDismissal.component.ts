@@ -52,6 +52,7 @@ export class EquipmentDismissalComponent implements OnInit
     'categoryName',
     'equipmentItemCode',
     'dismissalType',
+    'reason',
     'creationDate',
     'companyName',
   ];
