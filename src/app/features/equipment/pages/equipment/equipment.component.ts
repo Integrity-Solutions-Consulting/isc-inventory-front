@@ -26,9 +26,11 @@ import { EquipmentFormComponent } from '../../components/equipmentForm/equipment
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { WarrantyTypeFormComponent } from '../../components/warranty-type-form/warranty-type-form.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EquipmentRepairFormComponent } from '../../components/equipmentRepairForm/equipmentRepairForm.component';
 import { EquipmentRepairDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentRepairDetailResponseDTO';
+import { EquipmentDismissalFormComponent } from '../../components/equipmentDismissalForm/equipmentDismissalForm.component';
+import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairStatusChangeRequestDTO';
 
 @Component({
   selector: 'app-equipment',
@@ -40,12 +42,13 @@ import { EquipmentRepairDetailResponseDTO } from '../../../../core/models/Respon
     MatInputModule,
     MatIconModule,
     MatButtonModule,
+    MatDialogModule,
     FormsModule,
     CommonModule,
     LayoutModule,
     MatCardModule,
-    MatMenuModule,
-  ],
+    MatMenuModule
+],
   templateUrl: './equipment.component.html',
   styleUrls: ['./equipment.component.css'],
 })
@@ -67,6 +70,16 @@ export class EquipmentComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   isSmallScreen: boolean = false;
+
+  equipmentStatuses = [
+    { id: 1, name: 'Disponible' },
+    { id: 2, name: 'Asignado' },
+    { id: 3, name: 'En reparación' },
+    { id: 4, name: 'En revisión' },
+    { id: 5, name: 'Falla reportada' },
+    { id: 6, name: 'Reparado' },
+    { id: 7, name: 'Fuera de Servicio' },
+  ];
 
   constructor
   (
@@ -103,19 +116,18 @@ export class EquipmentComponent implements OnInit {
           this.total = this.dataSource.data.length;
           this.dataSource.paginator = this.paginator;
           this.dataSource.filterPredicate = (data, filter) => {
-  const term = filter.trim().toLowerCase();
-  return (
-    data.categoryName?.toLowerCase().includes(term) ||
-    data.brand?.toLowerCase().includes(term) ||
-    data.model?.toLowerCase().includes(term) ||
-    data.serialNumber?.toLowerCase().includes(term) ||
-    data.itemCode?.toLowerCase().includes(term) ||
-    data.companyName?.toLowerCase().includes(term) ||
-    data.equipmentStatusName?.toLowerCase().includes(term) ||
-    data.equipmentConditionName?.toLowerCase().includes(term)
-  );
-};
-
+          const term = filter.trim().toLowerCase();
+          return (
+            data.categoryName?.toLowerCase().includes(term) ||
+            data.brand?.toLowerCase().includes(term) ||
+            data.model?.toLowerCase().includes(term) ||
+            data.serialNumber?.toLowerCase().includes(term) ||
+            data.itemCode?.toLowerCase().includes(term) ||
+            data.companyName?.toLowerCase().includes(term) ||
+            data.equipmentStatusName?.toLowerCase().includes(term) ||
+            data.equipmentConditionName?.toLowerCase().includes(term)
+          );
+        };
         },
         error: (err) => {
           console.error('Error loading table', err);
@@ -125,6 +137,51 @@ export class EquipmentComponent implements OnInit {
           this.loading.hide(); // Hide loading spinner on complete
         },
       });
+  }
+
+  // Método para confirmar y marcar equipo como fuera de servicio
+  confirmOutOfService(equipment: EquipmentDetailResponseDTO): void {
+    this.warningService.open(
+      'Confirmar fuera de servicio',
+      '¿Estás seguro que deseas marcar este equipo como fuera de servicio? Esta acción cambiará el estado del equipo.',
+      () => {
+        this.setEquipmentOutOfService(equipment);
+      }
+    );
+  }
+
+  setEquipmentOutOfService(entity: EquipmentDetailResponseDTO): void {
+    this.loading.show();
+    this.equipmentService.delete(entity.id).subscribe({
+      next: (resp) => {
+        const index = this.dataSource.data.findIndex((u) => u.id === entity.id);
+        if (index !== -1) {
+          this.dataSource.data[index].status = false;
+          this.dataSource.data[index].equipmentStatusName = 'Fuera de servicio';
+          this.dataSource.data[index].equipmentStatusId = 7;
+          this.dataSource.data = this.dataSource.data.map((item) => {
+            if (item.categoryId === entity.categoryId) {
+              return {
+                ...item,
+                categoryStock: entity.categoryStock - 1,
+              };
+            }
+            return item;
+          });
+          this.dataSource.data = [...this.dataSource.data];
+        }
+        this.loading.hide();
+        this.modalDialogService.open(
+          'success',
+          'Equipo fuera de servicio',
+          'El equipo fue marcado como fuera de servicio correctamente.'
+        );
+      },
+      error: (error) => {
+        this.loading.hide();
+        this.modalDialogService.open('error', 'Error', error.error.message);
+      },
+    });
   }
 
   create(): void {
