@@ -17,3 +17,12 @@
   max-width: 15rem;
   width: 100%;
 }
+
+@media (max-width: 1200px) {
+  ::ng-deep .legend-label-text {
+    white-space: normal !important;
+    word-break: break-word !important;
+    text-align: left !important;
+  }
+}
+
