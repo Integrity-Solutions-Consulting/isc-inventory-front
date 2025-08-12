@@ -160,7 +160,7 @@
               <button
                mat-menu-item
               (click)="openDismissalFormAndThenSetStatus(item.equipment, 7, item.id)"
-              [disabled]="item.repairStatus.id == 7 || !item.status">
+              [disabled]="item.repairStatus.id == 7 || !item.status || item.repairStatus.id == 6">
               <mat-icon>highlight_off</mat-icon>
               <span>Fuera de servicio</span>
               </button>
