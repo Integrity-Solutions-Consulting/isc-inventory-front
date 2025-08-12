@@ -69,7 +69,7 @@ export class EquipmentRepairComponent implements OnInit {
   dataSource = new MatTableDataSource<EquipmentRepairDetailResponseDTO>();
   total = 0;
 
- 
+
   equipmentStatuses = [
     { id: 1, name: 'Disponible' },
     { id: 3, name: 'En reparación' },
