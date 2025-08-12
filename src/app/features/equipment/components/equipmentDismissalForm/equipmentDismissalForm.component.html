@@ -7,39 +7,33 @@
     </div>
   </div>
 
+  <!-- Formulario - Tipo de Baja -->
   <form [formGroup]="equipmentDismissalTypeForm">
-
-    <!-- Tipo de Baja -->
-    <div class="form-field">
-      <label>Tipo de Baja <span class="required-asterisk">*</span></label>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-select formControlName="dismissalType">
-          <!-- Buscar-->
-          <mat-option>
-            <ngx-mat-select-search
-              [formControl]="dismissalTypeFilterCtrl"
-              placeholderLabel="Buscar tipo de baja..."
-              noEntriesFoundLabel="No se encontraron resultados">
-            </ngx-mat-select-search>
-          </mat-option>
-          <!-- Opciones filtradas -->
-          <mat-option *ngFor="let type of filteredDismissalType" [value]="type.id">
-            {{ type.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+  <div class="form-field">
+    <label>Tipo de Baja <span class="required-asterisk">*</span></label>
+    <mat-form-field appearance="outline" class="w-100 centered-select">
+      <mat-select formControlName="dismissalType">
+        <!-- Buscar-->
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="dismissalTypeFilterCtrl"
+            placeholderLabel="Buscar tipo de baja..."
+            noEntriesFoundLabel="No se encontraron resultados">
+          </ngx-mat-select-search>
+        </mat-option>
+        <!-- Opciones filtradas -->
+        <mat-option *ngFor="let type of filteredDismissalType" [value]="type.id">
+          {{ type.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
     <!-- Razón de Baja -->
     <div class="form-field">
-      <label>Razón de Baja</label>
+      <label>Razón de Baja (Opcional)</label>
       <mat-form-field appearance="outline" class="w-100">
-        <textarea
-          matInput
-          formControlName="dismissalReason"
-          placeholder="Ingrese la razón de la baja"
-          rows="3">
-        </textarea>
+        <input matInput formControlName="dismissalReason" (input)="limitCharacters('dismissalReason', 100)" />
       </mat-form-field>
     </div>
 

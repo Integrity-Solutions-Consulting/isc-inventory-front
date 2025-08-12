@@ -4,40 +4,41 @@
   border-radius: 1rem;
 }
 
+/* Barra de búsqueda */
 .toolbar {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  height: 40px; /* o la altura que tenga tu toolbar */
-  margin-bottom: 2rem;
+  height: 40px;
+  margin-bottom: 1.5rem;
 }
 
 .toolbar mat-form-field {
-  height: 100%;       /* Ocupa toda la altura del contenedor */
-  margin: 0;          /* Elimina márgenes que alteren la altura */
+  height: 100%;
+  margin: 0;
   width: 25rem;
 }
 
 .toolbar mat-form-field .mat-form-field-wrapper {
-  height: 100%;       /* Ajusta el wrapper interno */
-  padding-bottom: 0;  /* Evita espacio extra debajo */
+  height: 100%;
+  padding-bottom: 0;
 }
 
 .toolbar mat-form-field input.mat-input-element {
-  height: 100%;       /* Input ocupa toda la altura disponible */
-  padding: 0 12px;    /* Ajusta padding para que quede cómodo */
+  height: 100%;
+  padding: 0 12px;
   box-sizing: border-box;
 }
 
-.spacer {
-  flex: 1 1 auto;
+button.mat-icon-button {
+  color: var(--itg-primary);
 }
 
-
+/* Botones generales */
 button.mat-mdc-unelevated-button:not(:disabled) {
-  color: var(--itg-primary); /* color icono de búsqueda */
-  background-color: var(--itg-primary-bg);/* fondo suave para el botón de búsqueda */
-  border: 2px solid  var(--itg-primary);
+  color: var(--itg-primary);
+  background-color: var(--itg-primary-bg);
+  border: 2px solid var(--itg-primary);
   border-radius: .5rem;
   transition: background-color 0.3s ease;
 }
@@ -47,166 +48,184 @@ button.mat-mdc-unelevated-button:not(:disabled):hover {
   color: white;
 }
 
-button.mat-flat-button {
-  background-color: var(--itg-secondary-bg);
-  color: white;
-  border-radius: 4px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+/* Tabla y responsive */
+.custom-table-wrapper {
+  overflow-x: auto;
+}
+
+.table-scroll-wrapper {
+  min-width: 800px;
+}
+
+/* Card layout para pantallas pequeñas */
+.card-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.equipment-card {
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 16px 0 16px;
+  padding: 1rem;
 }
 
-::ng-deep mat-form-field.search-input .mat-mdc-form-field-subscript-wrapper {
-  display: none !important;
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
-.mat-mdc-form-field{
-  justify-content: center !important;
+.text-muted {
+  color: #6c757d;
+  font-size: 0.85rem;
 }
 
-::ng-deep .mat-mdc-text-field-wrapper.search-input {
-  flex: none !important;
+/* ===== CONFIGURACIÓN DE TABLA MEJORADA ===== */
+
+/* Configuración flexible de tabla */
+.custom-table-wrapper table {
+  table-layout: fixed; /* Volvemos a fixed para controlar mejor los anchos */
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: separate;
 }
 
-.equipment-info-card,
-.equipment-characteristics-card {
-  padding: 0.5rem;
-}
-
-.one-line-ellipsis {
-  white-space: nowrap;
+.custom-table-wrapper th,
+.custom-table-wrapper td {
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 20rem;
-  display: inline-block;
+  white-space: normal; /* permite salto de línea */
+  word-break: break-word;
+  vertical-align: middle; /* CENTRADO VERTICAL GENERAL */
+  padding: 12px 16px; /* Incrementado el padding horizontal para más separación */
 }
 
-.status-container{
-  padding: 3px 5px;
-  border-radius: 1rem;
+/* ===== CENTRADO VERTICAL Y HORIZONTAL DE TÍTULOS ===== */
+.custom-table-wrapper th.mat-header-cell {
+  text-align: center; /* Centrado horizontal de todos los títulos */
+  vertical-align: middle; /* Centrado vertical de todos los títulos */
+  font-weight: 600;
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap; /* Evita que los títulos se partan en líneas */
+  min-width: fit-content; /* Asegura espacio mínimo necesario */
 }
 
-.active{
-  background-color: var(--status-available-bg);
-  color: var(--status-available);
-  font-weight: bold !important;
+/* ===== ANCHOS PERSONALIZADOS OPTIMIZADOS ===== */
+th.mat-header-cell:nth-child(1), /* Equipo */
+td.mat-cell:nth-child(1) {
+  width: 16%;
 }
 
-.inactive {
-  background-color: var(--status-out-of-service-bg);   /* Rojo claro de fondo */
-  color: var(--status-out-of-service);              /* Rojo fuerte para el texto */
-  font-weight: bold !important;
+th.mat-header-cell:nth-child(2), /* Equipo Identificación */
+td.mat-cell:nth-child(2) {
+  width: 16%;
 }
 
-.available
-{
-  background-color: var(--status-available-bg);
-  color: var(--status-available);
-  font-weight: bold !important;
+th.mat-header-cell:nth-child(3), /* Tipo de Baja */
+td.mat-cell:nth-child(3) {
+  width: 12%;
 }
 
-.assigned
-{
-  background-color: var(--status-assigned-bg);
-  color: var(--status-assigned);
-  font-weight: bold !important;
+th.mat-header-cell:nth-child(4), /* Razón - MÁS ESPACIO */
+td.mat-cell:nth-child(4) {
+  width: 32%; /* Espacio para razón */
 }
 
-.under-repair
-{
-  background-color: var(--status-underway-bg);
-  color: var(--status-underway);
-  font-weight: bold !important;
+th.mat-header-cell:nth-child(5), /* Fecha de Baja */
+td.mat-cell:nth-child(5) {
+  width: 14%;
 }
 
-.under-review
-{
-  background-color: var(--status-under-review-bg);
-  color: var(--status-under-review);
-  font-weight: bold !important;
+th.mat-header-cell:nth-child(6), /* Oficina - pegado al borde derecho */
+td.mat-cell:nth-child(6) {
+  width: 10%;
 }
 
-.bug-reported
-{
-  background-color: var(--status-bug-reported-bg);
-  color: var(--status-bug-reported);
-  font-weight: bold !important;
+/* ===== ALINEACIÓN ESPECÍFICA PARA FECHA Y OFICINA ===== */
+
+/* Títulos de Fecha de Baja y Oficina alineados a la derecha */
+th.mat-header-cell:nth-child(5), /* Fecha de Baja */
+th.mat-header-cell:nth-child(6)  /* Oficina */ {
+  text-align: right !important;
+  padding-right: 16px; /* Un poco de separación del borde */
 }
 
-.repaired
-{
-  background-color: var(--status-repaired-bg);
-  color: var(--status-repaired);
-  font-weight: bold !important;
+/* Contenido de Fecha de Baja y Oficina alineado a la derecha */
+td.mat-cell:nth-child(5), /* Fecha de Baja */
+td.mat-cell:nth-child(6)  /* Oficina */ {
+  text-align: right;
+  padding-right: 16px; /* Un poco de separación del borde */
 }
 
-.in-progress
-{
-  background-color: var(--status-progress-bg);
-  color: var(--status-progress);
-  font-weight: bold !important;
+/* Oficina pegada al borde derecho de la tabla */
+th.mat-header-cell:nth-child(6), /* Oficina título */
+td.mat-cell:nth-child(6)  /* Oficina contenido */ {
+  padding-right: 8px; /* Menos padding para pegarlo más al borde */
 }
 
-.out-of-service
-{
-  background-color: var(--status-out-of-service-bg);
-  color: var(--status-out-of-service);
-  font-weight: bold !important;
+/* ===== MEJORAS VISUALES ADICIONALES ===== */
+
+/* Subtexto más suave */
+.sub-info {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 2px;
 }
 
-.new
-{
-  background-color: var(--status-available-bg);
-  color: var(--status-available);
-  font-weight: bold !important;
+/* Hover effect para filas */
+.custom-table-wrapper tr.mat-row:hover {
+  background-color: #f8f9fa;
 }
 
-.like-new
-{
-  background-color: var(--status-assigned-bg);
-  color: var(--status-assigned);
-  font-weight: bold !important;
+/* Espaciado mejorado para el contenido de celdas */
+.custom-table-wrapper td.mat-cell div {
+  line-height: 1.4;
 }
 
-.used
-{
-  background-color: var(--status-underway-bg);
-  color: var(--status-underway);
-  font-weight: bold !important;
+/* Estilo para texto fuerte en celdas */
+.custom-table-wrapper td.mat-cell div strong {
+  font-weight: 600;
+  color: #333;
 }
 
-.worn-out
-{
-  background-color: var(--status-underway-review-bg);
-  color: var(--status-underway-review);
-  font-weight:  bold !important;
+/* Ajuste específico para la columna de razón */
+th.mat-header-cell:nth-child(4) p,
+td.mat-cell:nth-child(4) p {
+  margin: 0;
+  line-height: 1.4;
+  max-height: 60px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
-.minor-fault
-{
-  background-color: var(--status-underway-review);
-  color: var(--status-underway-review-bg);
-  font-weight: bold !important;
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  th.mat-header-cell:nth-child(4),
+  td.mat-cell:nth-child(4) {
+    width: 30%;
+  }
 }
 
-.major-fault
-{
-  background-color: var(--status-underway-review);
-  color: var(--status-underway-review-bg);
-  font-weight: bold !important;
-}
+@media (max-width: 768px) {
+  .custom-table-wrapper th,
+  .custom-table-wrapper td {
+    padding: 8px 6px;
+    font-size: 0.9rem;
+  }
 
-.unrepairable
-{
-  background-color: var(--status-out-of-service-bg);
-  color: var(--status-out-of-service);
-  font-weight: bold !important;
+  th.mat-header-cell:nth-child(6),
+  td.mat-cell:nth-child(6) {
+    padding-right: 10px;
+  }
 }

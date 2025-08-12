@@ -149,13 +149,15 @@
                 <mat-icon>build</mat-icon>
                 <span>Enviar a reparación</span>
               </button>
+
               <button
                 mat-menu-item
-                (click)="confirmOutOfService(item)"
+                (click)="openDismissalFormAndThenSetStatus(item)"
                 [disabled]="item.equipmentStatusId === 7 || !item.status">
                 <mat-icon>highlight_off</mat-icon>
                 <span>Fuera de servicio</span>
               </button>
+
             </mat-menu>
           </td>
         </ng-container>

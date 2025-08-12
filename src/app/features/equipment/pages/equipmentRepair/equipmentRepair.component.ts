@@ -161,7 +161,6 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
     height: '350px',  // Altura más generosa
     maxWidth: '90vw',
     maxHeight: '90vh',
-    autoFocus: false,
     panelClass: 'custom-dialog-container', // MUY IMPORTANTE: esto conecta con el CSS global
     hasBackdrop: true,
     disableClose: false,
