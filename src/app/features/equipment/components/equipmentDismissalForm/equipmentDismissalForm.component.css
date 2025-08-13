@@ -84,10 +84,6 @@ mat-form-field {
   padding-bottom: 0.5rem !important;
 }
 
-::ng-deep .description-field textarea {
-  min-height: 3rem;
-  resize: vertical;
-}
 label {
   font-weight: 500;
   margin-bottom: 0.25rem;
@@ -138,3 +134,69 @@ label {
   padding: 8px;
   font-size: 14px;
 }
+
+
+/* Agrega estos estilos en tu equipmentDismissalForm.component.css
+
+/* Centra el texto del mat-select
+::ng-deep .mat-mdc-select-value-text {
+  text-align: center !important;
+}
+
+/* Centra el placeholder cuando no hay selección
+::ng-deep .mat-mdc-select-placeholder {
+  text-align: center !important;
+}
+
+/* Centra específicamente para tu formulario si quieres ser más específico
+::ng-deep .form-field mat-select .mat-mdc-select-value {
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Centra el texto cuando hay un valor seleccionado
+::ng-deep .form-field .mat-mdc-select-value-text {
+  text-align: center !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+/* Alternativa más específica si la anterior no funciona
+::ng-deep .form-field mat-form-field mat-select .mat-mdc-select-trigger {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Para el contenido del trigger del select
+::ng-deep .form-field .mat-mdc-select-trigger .mat-mdc-select-value {
+  text-align: center !important;
+  flex-grow: 1 !important;
+}
+
+
+*/
+
+/*
+
+Estilos específicos para el select centrado
+::ng-deep .centered-select .mat-mdc-select-value-text {
+  text-align: center !important;
+}
+
+::ng-deep .centered-select .mat-mdc-select-placeholder {
+  text-align: center !important;
+}
+
+::ng-deep .centered-select .mat-mdc-select-trigger {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+::ng-deep .centered-select .mat-mdc-select-value {
+  text-align: center !important;
+  width: 100% !important;
+}*/

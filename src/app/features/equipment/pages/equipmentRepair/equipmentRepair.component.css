@@ -28,6 +28,40 @@
   padding: 0 12px;    /* Ajusta padding para que quede cómodo */
   box-sizing: border-box;
 }
+.custom-dialog-container .mat-mdc-dialog-container {
+  overflow: hidden !important;
+  max-height: 90vh !important;
+}
+
+.custom-dialog-container .mat-mdc-form-field-infix {
+  padding: 0 !important;
+  height: 40px !important;
+}
+
+.custom-dialog-container .mat-mdc-dialog-content {
+  overflow: visible !important;
+  max-height: none !important;
+  padding: 0 !important;
+}
+
+.custom-dialog-container mat-form-field {
+  background-color: white;
+  border-radius: 0.5rem;
+
+  .mat-form-field-flex {
+    border: 1px solid var(--itg-text-muted, #ccc);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    background-color: white;
+  }
+
+  .mat-form-field-appearance-fill .mat-form-field-outline {
+    display: none;
+  }
+}
+.custom-dialog-container .mdc-dialog__surface {
+  overflow: hidden !important;
+}
 
 .spacer {
   flex: 1 1 auto;

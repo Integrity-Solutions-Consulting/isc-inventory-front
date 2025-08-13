@@ -22,23 +22,26 @@
   <div class="custom-table-wrapper">
     <div class="table-scroll-wrapper">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
-        <!-- Nombre -->
+        <!-- Equipo -->
         <ng-container matColumnDef="categoryName">
           <th mat-header-cell *matHeaderCellDef>Equipo</th>
           <td mat-cell *matCellDef="let item">
-            <strong>{{ item.categoryName }}</strong>
+            <div><strong>{{ item.categoryName }}</strong></div>
             <div class="text-muted sub-info">{{ item.equipmentBrand}} {{ item.equipmentModel}}</div>
           </td>
         </ng-container>
 
-        <!-- Detalle Identificacion -->
+        <!-- Equipo Identificación -->
         <ng-container matColumnDef="equipmentItemCode">
-          <th mat-header-cell *matHeaderCellDef>Equipo Identificación</th>
+         <th mat-header-cell *matHeaderCellDef>
+           Equipo<br />Identificación
+          </th>
           <td mat-cell *matCellDef="let item">
-            <p>{{ item.equipmentSerialNumber }}</p>
-            <p class="text-muted sub-info">{{ item.equipmentItemCode }}</p>
+         <div>{{ item.equipmentSerialNumber }}</div>
+         <div class="sub-info">{{ item.equipmentItemCode }}</div>
           </td>
         </ng-container>
+
 
         <!-- Tipo de Baja -->
         <ng-container matColumnDef="dismissalType">
