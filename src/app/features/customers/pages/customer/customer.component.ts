@@ -91,7 +91,7 @@ export class CustomerComponent implements OnInit {
       }
     };
   }
-
+//
   loadTable(): void {
     this.loading.show();
     this.customerService.getAll().subscribe({

@@ -55,9 +55,7 @@ export class EmployeeComponent implements OnInit, AfterViewInit {
     'email',
     'phone',
     'position',
-    'contractDate',
     'contractEndDate',
-    'actions',
   ];
   dataSource = new MatTableDataSource<EmployeeTableResponseDTO>();
   total = 0;
