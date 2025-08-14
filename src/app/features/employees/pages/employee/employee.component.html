@@ -33,7 +33,7 @@
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z1" matSort>
         <!-- Nombre -->
         <ng-container matColumnDef="employee">
-          <th mat-header-cell *matHeaderCellDef  mat-sort-header>Empleados
+          <th mat-header-cell *matHeaderCellDef  mat-sort-header>Empleados</th>
           <td mat-cell *matCellDef="let employee">
             <strong>{{ employee.firstName }} {{ employee.lastName }}</strong>
             <p>
@@ -54,7 +54,7 @@
         </ng-container>
 
         <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef  mat-sort-header>Correo</th>
+          <th mat-header-cell *matHeaderCellDef  mat-sort-header>Correo electrónico</th>
           <td mat-cell *matCellDef="let employee">
             {{ employee.email }}
           </td>
@@ -75,14 +75,14 @@
           </td>
         </ng-container>
 
-
-
-        <ng-container matColumnDef="contractEndDate">
-          <th mat-header-cell *matHeaderCellDef  mat-sort-header>Fin Contrato</th>
+        <ng-container matColumnDef="contractDate">
+          <th mat-header-cell *matHeaderCellDef  mat-sort-header>Inicio Contrato</th>
           <td mat-cell *matCellDef="let employee">
-            {{ employee.contractEndDate | date : "dd/MM/yyyy" }}
+            {{ employee.contractDate | date : "dd/MM/yyyy" }}
           </td>
         </ng-container>
+
+
 
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
