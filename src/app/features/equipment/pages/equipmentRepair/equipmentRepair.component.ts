@@ -68,7 +68,7 @@ export class EquipmentRepairComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<EquipmentRepairDetailResponseDTO>();
   total = 0;
-
+  disabledAvailableButtons = new Set<number>();
 
   equipmentStatuses = [
     { id: 1, name: 'Disponible' },
@@ -211,8 +211,12 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
     });
   }
 
-  setRepairStatus(equipmentId: number, status: number, idRepair:number) {
-
+  setRepairStatus(equipmentId: number, status: number, idRepair:number) {  
+    // Solo para estado Disponible (1)
+    if (status === 1) {
+        this.disabledAvailableButtons.add(idRepair);
+    }
+    
     const equipmentRepairStatusChange: EquipmentRepairStatusChangeRequestDTO = {
     statusChange: status,
     idRepair: idRepair
@@ -220,25 +224,29 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
 
     this.equipmentService.changeStatus(equipmentRepairStatusChange,equipmentId).subscribe({
       next: (response) => {
-        const newStatus = this.equipmentStatuses.find((s) => s.id === status);
+        const newStatus = this.equipmentStatuses.find((s) => s.id === status);        
 
         // Recorre todos los elementos que coincidan con equipmentId
         const updatedRepair = this.dataSource.data.find(item => item.id === idRepair);
+        if (updatedRepair && newStatus) {
+                // Mantener siempre estado "Reparado" (6) visualmente
+                if (status === 1) {
+                    updatedRepair.repairStatus = {
+                        id: 6,       // Fuerza estado Reparado
+                        name: 'Reparado'
+                    };
+                } else {
+                    // Lógica normal para otros estados
+                    updatedRepair.repairStatus = {
+                        id: newStatus.id,
+                        name: newStatus.name
+                    };
 
-        if (updatedRepair && newStatus && newStatus.id !== 1)
-          {
-            updatedRepair.repairStatus =
-            {
-            id: newStatus.id,
-            name: newStatus.name,
-            };
-
-        if (status === 6)
-          {
-              updatedRepair.repairDate = new Date().toISOString();
-           }
-}
-
+                    if (status === 6) {
+                        updatedRepair.repairDate = new Date().toISOString();
+                    }
+                }
+            }
 
         // Forzar actualización del datasource
         this.dataSource.data = [...this.dataSource.data];
@@ -250,6 +258,9 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
         );
       },
       error: (error) => {
+        if (status === 1) {
+                this.disabledAvailableButtons.delete(idRepair);
+            }
         this.modalDialogService.open('error', 'Error', error.error.message);
       },
     });
