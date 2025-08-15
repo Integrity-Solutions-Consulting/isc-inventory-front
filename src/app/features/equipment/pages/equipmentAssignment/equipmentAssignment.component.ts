@@ -57,6 +57,7 @@ export class EquipmentAssignmentComponent implements OnInit, AfterViewInit {
     'company',
     'assignmentDate',
     'returnDate',
+    'observations',
     'status',
     'actions',
   ];

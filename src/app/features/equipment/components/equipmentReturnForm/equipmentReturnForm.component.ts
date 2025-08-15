@@ -13,8 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MenuService } from '../../../menu/services/menu.service';
-import { PrivilegeService } from '../../../privilege/services/privilege.service';
+
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { FormControl } from '@angular/forms';
@@ -40,6 +39,8 @@ import { EquipmentAssignmentDetailResponseDTO } from '../../../../core/models/Re
 import { EquipmentRevokeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRevokeRequestDTO';
 import { ConditionResponseDTO } from '../../../../core/models/ResponseDTO/inventory/ConditionResponseDTO';
 import { ConditionsService } from '../../../../core/services/conditions/conditions.service';
+import { ResponseDTO } from '../../../../core/models/ResponseDTO/ResponseDTO';
+
 
 @Component({
   selector: 'app-equipmentReturnForm',
@@ -97,11 +98,32 @@ export class EquipmentReturnFormComponent implements OnInit, OnDestroy {
     this.equipmentReturnForm = this.fb.group({
       dateReturn: [null],
       condition: [null],
+      observations: [''],
     });
   }
 
 loadData() {
   this.entityId = this.formService.modalDataValue;
+
+  this.assignamentService.getAll().subscribe({
+    next: (resp: ResponseDTO<EquipmentAssignmentDetailResponseDTO[]>) => {
+      const assignments = resp.data; // <-- aquí accedemos al arreglo real
+      const assignment = assignments.find(a => a.id === this.entityId);
+      if (assignment) {
+        this.equipmentReturnForm.patchValue({
+          dateReturn: assignment.returnDate ? new Date(assignment.returnDate) : null,
+          condition: assignment.condition || null,
+          observations: assignment.observations || '',
+        });
+      }
+    },
+    error: (err) => console.error('Error al cargar asignación:', err),
+    complete: () => {
+      this.loading = false;
+    },
+  });
+
+
 
   this.conditionService.getAll().subscribe({
     next: (resp) => { this.conditions = resp.data;
@@ -133,6 +155,7 @@ loadData() {
     {
   revokeDate: revokeDate,
   condition: this.equipmentReturnForm.value.condition,
+  observations: this.equipmentReturnForm.value.observations,
 };
 
     this.assignamentService.revoke(this.entityId, revokeRequest).subscribe({
