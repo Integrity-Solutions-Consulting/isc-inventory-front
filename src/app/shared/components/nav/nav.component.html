@@ -41,7 +41,7 @@
 
   <!-- Menú de usuario -->
   <mat-menu #userMenu="matMenu">
-    <button mat-menu-item>Perfil</button>
+    <button mat-menu-item (click)="goToProfile()">Perfil</button>
     <button mat-menu-item (click)="logout()">Cerrar sesión</button>
   </mat-menu>
 </mat-toolbar>
