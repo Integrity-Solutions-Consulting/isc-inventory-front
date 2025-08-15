@@ -1,3 +1,4 @@
+import { NationalityResponseDTO } from '../administration/NationalityResponseDTO'
 import{SupplierTypeResponseDTO}from'../inventory/SupplierTypeResponseDTO'
 
 export interface SupplierResponseDTO {
@@ -8,5 +9,5 @@ export interface SupplierResponseDTO {
 	email: string,
   ruc: string,
   supplierType:SupplierTypeResponseDTO,
-
+  nationality:NationalityResponseDTO
 }

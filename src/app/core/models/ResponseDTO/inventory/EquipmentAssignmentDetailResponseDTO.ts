@@ -3,16 +3,16 @@ import { CompanyResponseDTO } from "./CompanyResponseDTO";
 import { ConditionResponseDTO } from "./ConditionResponseDTO";
 import { EquipmentResponseDTO } from "./EquipmentResponseDTO";
 
-export interface EquipmentAssignmentDetailResponseDTO{
+export interface EquipmentAssignmentDetailResponseDTO
+{
     id:number,
     employee: EmployeeCatalogResponseDTO,
     equipment: EquipmentResponseDTO,
     company: CompanyResponseDTO,
     assignmentDate: string,
     returnDate: string,
-    status:boolean
-    statusId: number;
+    observations?: string,
+    status:boolean,
+    statusId: number,
     condition?: ConditionResponseDTO,
-
-
 }
