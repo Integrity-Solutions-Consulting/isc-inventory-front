@@ -21,12 +21,13 @@
         </mat-form-field>
       </div>
 
+      <div class="form-row">
       <!-- País -->
 <div class="form-field">
   <label>País <span class="required-asterisk">*</span></label>
   <mat-form-field appearance="outline" class="w-100">
     <mat-select formControlName="country">
-      <mat-option *ngFor="let type of nationality" [value]="type.description">
+      <mat-option *ngFor="let type of nationality" [value]="type.id">
         {{ type.description }}
       </mat-option>
     </mat-select>
@@ -36,7 +37,21 @@
   </mat-form-field>
 </div>
 
-<!-- RUC -->
+<!-- Teléfono -->
+      <div class="form-field">
+        <label>Teléfono <span class="required-asterisk">*</span> </label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="phone" maxlength="10" (keypress)="allowOnlyNumbers($event)"/>
+          <mat-error *ngIf="supplierForm.get('phone')?.hasError('required')">
+            El teléfono es obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    </div>
+
+    <div class="form-row">
+      <!-- RUC -->
 <div class="form-field">
   <label>RUC <span class="required-asterisk">*</span> </label>
   <mat-form-field appearance="outline" class="w-100">
@@ -54,29 +69,6 @@
 </div>
 
 
-    <div class="form-row">
-      <!-- Dirección -->
-      <div class="form-field">
-        <label>Dirección <span class="required-asterisk">*</span> </label>
-        <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="address" minlength="3" />
-          <mat-error *ngIf="supplierForm.get('address')?.hasError('required')">
-            La dirección es obligatoria
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <!-- Teléfono -->
-      <div class="form-field">
-        <label>Teléfono <span class="required-asterisk">*</span> </label>
-        <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="phone" maxlength="10" (keypress)="allowOnlyNumbers($event)"/>
-          <mat-error *ngIf="supplierForm.get('phone')?.hasError('required')">
-            El teléfono es obligatorio
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </div>
 
     <div class="form-row">
   <!-- Email -->
@@ -107,9 +99,23 @@
       </mat-error>
     </mat-form-field>
   </div>
-
-
 </div>
+
+<div class="form-row address-row">
+<!-- Dirección -->
+      <div class="form-field">
+        <label>Dirección <span class="required-asterisk">*</span> </label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="address" minlength="3" />
+          <mat-error *ngIf="supplierForm.get('address')?.hasError('required')">
+            La dirección es obligatoria
+          </mat-error>
+        </mat-form-field>
+      </div>
+      </div>
+      <div></div>
+
+
 
 
     <div class="itg-button-group">

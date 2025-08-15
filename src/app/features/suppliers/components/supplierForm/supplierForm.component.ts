@@ -142,7 +142,7 @@ export class SupplierFormComponent implements OnInit {
 
   // Buscar el tipo de proveedor y pais completo en el array
   const selectedSupplierType = this.supplierTypes.find(type => type.id === formValue.supplierType);
-  const selectedNationality = this.nationality.find(type => type.id == formValue.nationality);
+  const selectedNationality = this.nationality.find(type => type.id == formValue.country);
 
   if (!selectedSupplierType)
     {
