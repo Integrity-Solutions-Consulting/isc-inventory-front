@@ -75,7 +75,13 @@ export class SupplierFormComponent implements OnInit {
       Validators.maxLength(200),
       Validators.pattern(/^[\p{L}\p{N}\s\.,\-#áéíóúÁÉÍÓÚñÑ]*$/u)]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]],
-      ruc: ['',[Validators.required, rucValidator(() => this.supplierForm?.get('country')?.value)]],
+      ruc: ['', [Validators.required, rucValidator(() =>
+        {
+    const countryId = this.supplierForm?.get('country')?.value;
+    const countryObj = this.nationality.find(n => n.id === countryId);
+    return countryObj?.description || '';
+        })
+        ]],
       email: ['', [Validators.required,
       Validators.maxLength(100),
       Validators.pattern(/^[A-Za-z0-9+_.-]+@(.+)\.(com|ec|net|org|edu|gob|mil|co|info|xyz)$/)]],
@@ -87,8 +93,6 @@ export class SupplierFormComponent implements OnInit {
     this.supplierForm.get('ruc')?.updateValueAndValidity();
   });
  }
-
-
 
   loadData(): void
   {

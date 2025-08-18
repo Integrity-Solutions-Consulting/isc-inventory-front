@@ -12,7 +12,7 @@ export function rucValidator(countryControl: () => string): ValidatorFn {
     if (!ruc) return null;
 
     // Validación para Ecuador
-    if (country === 'Ecuador') {
+    if (country === '5') {
       const regexEcuador = /^\d{10}001$/; // 13 dígitos, termina en 001
       return regexEcuador.test(ruc)
         ? null

@@ -117,7 +117,7 @@ export class EquipmentRepairComponent implements OnInit {
       this.dataSource.sortingDataAccessor = (item, property) => {
         switch (property) {
           case 'serialNumber':
-            return item.serialNumber || '';
+            return item.equipment|| '';
           case 'repairDate':
             return item.repairDate || '';
           case 'repairStatus':
@@ -200,6 +200,9 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
           const term = filter.trim().toLowerCase();
           return (
             data.serialNumber?.toLowerCase().includes(term) ||
+            data.brand?.toLocaleLowerCase().includes(term)||
+            data.categoryName?.toLocaleLowerCase().includes(term)||
+            data.model?.toLocaleLowerCase().includes(term)||
             data.description?.toLowerCase().includes(term) ||
             data.serviceProvider?.toLowerCase().includes(term) ||
             data.repairDate?.toLowerCase().includes(term) ||
