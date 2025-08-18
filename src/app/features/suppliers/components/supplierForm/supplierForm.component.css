@@ -48,7 +48,7 @@
 
 /* AÑADIDO: Clase especial para la fila de dirección */
 .form-row.address-row {
-  grid-template-columns: 3.65fr 0.35fr; /* Dirección más ancha pero no completa */
+  grid-template-columns: 0.65fr 0.35fr; /* Dirección más ancha pero no completa */
 }
 
 @media (max-width: 768px) {
