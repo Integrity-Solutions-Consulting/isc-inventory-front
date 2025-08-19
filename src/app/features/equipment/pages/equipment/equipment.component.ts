@@ -263,11 +263,22 @@ export class EquipmentComponent implements OnInit {
   }
 
   sendToRepair(entity: EquipmentDetailResponseDTO): void {
+    // Pasa SOLO los datos necesarios para creación
+  const repairData = {
+    equipment: entity.id,
+    description: '',                // Initialize empty or with default values
+    serviceProvider: '',           // User should fill this in the form
+    cost: 0.00,                      
+    revoke: false 
+  };
+
+  console.log('Datos enviados al formulario:', repairData);
+    
     this.formService.open(
       'Reparar Equipo',
       'engineering',
       EquipmentRepairFormComponent,
-      entity,
+      repairData,
       (result: EquipmentRepairDetailResponseDTO) => {
         if (result) {
           this.dataSource.data = this.dataSource.data.map((item) => {
@@ -286,7 +297,7 @@ export class EquipmentComponent implements OnInit {
             'Equipo enviado a reparación',
             'El equipo fue registrado correctamente.'
           );
-        }
+        } 
       },
       (error) => {
         console.error('Ocurrió un error al guardar', error);

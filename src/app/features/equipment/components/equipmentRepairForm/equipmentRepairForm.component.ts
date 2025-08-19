@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
@@ -41,7 +41,7 @@ import { SupplierResponseDTO } from '../../../../core/models/ResponseDTO/invento
     MatIconModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatProgressSpinner,
+    MatProgressSpinnerModule,
     NgxMatSelectSearchModule,
     MatDatepickerModule,
   ],
@@ -60,6 +60,7 @@ export class EquipmentRepairFormComponent implements OnInit {
   loading = true;
   repairForm!: FormGroup;
   entityId: number = 0;
+  isEditMode: boolean = false;
 
   suppliers: SupplierRequestDTO[] = [];
   suppliersFilterCtrl = new FormControl();
@@ -74,7 +75,7 @@ export class EquipmentRepairFormComponent implements OnInit {
     private formService: FormService,
     private suppliersService: SupplierService,
     private warningService: WarningService,
-    private repairSearvice: RepairService
+    private repairService: RepairService
   ) {}
 
 
@@ -113,48 +114,80 @@ export class EquipmentRepairFormComponent implements OnInit {
   initForm() {
     this.repairForm = this.fb.group({
       description: [null, Validators.required],
-      supplier: [null, Validators.required],
-      cost: [0.0, [Validators.min(0)]],
+      serviceProvider: [null, Validators.required],
+      cost: [null, [Validators.min(0)]],
     });
-    this.loadData();
   }
 
   loadData() {
     const entityToEdit = this.formService.modalDataValue;
-    console.log(entityToEdit);
-    if (entityToEdit) {
+    console.log('Datos recibidos en el formulario: ', entityToEdit);
+    
+    this.isEditMode = !!entityToEdit?.id && entityToEdit.id > 0;
+
+    if (this.isEditMode) {
+      console.log('Modo EDICIÓN activado');
+      this.entityId = entityToEdit.id;
       this.equipment = {
-        id: entityToEdit.equipmentId || entityToEdit.id,
-        serialNumber: entityToEdit.serialNumber,
-        equipmentStatusId: entityToEdit.equipmentStatusId || 0,
+        id: entityToEdit.equipment?.id || entityToEdit.equipment || entityToEdit.id,
+        serialNumber: entityToEdit.serialNumber || '',
+        equipmentStatusId: entityToEdit.repairStatus?.id || 0,
       };
-      if (entityToEdit.equipmentId) {
-        this.entityId = entityToEdit.id;
-      }
+
       this.repairForm.patchValue({
-        description: entityToEdit.description,
-        supplier: entityToEdit.serviceProvider,
-        cost: entityToEdit.cost,
+        description: entityToEdit.description || '',
+        serviceProvider: entityToEdit.serviceProvider || '',
+        cost: entityToEdit.cost || 0,
+      });
+    } else {
+      console.log('Modo CREACIÓN activado');
+      this.entityId = 0;
+      this.equipment = {
+        id: entityToEdit?.equipment || entityToEdit?.id,
+        serialNumber: entityToEdit?.serialNumber || entityToEdit?.itemCode || '',
+        equipmentStatusId: entityToEdit?.equipmentStatusId || 0,
+      };
+      this.repairForm.reset({
+        description: '',
+        serviceProvider: '',
+        cost: 0,
       });
     }
   }
+
 
   onSubmit() {
     if (this.repairForm.invalid) return;
 
     this.isSubmitting = true;
-
     const formValue = this.repairForm.value;
 
+    if (!this.equipment.id || this.equipment.id <= 0) {
+      this.formService.error({ message: 'ID de equipo inválido' });
+      this.isSubmitting = false;
+      return;
+    }
+
     const request: EquipmentRepairRequestDTO = {
-      description: formValue.description,
-      serviceProvider: formValue.supplier || null,
-      cost: formValue.cost,
       equipment: this.equipment.id,
+      description: formValue.description,
+      serviceProvider: formValue.serviceProvider,
+      cost: formValue.cost,
       revoke: this.revoke,
-    };
-    if (this.entityId == 0) {
-      this.repairSearvice.save(request).subscribe({
+    };    
+    if(this.isEditMode && this.entityId > 0) {
+        this.repairService.update(this.entityId, request).subscribe({
+          next: (response) => {
+            this.isSubmitting = false;
+            this.formService.close(response.data);
+          },
+          error: (error) => {
+            this.isSubmitting = false;
+            this.formService.error(error.error);
+          },
+        });
+      } else {
+      this.repairService.save(request).subscribe({
         next: (response) => {
           this.isSubmitting = false;
           this.formService.close(response.data);
@@ -164,7 +197,11 @@ export class EquipmentRepairFormComponent implements OnInit {
           this.formService.error(error.error);
         },
       });
-    }
+    } 
+  }
+
+  getSupplierNameById(id: number): string {
+    return this.suppliers.find(s => s.id === id)?.businessName || '';
   }
 
   submitAndRepair() {
@@ -190,5 +227,16 @@ export class EquipmentRepairFormComponent implements OnInit {
 
   onCancel() {
     this.formService.close();
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  preventInvalidInput(event: KeyboardEvent) {
+    if (['e', 'E', '+', '-'].includes(event.key)) {
+      event.preventDefault();
+    }
   }
 }
