@@ -14,7 +14,10 @@ import { SupplierTypeResponseDTO } from '../../../../core/models/ResponseDTO/inv
 import { SupplierTypeService } from '../../services/supplier/supplier-type.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { SupplierTypeRequestDTO } from '../../../../core/models/RequestDTO/inventory/SupplierTypeRequestDTO';
+
+import { NationalityService } from '../../../../core/services/nationality/nationality.service';
+import { NationalityResponseDTO } from '../../../../core/models/ResponseDTO/administration/NationalityResponseDTO';
+import { rucValidator } from '../../../../shared/components/ruc.validator';
 
 @Component({
   selector: 'app-supllierForm',
@@ -40,44 +43,64 @@ export class SupplierFormComponent implements OnInit {
   isSubmitting: boolean = false;
   supplierId: number = 0;
   supplierTypes: SupplierTypeResponseDTO[] = [];
+  nationality: NationalityResponseDTO[]=[];
 
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
     private supplierService: SupplierService,
-    private supplierTypeService: SupplierTypeService
+    private supplierTypeService: SupplierTypeService,
+    private nationalityService:NationalityService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit()
+  {
     this.initForm();
     this.loadSupplierTypes();
+    this.loadNationality();
     this.loadData();
   }
 
-  initForm(): void {
-    this.supplierForm = this.fb.group({
+  initForm(): void
+  {
+    this.supplierForm = this.fb.group(
+      {
       businessName: ['', [Validators.required,
       Validators.minLength(3),
       Validators.maxLength(150),
       Validators.pattern(/^[\p{L}\p{N}\s\.,\-#áéíóúÁÉÍÓÚñÑ]*$/u)]],
+      country:['', Validators.required],
       address: ['', [Validators.required,
       Validators.minLength(3),
       Validators.maxLength(200),
       Validators.pattern(/^[\p{L}\p{N}\s\.,\-#áéíóúÁÉÍÓÚñÑ]*$/u)]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]],
-      ruc: ['', [Validators.required, Validators.pattern(/^\d{10}001$/)]],
+      ruc: ['', [Validators.required, rucValidator(() =>
+        {
+    const countryId = this.supplierForm?.get('country')?.value;
+    const countryObj = this.nationality.find(n => n.id === countryId);
+    return countryObj?.description || '';
+        })
+        ]],
       email: ['', [Validators.required,
       Validators.maxLength(100),
       Validators.pattern(/^[A-Za-z0-9+_.-]+@(.+)\.(com|ec|net|org|edu|gob|mil|co|info|xyz)$/)]],
       supplierType: ['', Validators.required]
     });
-  }
 
-  loadData(): void {
+    // Escuchar cambios de país para actualizar validación del RUC
+  this.supplierForm.get('country')?.valueChanges.subscribe(() => {
+    this.supplierForm.get('ruc')?.updateValueAndValidity();
+  });
+ }
+
+  loadData(): void
+  {
     const supplierToEdit = this.formService.modalDataValue;
     if (supplierToEdit)
       {
-      this.supplierForm.patchValue({...supplierToEdit,supplierType: supplierToEdit.supplierType?.id
+      this.supplierForm.patchValue({...supplierToEdit,supplierType: supplierToEdit.supplierType?.id,
+        country: supplierToEdit.nationality?.id
       });
             this.supplierId = supplierToEdit.id;
 
@@ -85,7 +108,8 @@ export class SupplierFormComponent implements OnInit {
     this.loading = false;
   }
 
-  loadSupplierTypes(): void {
+  loadSupplierTypes(): void
+  {
     this.supplierTypeService.getAllActive().subscribe({
       next: (resp) => {
         this.supplierTypes = resp.data;
@@ -94,6 +118,21 @@ export class SupplierFormComponent implements OnInit {
         console.error('Error cargando tipos de proveedor:', err);
       }
     });
+  }
+
+  loadNationality():void
+  {
+    this.nationalityService.getAll().subscribe(
+      {
+        next:(resp)=>
+          {
+            this.nationality=resp.data;
+          },
+          error:(err)=>
+          {
+            console.error('Error cargando paises:', err);
+          }
+    })
   }
 
   onSubmit(): void {
@@ -105,24 +144,36 @@ export class SupplierFormComponent implements OnInit {
   this.isSubmitting = true;
   const formValue = this.supplierForm.value;
 
-  // Buscar el tipo de proveedor completo en el array
+  // Buscar el tipo de proveedor y pais completo en el array
   const selectedSupplierType = this.supplierTypes.find(type => type.id === formValue.supplierType);
+  const selectedNationality = this.nationality.find(type => type.id == formValue.country);
 
-  if (!selectedSupplierType) {
+  if (!selectedSupplierType)
+    {
     console.error('Tipo de proveedor no encontrado');
     this.isSubmitting = false;
     this.formService.error('Seleccione un tipo de proveedor válido');
     return;
   }
 
+  if (!selectedNationality)
+    {
+      console.error('Pais no encontrado');
+      this.isSubmitting = false;
+      this.formService.error('Seleccione un pais válido');
+      return;
+    }
+
   // Crear el DTO de solicitud con el objeto completo
-  const supplierRequest: SupplierRequestDTO = {
+  const supplierRequest: SupplierRequestDTO =
+  {
     businessName: formValue.businessName,
     address: formValue.address,
     phone: formValue.phone,
     email: formValue.email,
     ruc:formValue.ruc,
-    supplierType: selectedSupplierType // Enviamos el objeto completo
+    supplierType: selectedSupplierType,
+    nationality: selectedNationality,
   };
 
   console.log('Enviando al backend:', supplierRequest); // Para depuración
@@ -150,11 +201,22 @@ export class SupplierFormComponent implements OnInit {
 }
 
 allowOnlyNumbers(event: KeyboardEvent): void {
-  const charCode = event.key;
-  if (!/^\d$/.test(charCode)) {
-    event.preventDefault();
+  const country = this.supplierForm?.get('country')?.value;
+
+  // Si es Ecuador: solo números
+  if (country === 'Ecuador') {
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+  // Otros países: permitir letras y números
+  else {
+    if (!/^[a-zA-Z0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
   }
 }
+
 
   onCancel(): void {
     this.formService.close();

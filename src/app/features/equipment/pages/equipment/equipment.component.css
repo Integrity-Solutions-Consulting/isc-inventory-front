@@ -211,3 +211,13 @@ button.mat-flat-button {
   font-weight: bold !important;
 }
 
+.row-deleted {
+  opacity: 0.5;          /* fila más tenue */
+  text-decoration: line-through; /* tachar texto */
+  background-color: #797777; /* opcional: plomo color */
+  pointer-events: none;  /* opcional: evitar interacción con la fila */
+}
+
+.row-deleted .mat-icon {
+  color: #999; /* íconos grises */
+}

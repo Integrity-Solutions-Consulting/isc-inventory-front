@@ -118,7 +118,7 @@ export class EquipmentRepairComponent implements OnInit {
       this.dataSource.sortingDataAccessor = (item, property) => {
         switch (property) {
           case 'serialNumber':
-            return item.serialNumber || '';
+            return item.equipment|| '';
           case 'repairDate':
             return item.repairDate || '';
           case 'repairStatus':
@@ -162,7 +162,6 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
     height: '350px',  // Altura más generosa
     maxWidth: '90vw',
     maxHeight: '90vh',
-    autoFocus: false,
     panelClass: 'custom-dialog-container', // MUY IMPORTANTE: esto conecta con el CSS global
     hasBackdrop: true,
     disableClose: false,
@@ -202,6 +201,9 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
           const term = filter.trim().toLowerCase();
           return (
             data.serialNumber?.toLowerCase().includes(term) ||
+            data.brand?.toLocaleLowerCase().includes(term)||
+            data.categoryName?.toLocaleLowerCase().includes(term)||
+            data.model?.toLocaleLowerCase().includes(term)||
             data.description?.toLowerCase().includes(term) ||
             data.serviceProvider?.toLowerCase().includes(term) ||
             data.repairDate?.toLowerCase().includes(term) ||

@@ -24,6 +24,15 @@ export class SupplierService {
       );
     }
 
+    public getSuppliersIdType(
+      id:number
+    ): Observable<ResponseDTO<SupplierResponseDTO[]>>
+    {
+      return this.httpClient.get<ResponseDTO<SupplierResponseDTO[]>>(
+        `${this.apiURl}/supplierType/${id}`
+      )
+    }
+
   public create(
       entity: SupplierRequestDTO
     ): Observable<ResponseDTO<SupplierResponseDTO>> {

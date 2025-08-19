@@ -58,7 +58,6 @@ export class EquipmentComponent implements OnInit {
     'identificacion_equipo',
     'estado',
     'condicion',
-    'stock',
     'buyDate',
     'invoice',
     'office',
@@ -149,6 +148,27 @@ export class EquipmentComponent implements OnInit {
       }
     );
   }
+
+
+openDismissalFormAndThenSetStatus(entity: EquipmentDetailResponseDTO): void {
+  const dialogRef = this.dialog.open(EquipmentDismissalFormComponent, {
+    width: '800px',
+    height: '350px',  // Altura más generosa
+    maxWidth: '90vw',
+    maxHeight: '90vh',
+    panelClass: 'custom-dialog-container', // MUY IMPORTANTE: esto conecta con el CSS global
+    hasBackdrop: true,
+    disableClose: false,
+    data: { equipmentId:entity.id }
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result === 'submitted') {
+      this.setEquipmentOutOfService(entity);
+    }
+  });
+
+}
 
   setEquipmentOutOfService(entity: EquipmentDetailResponseDTO): void {
     this.loading.show();

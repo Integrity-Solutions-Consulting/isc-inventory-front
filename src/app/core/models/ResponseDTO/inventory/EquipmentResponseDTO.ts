@@ -1,4 +1,5 @@
-export interface EquipmentResponseDTO {
+export interface EquipmentResponseDTO
+{
   id: number;
   category: string;
   brand: string;

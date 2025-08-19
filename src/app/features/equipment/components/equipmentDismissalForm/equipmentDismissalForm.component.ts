@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit, Inject, Optional } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { CommonModule, Location } from '@angular/common';
@@ -86,7 +88,13 @@ export class EquipmentDismissalFormComponent implements OnInit, OnDestroy {
   initForm() {
     this.equipmentDismissalTypeForm = this.fb.group({
       dismissalType: [null, Validators.required],
-      dismissalReason: [null, [ Validators.maxLength(100)]]
+      dismissalReason: [null, [ Validators.maxLength(100), (control: AbstractControl): ValidationErrors | null => {
+        const value = control.value;
+        if (value && value.trim() !== value) {
+          return { whitespace: true };
+        }
+        return null;
+      }]]
     });
   }
 
@@ -110,6 +118,16 @@ export class EquipmentDismissalFormComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  limitCharacters(controlName: string, maxLength: number) {
+  const control = this.equipmentDismissalTypeForm.get(controlName);
+  if (control && control.value) {
+    const currentValue = control.value;
+    if (currentValue.length > maxLength) {
+      control.setValue(currentValue.substring(0, maxLength), { emitEvent: false });
+    }
+  }
+}
 
   filterDismissal() {
     const search = this.dismissalTypeFilterCtrl.value?.toLowerCase() || '';

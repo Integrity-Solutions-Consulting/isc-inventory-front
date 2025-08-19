@@ -55,6 +55,18 @@
 </div>
     </div>
 
+    <!-- Observaciones -->
+     <div class="form-field">
+      <label>Observaciones</label>
+      <mat-form-field appearance="outline" class="w-100">
+        <input matInput formControlName="observations" placeholder="Ingrese observaciones de la devolución" />
+      </mat-form-field>
+      <div class="info-text">
+        <mat-icon class="info-icon-inline">info</mat-icon>
+        Puedes escribir la observación del equipo al devolverlo.
+      </div>
+    </div>
+
     <!-- Botones -->
     <div class="itg-button-group">
       <button mat-flat-button class="itg-cancel-button" (click)="onCancel()">
