@@ -162,12 +162,6 @@ export class EquipmentRepairFormComponent implements OnInit {
     this.isSubmitting = true;
     const formValue = this.repairForm.value;
 
-    if (!this.equipment.id || this.equipment.id <= 0) {
-      this.formService.error({ message: 'ID de equipo inválido' });
-      this.isSubmitting = false;
-      return;
-    }
-
     const request: EquipmentRepairRequestDTO = {
       equipment: this.equipment.id,
       description: formValue.description,
