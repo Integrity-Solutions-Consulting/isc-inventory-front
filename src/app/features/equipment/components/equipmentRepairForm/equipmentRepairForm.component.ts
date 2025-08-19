@@ -22,6 +22,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EquipmentRepairRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairRequestDTO';
 import { RepairService } from '../../services/repair/repair.service';
 import { WarningService } from '../../../../core/services/modals/warning/warning.service';
+import { SupplierTypeResponseDTO } from '../../../../core/models/ResponseDTO/inventory/SupplierTypeResponseDTO';
+import { SupplierService } from '../../../suppliers/services/supplier/supplier.service';
+import { SupplierResponseDTO } from '../../../../core/models/ResponseDTO/inventory/SupplierResponseDTO';
 
 @Component({
   selector: 'app-equipmentRepairForm',
@@ -44,14 +47,17 @@ import { WarningService } from '../../../../core/services/modals/warning/warning
   styleUrls: ['./equipmentRepairForm.component.css'],
 })
 export class EquipmentRepairFormComponent implements OnInit {
-  equipment = {
+  equipment =
+  {
     id: 0,
     serialNumber: '',
     equipmentStatusId: 0,
   };
 
+supplierTypes: SupplierResponseDTO[] = [];
 
   isSubmitting = false;
+
   repairForm!: FormGroup;
   entityId: number = 0;
 
@@ -61,12 +67,14 @@ export class EquipmentRepairFormComponent implements OnInit {
     private fb: FormBuilder,
     private formService: FormService,
     private warningService: WarningService,
-    private repairSearvice: RepairService
+    private repairSearvice: RepairService,
+    private supplierService: SupplierService,
   ) {}
 
 
   ngOnInit() {
     this.initForm();
+    this.loadSupplierTypes();
   }
 
   initForm() {
@@ -74,6 +82,7 @@ export class EquipmentRepairFormComponent implements OnInit {
       description: [null, Validators.required],
       serviceProvider: [null, Validators.required],
       cost: [0.0, [Validators.min(0)]],
+      supplierType: ['', Validators.required],
     });
     this.loadData();
   }
@@ -90,12 +99,28 @@ export class EquipmentRepairFormComponent implements OnInit {
       if (entityToEdit.equipmentId) {
         this.entityId = entityToEdit.id;
       }
-      this.repairForm.patchValue({
+      this.repairForm.patchValue({...entityToEdit,supplierType: entityToEdit.supplierType?.id,
         description: entityToEdit.description,
         serviceProvider: entityToEdit.serviceProvider,
         cost: entityToEdit.cost,
       });
+            this.entityId = entityToEdit.id;
+
     }
+  }
+
+  loadSupplierTypes(): void
+  {
+    const supplierTypeId = 2;
+    this.supplierService.getSuppliersIdType(supplierTypeId).subscribe({
+
+      next: (resp) => {
+        this.supplierTypes = resp.data;
+      },
+      error: (err) => {
+        console.error('Error cargando tipos de proveedor:', err);
+      }
+    });
   }
 
   onSubmit() {
@@ -112,6 +137,16 @@ export class EquipmentRepairFormComponent implements OnInit {
       equipment: this.equipment.id,
       revoke: this.revoke,
     };
+      const selectedSupplierType = this.supplierTypes.find(type => type.id === formValue.supplierType);
+
+      if (!selectedSupplierType)
+    {
+    console.error('Tipo de proveedor no encontrado');
+    this.isSubmitting = false;
+    this.formService.error('Seleccione un tipo de proveedor válido');
+    return;
+  }
+
     if (this.entityId == 0) {
       this.repairSearvice.save(request).subscribe({
         next: (response) => {

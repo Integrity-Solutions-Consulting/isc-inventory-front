@@ -40,11 +40,11 @@
       <div class="form-field">
   <label>Proveedor del servicio <span class="required-asterisk">*</span></label>
   <mat-form-field appearance="outline" class="w-100">
-    <input
-      matInput
-      formControlName="serviceProvider"
-      placeholder="Nombre del proveedor"
-    />
+    <mat-select formControlName="supplierType">
+        <mat-option *ngFor="let type of supplierTypes" [value]="type.id">
+          {{ type.businessName }}
+        </mat-option>
+      </mat-select>
         <mat-error *ngIf="repairForm.get('serviceProvider')?.hasError('required')">
            El proveedor del servicio es obligatorio
         </mat-error>
@@ -84,7 +84,8 @@
         (click)="submitAndRepair()"
         [disabled]="repairForm.invalid || isSubmitting"
       >
-        {{ entityId ? "Actualizar reparación" : "Crear reparación" }}
+        {{ entityId !=0 ? "Actualizar reparación" : "Crear reparación" }}
+        <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
       </button>
     </div>
   </form>

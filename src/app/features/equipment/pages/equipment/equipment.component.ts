@@ -58,7 +58,6 @@ export class EquipmentComponent implements OnInit {
     'identificacion_equipo',
     'estado',
     'condicion',
-    'stock',
     'buyDate',
     'invoice',
     'office',

@@ -150,7 +150,7 @@
               <button
                 mat-menu-item
                 (click)="setRepairStatus(item.equipment, 1,item.id)"
-                [disabled]="item.repairStatus.id  !== 6 || !item.status"
+                [disabled]="item.repairStatus.id  !== 6 || item.equipStatus.id == 1"
               >
                 <mat-icon>check_circle</mat-icon>
                 <span>Marcar como Disponible</span>
