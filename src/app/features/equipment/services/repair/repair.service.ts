@@ -26,7 +26,16 @@ export class RepairService {
     entity: EquipmentRepairRequestDTO
   ): Observable<ResponseDTO<EquipmentRepairDetailResponseDTO>> {
     return this.httpClient.post<ResponseDTO<EquipmentRepairDetailResponseDTO>>(
-      `${this.apiUrl}/createEquimentRepair`,
+      `${this.apiUrl}/createEquipmentRepair`,
+      entity
+    );
+  }
+
+  public update(id: number,
+    entity: EquipmentRepairRequestDTO
+  ): Observable<ResponseDTO<EquipmentRepairDetailResponseDTO>> {
+    return this.httpClient.put<ResponseDTO<EquipmentRepairDetailResponseDTO>>(
+      `${this.apiUrl}/updateEquipmentRepair/${id}`,
       entity
     );
   }
