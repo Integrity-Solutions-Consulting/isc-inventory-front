@@ -132,7 +132,7 @@ supplierTypes: SupplierResponseDTO[] = [];
 
     const request: EquipmentRepairRequestDTO = {
       description: formValue.description,
-      serviceProvider: formValue.serviceProvider || null,
+      supplierTypeId: formValue.serviceProvider || null,
       cost: formValue.cost,
       equipment: this.equipment.id,
       revoke: this.revoke,

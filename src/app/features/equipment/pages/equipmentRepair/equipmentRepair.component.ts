@@ -31,6 +31,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDivider } from '@angular/material/divider';
 import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairStatusChangeRequestDTO';
+import { SupplierResponseDTO } from '../../../../core/models/ResponseDTO/inventory/SupplierResponseDTO';
 
 @Component({
   selector: 'app-equipmentRepair',
@@ -204,7 +205,6 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
             data.categoryName?.toLocaleLowerCase().includes(term)||
             data.model?.toLocaleLowerCase().includes(term)||
             data.description?.toLowerCase().includes(term) ||
-            data.serviceProvider?.toLowerCase().includes(term) ||
             data.repairDate?.toLowerCase().includes(term) ||
             data.cost?.toString().includes(term)
           );

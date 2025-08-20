@@ -1,5 +1,5 @@
-import { EquipmentResponseDTO } from "./EquipmentResponseDTO";
 import { EquipmentStatusResponseDTO } from "./EquipmentStatusResponseDTO";
+import { SupplierResponseDTO } from "./SupplierResponseDTO";
 
 export interface EquipmentRepairDetailResponseDTO
 {
@@ -13,7 +13,7 @@ export interface EquipmentRepairDetailResponseDTO
   repairDate: string;
   description: string;
   cost: number;
-  serviceProvider: string;
+  serviceProvider:SupplierResponseDTO,
   status: boolean;
   creationDate: string;
   modificationDate: string;
