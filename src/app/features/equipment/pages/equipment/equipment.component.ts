@@ -58,7 +58,6 @@ export class EquipmentComponent implements OnInit {
     'identificacion_equipo',
     'estado',
     'condicion',
-    'stock',
     'buyDate',
     'invoice',
     'office',
@@ -296,7 +295,7 @@ openDismissalFormAndThenSetStatus(entity: EquipmentDetailResponseDTO): void {
               return {
                 ...item,
                  equipmentConditionId: 3,
-                equipmentStatusName: 'En reparación',
+                equipmentStatusName: 'en reparación',
               };
             }
             return item;
@@ -375,20 +374,20 @@ openDismissalFormAndThenSetStatus(entity: EquipmentDetailResponseDTO): void {
    */
   getStatusClasses(statusName: string | undefined): string {
     if (!statusName) return 'dot-inactive out-of-service';
-    switch (statusName.trim().toLowerCase()) {
-      case 'disponible':
+    switch (statusName) {
+      case 'Disponible':
         return 'dot-available available';
-      case 'asignado':
+      case 'Asignado':
         return 'dot-assigned assigned';
-      case 'en reparación':
+      case 'En reparación':
         return 'dot-under-repair under-repair';
-      case 'en revisión':
+      case 'En revisión':
         return 'dot-under-review under-review';
-      case 'falla reportada':
+      case 'Falla Reportada':
         return 'dot-bug-reported bug-reported';
-      case 'reparado':
+      case 'Reparado':
         return 'dot-repaired repaired';
-      case 'fuera de servicio':
+      case 'Fuera de Servicio':
         return 'dot-out-of-service out-of-service';
       default:
         return 'dot-inactive out-of-service';

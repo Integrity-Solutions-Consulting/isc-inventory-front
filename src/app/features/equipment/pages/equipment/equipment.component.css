@@ -102,7 +102,7 @@ button.mat-flat-button {
 
 .inactive {
   background-color: var(--status-out-of-service-bg);   /* Rojo claro de fondo */
-  color: var(--status-out-of-service);              /* Rojo fuerte para el texto */
+  color: var(--status-bug-reported);              /* Rojo fuerte para el texto */
   font-weight: bold !important;
 }
 
@@ -157,8 +157,8 @@ button.mat-flat-button {
 
 .out-of-service
 {
-  background-color: var(--status-out-of-service-bg);
-  color: var(--status-out-of-service);
+  background-color: var(--status-bug-reported-bg);
+  color: var(--status-bug-reported);
   font-weight: bold !important;
 }
 
@@ -211,3 +211,13 @@ button.mat-flat-button {
   font-weight: bold !important;
 }
 
+.row-deleted {
+  opacity: 0.5;          /* fila más tenue */
+  text-decoration: line-through; /* tachar texto */
+  background-color: #797777; /* opcional: plomo color */
+  pointer-events: none;  /* opcional: evitar interacción con la fila */
+}
+
+.row-deleted .mat-icon {
+  color: #999; /* íconos grises */
+}

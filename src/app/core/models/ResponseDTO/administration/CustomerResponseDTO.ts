@@ -1,4 +1,5 @@
-export interface CustomerResponseDTO {
+export interface CustomerResponseDTO
+{
   id: number;
   name: string;
   address: string;

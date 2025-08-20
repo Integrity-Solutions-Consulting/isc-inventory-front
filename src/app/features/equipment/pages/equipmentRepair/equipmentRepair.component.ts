@@ -31,6 +31,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDivider } from '@angular/material/divider';
 import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairStatusChangeRequestDTO';
+import { SupplierResponseDTO } from '../../../../core/models/ResponseDTO/inventory/SupplierResponseDTO';
 
 @Component({
   selector: 'app-equipmentRepair',
@@ -72,6 +73,7 @@ export class EquipmentRepairComponent implements OnInit {
 
   equipmentStatuses = [
     { id: 1, name: 'Disponible' },
+
     { id: 3, name: 'En reparación' },
     { id: 6, name: 'Reparado' },
     { id: 7, name: 'Fuera de Servicio' },
@@ -105,8 +107,8 @@ export class EquipmentRepairComponent implements OnInit {
   ngAfterViewInit() {
     setTimeout(() => {
       const statusPriority: { [key: string]: number } = {
-        'en revision': 0,
-        'en reparación': 1,
+        'En revision': 0,
+        'En reparación': 1,
         'reparado': 2,
         'fuera de servicio': 3,
         'disponible': 5,
@@ -182,6 +184,15 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
     this.loading.show(); // Show loading spinner
     this.equipmentRepairService.getAll().subscribe({
       next: (response) => {
+        console.log('Datos de reparaciones:', response.data);
+        // Log específico para el primer item
+        if (response.data.length > 0) {
+          console.log('Primer item:', {
+            repairStatus: response.data[0].repairStatus,
+            equipmentStatus: response.data[0].equipmentStatus,
+            status: response.data[0].status
+          });
+        }
         this.dataSource.data = response.data;
         this.total = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
@@ -204,7 +215,6 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
             data.categoryName?.toLocaleLowerCase().includes(term)||
             data.model?.toLocaleLowerCase().includes(term)||
             data.description?.toLowerCase().includes(term) ||
-            data.serviceProvider?.toLowerCase().includes(term) ||
             data.repairDate?.toLowerCase().includes(term) ||
             data.cost?.toString().includes(term)
           );
@@ -219,25 +229,31 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
     idRepair: idRepair
   };
 
-    this.equipmentService.changeStatus(equipmentRepairStatusChange,equipmentId).subscribe({
-      next: (response) => {
-        const newStatus = this.equipmentStatuses.find((s) => s.id === status);
+    this.equipmentService.changeStatus(equipmentRepairStatusChange, equipmentId).subscribe({
+    next: (response) => {
+      const newStatus = this.equipmentStatuses.find((s) => s.id === status);
 
-        // Recorre todos los elementos que coincidan con equipmentId
-        const updatedRepair = this.dataSource.data.find(item => item.id === idRepair);
-        if (updatedRepair && newStatus && newStatus.id !== 1)
-          {
-            updatedRepair.repairStatus =
-            {
+      const updatedRepair = this.dataSource.data.find(item => item.id === idRepair);
+      if (updatedRepair && newStatus) {
+
+        if (newStatus.id !== 1) {
             id: newStatus.id,
             name: newStatus.name,
-            };
+          };
 
-        if (status === 6)
-          {
-              updatedRepair.repairDate = new Date().toISOString();
-           }
-}
+          if (status === 6) {
+            updatedRepair.repairDate = new Date().toISOString();
+          }
+        }
+
+        if (status === 1) {
+          // Cuando "Disponible", actualizar el equipmentStatus
+          updatedRepair.equipmentStatus = {
+            id: 1,
+            name: 'Disponible'
+          };
+        }
+      }
 
 
         // Forzar actualización del datasource
@@ -305,14 +321,14 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
 
   getStatusClasses(statusName: string | undefined): string {
     if (!statusName) return 'dot-inactive out-of-service';
-    switch (statusName.trim().toLowerCase()) {
+    switch (statusName) {
       case 'disponible':
         return 'dot-available available';
       case 'asignado':
         return 'dot-assigned assigned';
-      case 'en reparacion':
+      case 'En reparación':
         return 'dot-under-repair under-repair';
-      case 'en revision':
+      case 'En revision':
         return 'dot-under-review under-review';
       case 'falla reportada':
         return 'dot-bug-reported bug-reported';
