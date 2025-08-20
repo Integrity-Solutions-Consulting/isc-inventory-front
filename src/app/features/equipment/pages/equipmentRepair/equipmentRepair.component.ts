@@ -235,16 +235,16 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
 
       const updatedRepair = this.dataSource.data.find(item => item.id === idRepair);
       if (updatedRepair && newStatus) {
-
-        if (newStatus.id !== 1) {
+            updatedRepair.repairStatus =
+            {
             id: newStatus.id,
             name: newStatus.name,
-          };
+            };
 
-          if (status === 6) {
-            updatedRepair.repairDate = new Date().toISOString();
-          }
-        }
+        if (status === 6)
+          {
+              updatedRepair.repairDate = new Date().toISOString();
+           }
 
         if (status === 1) {
           // Cuando "Disponible", actualizar el equipmentStatus
