@@ -223,8 +223,7 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
     });
   }
 
-  setRepairStatus(equipmentId: number, status: number, idRepair:number) {
-
+  setRepairStatus(equipmentId: number, status: number, idRepair:number) {    
     const equipmentRepairStatusChange: EquipmentRepairStatusChangeRequestDTO = {
     statusChange: status,
     idRepair: idRepair
@@ -235,11 +234,9 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
       const newStatus = this.equipmentStatuses.find((s) => s.id === status);
 
       const updatedRepair = this.dataSource.data.find(item => item.id === idRepair);
-
       if (updatedRepair && newStatus) {
 
         if (newStatus.id !== 1) {
-          updatedRepair.repairStatus = {
             id: newStatus.id,
             name: newStatus.name,
           };
