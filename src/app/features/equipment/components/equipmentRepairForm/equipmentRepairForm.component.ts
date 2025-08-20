@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -22,7 +23,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EquipmentRepairRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairRequestDTO';
 import { RepairService } from '../../services/repair/repair.service';
 import { WarningService } from '../../../../core/services/modals/warning/warning.service';
-import { SupplierTypeResponseDTO } from '../../../../core/models/ResponseDTO/inventory/SupplierTypeResponseDTO';
+import { SupplierRequestDTO } from '../../../../core/models/RequestDTO/inventory/SupplierRequestDTO';
+import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { SupplierService } from '../../../suppliers/services/supplier/supplier.service';
 import { SupplierResponseDTO } from '../../../../core/models/ResponseDTO/inventory/SupplierResponseDTO';
 
@@ -47,42 +49,72 @@ import { SupplierResponseDTO } from '../../../../core/models/ResponseDTO/invento
   styleUrls: ['./equipmentRepairForm.component.css'],
 })
 export class EquipmentRepairFormComponent implements OnInit {
-  equipment =
-  {
+  equipment = {
     id: 0,
     serialNumber: '',
     equipmentStatusId: 0,
   };
 
-supplierTypes: SupplierResponseDTO[] = [];
 
   isSubmitting = false;
-
+  loading = true;
   repairForm!: FormGroup;
   entityId: number = 0;
+
+  suppliers: SupplierRequestDTO[] = [];
+  suppliersFilterCtrl = new FormControl();
+  filteredSuppliers: any[] = [];
+
+  private _onDestroy = new Subject<void>();
 
   revoke: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
+    private suppliersService: SupplierService,
     private warningService: WarningService,
-    private repairSearvice: RepairService,
-    private supplierService: SupplierService,
+    private repairSearvice: RepairService
   ) {}
 
 
   ngOnInit() {
     this.initForm();
-    this.loadSupplierTypes();
+    forkJoin({
+          suppliers: this.suppliersService.getAll(),
+        }).subscribe({
+          next: (resp) => {
+            this.suppliers = resp.suppliers.data.filter((supplier: SupplierResponseDTO) =>
+          supplier.supplierType?.id === 2);
+            this.filteredSuppliers = this.suppliers.slice();
+            this.suppliersFilterCtrl.valueChanges
+              .pipe(takeUntil(this._onDestroy))
+              .subscribe(() => {
+                this.filterSuppliers();
+              });
+          },
+          error: (err) => {
+            console.error('Error al cargar datos:', err);
+          },
+          complete: () => {
+            this.loading = false;
+            this.loadData();
+          },
+        });
+  }
+
+  filterSuppliers() {
+    const search = this.suppliersFilterCtrl.value?.toLowerCase() || '';
+    this.filteredSuppliers = this.suppliers.filter((sup) =>
+      `${sup.businessName} ${sup.id}`.toLowerCase().includes(search)
+    );
   }
 
   initForm() {
     this.repairForm = this.fb.group({
       description: [null, Validators.required],
-      serviceProvider: [null, Validators.required],
+      supplier: [null, Validators.required],
       cost: [0.0, [Validators.min(0)]],
-      supplierType: ['', Validators.required],
     });
     this.loadData();
   }
@@ -99,28 +131,12 @@ supplierTypes: SupplierResponseDTO[] = [];
       if (entityToEdit.equipmentId) {
         this.entityId = entityToEdit.id;
       }
-      this.repairForm.patchValue({...entityToEdit,supplierType: entityToEdit.supplierType?.id,
+      this.repairForm.patchValue({
         description: entityToEdit.description,
-        serviceProvider: entityToEdit.serviceProvider,
+        supplier: entityToEdit.serviceProvider,
         cost: entityToEdit.cost,
       });
-            this.entityId = entityToEdit.id;
-
     }
-  }
-
-  loadSupplierTypes(): void
-  {
-    const supplierTypeId = 2;
-    this.supplierService.getSuppliersIdType(supplierTypeId).subscribe({
-
-      next: (resp) => {
-        this.supplierTypes = resp.data;
-      },
-      error: (err) => {
-        console.error('Error cargando tipos de proveedor:', err);
-      }
-    });
   }
 
   onSubmit() {
@@ -132,21 +148,11 @@ supplierTypes: SupplierResponseDTO[] = [];
 
     const request: EquipmentRepairRequestDTO = {
       description: formValue.description,
-      supplierTypeId: formValue.serviceProvider || null,
+      serviceProvider: formValue.supplier || null,
       cost: formValue.cost,
       equipment: this.equipment.id,
       revoke: this.revoke,
     };
-      const selectedSupplierType = this.supplierTypes.find(type => type.id === formValue.supplierType);
-
-      if (!selectedSupplierType)
-    {
-    console.error('Tipo de proveedor no encontrado');
-    this.isSubmitting = false;
-    this.formService.error('Seleccione un tipo de proveedor válido');
-    return;
-  }
-
     if (this.entityId == 0) {
       this.repairSearvice.save(request).subscribe({
         next: (response) => {

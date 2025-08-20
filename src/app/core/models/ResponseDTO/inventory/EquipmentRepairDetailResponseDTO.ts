@@ -6,6 +6,7 @@ export interface EquipmentRepairDetailResponseDTO
   id: number;
   equipment: number;
   repairStatus: EquipmentStatusResponseDTO;
+  equipmentStatus: EquipmentStatusResponseDTO;
   serialNumber: string;
   brand:string;
   model:string;

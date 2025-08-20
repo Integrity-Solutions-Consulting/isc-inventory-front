@@ -38,18 +38,18 @@
     <!-- Proveedor del servicio -->
     <div class="form-row">
       <div class="form-field">
-  <label>Proveedor del servicio <span class="required-asterisk">*</span></label>
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-select formControlName="supplierType">
-      <mat-option *ngFor="let type of supplierTypes" [value]="type.id">
-        {{ type.businessName }}
-      </mat-option>
-    </mat-select>
-    <mat-error *ngIf="repairForm.get('supplierType')?.hasError('required')">
-      El proveedor del servicio es obligatorio
-    </mat-error>
-  </mat-form-field>
-</div>
+      <label>Proveedor del servicio <span class="required-asterisk">*</span></label>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-select formControlName="supplier" placeholder="Seleccione proveedor">
+          <mat-option *ngFor="let supplier of filteredSuppliers" [value]="supplier.id">
+            {{ supplier.businessName }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="repairForm.get('supplier')?.hasError('required')">
+          El proveedor del servicio es obligatorio
+        </mat-error>
+      </mat-form-field>
+    </div>
 
 
       <div class="form-field">
@@ -84,8 +84,7 @@
         (click)="submitAndRepair()"
         [disabled]="repairForm.invalid || isSubmitting"
       >
-        {{ entityId !=0 ? "Actualizar reparación" : "Crear reparación" }}
-        <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
+        {{ entityId ? "Actualizar reparación" : "Crear reparación" }}
       </button>
     </div>
   </form>

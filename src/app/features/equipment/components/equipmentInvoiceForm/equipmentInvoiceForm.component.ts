@@ -79,7 +79,8 @@ export class EquipmentInvoiceFormComponent implements OnInit, OnDestroy {
       suppliers: this.suppliersService.getAll(),
     }).subscribe({
       next: (resp) => {
-        this.suppliers = resp.suppliers.data;
+        this.suppliers = resp.suppliers.data.filter((supplier: SupplierResponseDTO) => 
+      supplier.supplierType?.id === 1);
         this.filteredSuppliers = this.suppliers.slice();
         this.suppliersFilterCtrl.valueChanges
           .pipe(takeUntil(this._onDestroy))

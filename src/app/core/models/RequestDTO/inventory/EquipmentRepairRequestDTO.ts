@@ -5,6 +5,6 @@ export interface EquipmentRepairRequestDTO {
     description:string;
     cost:number;
     revoke:boolean;
-    supplierTypeId: number; // solo envías el id
+    serviceProvider: number;
 
 }

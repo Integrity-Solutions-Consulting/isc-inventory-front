@@ -44,7 +44,11 @@ export class NavComponent implements OnInit {
     this.userName = this.sessionService.getUserNames();
   }
 
-    logout() {
+  goToProfile() {
+    this.route.navigate(['/profile']);
+  }
+  
+  logout() {
     this.authService.logout().subscribe({
       next: (resp)=>{},
       error: (error)=>{console.error(error)},

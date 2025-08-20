@@ -126,11 +126,11 @@
 
             <mat-menu #menu="matMenu">
               <!-- Solo se puede marcar como 'En Revisión' si no está ya en revisión -->
-              <button
+               <button
                 mat-menu-item
                 (click)="setRepairStatus(item.equipment, 3, item.id)"
-                *ngIf="item.repairStatus?.id !== 4"
-                [disabled]="item.repairStatus?.id == 1 || item.repairStatus?.id !== 4 || !item.status"
+                *ngIf="item.repairStatus !== 4"
+                [disabled]="item.repairStatus.id == 1 || item.repairStatus.id !== 4 || !item.status"
               >
                 <mat-icon>visibility</mat-icon>
                 <span>Marcar como En Reparación</span>
@@ -150,7 +150,7 @@
               <button
                 mat-menu-item
                 (click)="setRepairStatus(item.equipment, 1,item.id)"
-                [disabled]="item.repairStatus?.id  !== 6 || item.equipStatus?.id == 1"
+                [disabled]="item.repairStatus?.id !== 6 || item.equipmentStatus?.id === 1"
               >
                 <mat-icon>check_circle</mat-icon>
                 <span>Marcar como Disponible</span>
