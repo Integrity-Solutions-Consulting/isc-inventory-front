@@ -61,6 +61,7 @@
             formControlName="cost"
             placeholder="0.00"
             min="0"
+            (keydown)="preventInvalidInput($event)"
           />
           <mat-error *ngIf="repairForm.get('cost')?.hasError('required')">
             El costo es obligatorio
@@ -81,7 +82,7 @@
         mat-flat-button
         color="primary"
         class="itg-primary-button"
-        (click)="submitAndRepair()"
+        (click)="onSubmit()"
         [disabled]="repairForm.invalid || isSubmitting"
       >
         {{ entityId ? "Actualizar reparación" : "Crear reparación" }}

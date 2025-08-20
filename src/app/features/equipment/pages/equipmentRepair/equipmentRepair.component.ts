@@ -19,7 +19,7 @@ import { WarningService } from '../../../../core/services/modals/warning/warning
 import { EquipmentRepairDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentRepairDetailResponseDTO';
 import { RepairService } from '../../services/repair/repair.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,10 +28,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { EquipmentDismissalFormComponent } from '../../components/equipmentDismissalForm/equipmentDismissalForm.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatDivider } from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairStatusChangeRequestDTO';
-import { SupplierResponseDTO } from '../../../../core/models/ResponseDTO/inventory/SupplierResponseDTO';
+import { EquipmentRepairFormComponent } from '../../components/equipmentRepairForm/equipmentRepairForm.component';
 
 @Component({
   selector: 'app-equipmentRepair',
@@ -50,7 +50,7 @@ import { SupplierResponseDTO } from '../../../../core/models/ResponseDTO/invento
     LayoutModule,
     MatCardModule,
     MatSortModule,
-    MatDivider,
+    MatDividerModule
   ],
   templateUrl: './equipmentRepair.component.html',
   styleUrls: ['./equipmentRepair.component.css'],
@@ -92,7 +92,7 @@ export class EquipmentRepairComponent implements OnInit {
     private modalDialogService: ModalDialogService,
     private warningService: WarningService,
     private equipmentRepairService: RepairService,
-    private equipmentService: EquipmentService
+    private equipmentService: EquipmentService,
   ) {}
 
   ngOnInit(): void {
@@ -223,7 +223,48 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
     });
   }
 
-  setRepairStatus(equipmentId: number, status: number, idRepair:number) {    
+  editRepair(repair?: EquipmentRepairDetailResponseDTO): void {
+  this.formService.open(repair ?
+    'Editar Reparación' :
+    'Nueva Reparación',
+    'build_circle', // Icono diferente para reparaciones
+    EquipmentRepairFormComponent,
+    repair,
+    (result: EquipmentRepairDetailResponseDTO) => {
+      if (result) {
+        const index = this.dataSource.data.findIndex(r => r.id === result.id);
+        if (index !== -1) {
+          // Actualiza solo los campos editables
+          this.dataSource.data[index] = {
+            ...this.dataSource.data[index],
+            description: result.description,
+            serviceProvider: result.serviceProvider,
+            cost: result.cost,
+          };
+          this.dataSource.data = [...this.dataSource.data]; // Trigger change detection
+        } else {
+        // Inserta nueva reparación
+        this.dataSource.data = [result, ...this.dataSource.data];
+      }
+        this.modalDialogService.open(
+          'success',
+          'Reparación actualizada',
+          'La reparación fue actualizada correctamente.'
+        );
+      }
+    },
+    (error) => {
+      console.error('Error al editar la reparación', error);
+      this.modalDialogService.open(
+        'error',
+        'Error al editar',
+        'No se pudo actualizar la reparación.'
+      );
+    }
+  );
+}
+
+  setRepairStatus(equipmentId: number, status: number, idRepair:number) {
     const equipmentRepairStatusChange: EquipmentRepairStatusChangeRequestDTO = {
     statusChange: status,
     idRepair: idRepair
@@ -271,6 +312,7 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
     });
   }
 
+
   warningDelete(entity: EquipmentRepairDetailResponseDTO) {
     this.warningService.open(
       'Confirmar eliminación',
@@ -303,6 +345,7 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
       },
     });
   }
+
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

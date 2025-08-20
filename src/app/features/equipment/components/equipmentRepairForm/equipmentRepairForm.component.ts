@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
@@ -41,7 +41,7 @@ import { SupplierResponseDTO } from '../../../../core/models/ResponseDTO/invento
     MatIconModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatProgressSpinner,
+    MatProgressSpinnerModule,
     NgxMatSelectSearchModule,
     MatDatepickerModule,
   ],
@@ -60,6 +60,7 @@ export class EquipmentRepairFormComponent implements OnInit {
   loading = true;
   repairForm!: FormGroup;
   entityId: number = 0;
+  isEditMode: boolean = false;
 
   suppliers: SupplierRequestDTO[] = [];
   suppliersFilterCtrl = new FormControl();
@@ -113,10 +114,9 @@ export class EquipmentRepairFormComponent implements OnInit {
   initForm() {
     this.repairForm = this.fb.group({
       description: [null, Validators.required],
-      supplier: [null, Validators.required],
+      serviceProvider: [null, Validators.required],
       cost: [0.0, [Validators.min(0)]],
     });
-    this.loadData();
   }
 
   loadData() {
@@ -143,14 +143,13 @@ export class EquipmentRepairFormComponent implements OnInit {
     if (this.repairForm.invalid) return;
 
     this.isSubmitting = true;
-
     const formValue = this.repairForm.value;
 
     const request: EquipmentRepairRequestDTO = {
-      description: formValue.description,
-      serviceProvider: formValue.supplier || null,
-      cost: formValue.cost,
       equipment: this.equipment.id,
+      description: formValue.description,
+      serviceProvider: formValue.serviceProvider,
+      cost: formValue.cost,
       revoke: this.revoke,
     };
     if (this.entityId == 0) {
@@ -165,6 +164,10 @@ export class EquipmentRepairFormComponent implements OnInit {
         },
       });
     }
+    }
+
+  getSupplierNameById(id: number): string {
+    return this.suppliers.find(s => s.id === id)?.businessName || '';
   }
 
   submitAndRepair() {
@@ -190,5 +193,16 @@ export class EquipmentRepairFormComponent implements OnInit {
 
   onCancel() {
     this.formService.close();
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  preventInvalidInput(event: KeyboardEvent) {
+    if (['e', 'E', '+', '-'].includes(event.key)) {
+      event.preventDefault();
+    }
   }
 }
