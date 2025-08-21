@@ -85,7 +85,7 @@
         <ng-container matColumnDef="serviceProvider">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Proveedor</th>
           <td mat-cell *matCellDef="let item">
-            {{ item.serviceProvider || "N/D" }}
+            {{ item.serviceProviderName }}
           </td>
         </ng-container>
 
@@ -128,7 +128,7 @@
                <button
                 mat-menu-item
                 (click)="setRepairStatus(item.equipment, 3, item.id)"
-                *ngIf="item.repairStatus.id !== 4"
+                *ngIf="item.repairStatus !== 4"
                 [disabled]="item.repairStatus.id == 1 || item.repairStatus.id !== 4 || !item.status"
               >
                 <mat-icon>visibility</mat-icon>
@@ -149,12 +149,12 @@
               <button
                 mat-menu-item
                 (click)="setRepairStatus(item.equipment, 1,item.id)"
-                [disabled]="item.repairStatus?.id !== 6 || item.equipmentStatus?.id === 1"
+                 [disabled]="item.repairStatus?.id !== 6 || item.equipmentStatus?.id === 1"
               >
                 <mat-icon>check_circle</mat-icon>
                 <span>Marcar como Disponible</span>
               </button>
-              
+
               <!-- 'Fuera de servicio' siempre está disponible -->
               <!-- 'Fuera de servicio' siempre está disponible -->
 
@@ -205,7 +205,7 @@
           </div>
           <div><strong>Descripción:</strong> {{ item.description }}</div>
           <div>
-            <strong>Proveedor:</strong> {{ item.serviceProvider || "N/D" }}
+            <strong>Proveedor:</strong> {{ item.serviceProviderName || "N/D" }}
           </div>
           <div><strong>Costo:</strong> {{ item.cost | currency }}</div>
           <div>

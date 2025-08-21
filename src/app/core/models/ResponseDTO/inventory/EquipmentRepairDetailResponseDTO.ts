@@ -14,7 +14,8 @@ export interface EquipmentRepairDetailResponseDTO
   repairDate: string;
   description: string;
   cost: number;
-  serviceProvider:SupplierResponseDTO,
+  serviceProviderId:number,
+  serviceProviderName:string,
   status: boolean;
   creationDate: string;
   modificationDate: string;
