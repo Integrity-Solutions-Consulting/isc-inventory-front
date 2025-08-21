@@ -1,12 +1,26 @@
 version: '3.8'
 
 services:
-  angular_frontend:
+  angular_frontend_dev:
     image: inventory_front:latest
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "8081:80"   # Puerto distinto para DEV
     restart: always
-    container_name: inventory_front
+    container_name: inventory_front_dev
+    environment:
+      - ENV=development
+
+  angular_frontend_prod:
+    image: inventory_front:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"   # Puerto distinto para PROD
+    restart: always
+    container_name: inventory_front_prod
+    environment:
+      - ENV=production
