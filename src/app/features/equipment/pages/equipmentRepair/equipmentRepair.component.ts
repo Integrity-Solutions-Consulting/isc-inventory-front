@@ -119,7 +119,7 @@ export class EquipmentRepairComponent implements OnInit {
       this.dataSource.sortingDataAccessor = (item, property) => {
         switch (property) {
           case 'serialNumber':
-            return item.equipment|| '';
+            return item.serialNumber || '';
           case 'repairDate':
             return item.repairDate || '';
           case 'repairStatus':
@@ -130,7 +130,7 @@ export class EquipmentRepairComponent implements OnInit {
           case 'cost':
             return item.cost || 0;
           case 'serviceProvider':
-            return item.serviceProvider || '';
+            return item.serviceProviderName || '';
           case 'status':
             return item.status ? 'Activo' : 'Inactivo';
           case 'creationDate':
@@ -186,13 +186,6 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
       next: (response) => {
         console.log('Datos de reparaciones:', response.data);
         // Log específico para el primer item
-        if (response.data.length > 0) {
-          console.log('Primer item:', {
-            repairStatus: response.data[0].repairStatus,
-            equipmentStatus: response.data[0].equipmentStatus,
-            status: response.data[0].status
-          });
-        }
         this.dataSource.data = response.data;
         this.total = this.dataSource.data.length;
         this.dataSource.paginator = this.paginator;
@@ -216,7 +209,8 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
             data.model?.toLocaleLowerCase().includes(term)||
             data.description?.toLowerCase().includes(term) ||
             data.repairDate?.toLowerCase().includes(term) ||
-            data.cost?.toString().includes(term)
+            data.cost?.toString().includes(term) ||
+            data.serviceProviderName?.toLowerCase().includes(term)
           );
         };
       },
@@ -238,7 +232,8 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
           this.dataSource.data[index] = {
             ...this.dataSource.data[index],
             description: result.description,
-            serviceProvider: result.serviceProvider,
+            serviceProviderId: result.serviceProviderId,
+            serviceProviderName: result.serviceProviderName,
             cost: result.cost,
           };
           this.dataSource.data = [...this.dataSource.data]; // Trigger change detection
@@ -272,27 +267,40 @@ openDismissalFormAndThenSetStatus(equipmentId: number, status: number, idRepair:
 
     this.equipmentService.changeStatus(equipmentRepairStatusChange, equipmentId).subscribe({
     next: (response) => {
-      const newStatus = this.equipmentStatuses.find((s) => s.id === status);
-
+      console.log('Respuesta del cambio de estado:', response);
       const updatedRepair = this.dataSource.data.find(item => item.id === idRepair);
-      if (updatedRepair && newStatus) {
-            updatedRepair.repairStatus =
-            {
-            id: newStatus.id,
-            name: newStatus.name,
-            };
-
-        if (status === 6)
-          {
+      if (updatedRepair) {
+        // Encontramos el nuevo estado en nuestra lista de estados
+        const newStatus = this.equipmentStatuses.find(s => s.id === status);
+        if (newStatus) {
+          switch (status) {
+            case 3: // En reparación
+              updatedRepair.repairStatus = {
+                id: 3,
+                name: 'En reparación'
+              };
+              break;
+            case 6: // Reparado
+              updatedRepair.repairStatus = {
+                id: 6,
+                name: 'Reparado'
+              };
               updatedRepair.repairDate = new Date().toISOString();
-           }
-
-        if (status === 1) {
-          // Cuando "Disponible", actualizar el equipmentStatus
-          updatedRepair.equipmentStatus = {
-            id: 1,
-            name: 'Disponible'
-          };
+              break;
+            case 1: // Disponible
+              updatedRepair.equipmentStatus = {
+                id: 1,
+                name: 'Disponible'
+              };
+              // Mantenemos el repairStatus como está
+              break;
+            case 7: // Fuera de servicio
+              updatedRepair.repairStatus = {
+                id: 7,
+                name: 'Fuera de Servicio'
+              };
+              break;
+          }
         }
       }
 

@@ -80,13 +80,17 @@ export class EquipmentRepairFormComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log('Iniciando ngOnInit');
     this.initForm();
+    console.log('Formulario inicializado');
+    console.log('Obteniendo proveedores de servicio...');
     forkJoin({
-          suppliers: this.suppliersService.getAll(),
+          suppliers: this.suppliersService.getSuppliersIdType(1), // Obtener solo proveedores de servicio
         }).subscribe({
           next: (resp) => {
-            this.suppliers = resp.suppliers.data.filter((supplier: SupplierResponseDTO) =>
-          supplier.supplierType?.id === 2);
+            console.log('Suppliers response:', resp.suppliers);
+            this.suppliers = resp.suppliers.data;
+            console.log('Service suppliers:', this.suppliers);
             this.filteredSuppliers = this.suppliers.slice();
             this.suppliersFilterCtrl.valueChanges
               .pipe(takeUntil(this._onDestroy))
@@ -105,36 +109,69 @@ export class EquipmentRepairFormComponent implements OnInit {
   }
 
   filterSuppliers() {
+    console.log('Filtrando proveedores...');
     const search = this.suppliersFilterCtrl.value?.toLowerCase() || '';
+    console.log('Texto de búsqueda:', search);
     this.filteredSuppliers = this.suppliers.filter((sup) =>
       `${sup.businessName} ${sup.id}`.toLowerCase().includes(search)
     );
+    console.log('Proveedores filtrados:', this.filteredSuppliers);
   }
 
   initForm() {
     this.repairForm = this.fb.group({
       description: [null, Validators.required],
-      serviceProvider: [null, Validators.required],
-      cost: [0.0, [Validators.min(0)]],
+      supplierId: [null, [Validators.required, Validators.min(1)]],  // Aseguramos que sea un número positivo
+      cost: [null, [Validators.required]],
+    });
+
+    // Observar cambios en supplierId para debug
+    this.repairForm.get('supplierId')?.valueChanges.subscribe(value => {
+      console.log('Valor de supplierId cambiado a:', value);
     });
   }
 
   loadData() {
     const entityToEdit = this.formService.modalDataValue;
-    console.log(entityToEdit);
+    console.log('Datos recibidos en el formulario:', entityToEdit);
+
     if (entityToEdit) {
+      this.isEditMode = true;
+      console.log('Valores antes de asignar:', {
+        equipmentId: entityToEdit.equipmentId,
+        id: entityToEdit.id,
+        equipment: entityToEdit.equipment
+      });
+
+      // El ID del equipo puede venir en diferentes proiedades dependiendo del origen
       this.equipment = {
-        id: entityToEdit.equipmentId || entityToEdit.id,
-        serialNumber: entityToEdit.serialNumber,
+        id: entityToEdit.equipment || entityToEdit.equipmentId || entityToEdit.id,
+        serialNumber: entityToEdit.serialNumber || '',
         equipmentStatusId: entityToEdit.equipmentStatusId || 0,
       };
-      if (entityToEdit.equipmentId) {
+
+      console.log('Equipo asignado:', this.equipment);
+
+      // Si estamos editando, guardamos el ID de la reparación
+      if (entityToEdit.id) {
         this.entityId = entityToEdit.id;
       }
+      const providerId = entityToEdit.serviceProviderId;
+      console.log('Service Provider ID recibido:', providerId);
+      console.log('Service Provider Name recibido:', entityToEdit.serviceProviderName);
+
       this.repairForm.patchValue({
         description: entityToEdit.description,
-        supplier: entityToEdit.serviceProvider,
+        supplierId: providerId,
         cost: entityToEdit.cost,
+      });
+
+      // Verificar que el valor se estableció correctamente
+      console.log('Valor actual del formulario después de patch:', this.repairForm.value);
+      console.log('Estado del control supplierId:', {
+        value: this.repairForm.get('supplierId')?.value,
+        valid: this.repairForm.get('supplierId')?.valid,
+        errors: this.repairForm.get('supplierId')?.errors
       });
     }
   }
@@ -145,25 +182,69 @@ export class EquipmentRepairFormComponent implements OnInit {
     this.isSubmitting = true;
     const formValue = this.repairForm.value;
 
+    console.log('Datos del equipo antes de enviar:', this.equipment);
+
+    console.log('Valores del formulario:', formValue);
+
+    // Validar y convertir el ID del proveedor
+    if (!formValue.supplierId) {
+      console.error('El ID del proveedor es requerido');
+      this.isSubmitting = false;
+      return;
+    }
+
+    const providerId = Number(formValue.supplierId);
+    if (isNaN(providerId) || providerId <= 0) {
+      console.error('ID de proveedor inválido:', formValue.supplierId);
+      this.isSubmitting = false;
+      return;
+    }
+
     const request: EquipmentRepairRequestDTO = {
       equipment: this.equipment.id,
       description: formValue.description,
-      serviceProvider: formValue.serviceProvider,
+      serviceProviderId: providerId,
       cost: formValue.cost,
       revoke: this.revoke,
     };
-    if (this.entityId == 0) {
+
+    // Log detallado del request
+    console.log('Valores del formulario antes de enviar:', {
+      rawSupplierId: formValue.supplierId,
+      convertedSupplierId: providerId,
+      fullFormValue: formValue
+    });
+    console.log('Request final a enviar:', request);
+
+    console.log('Request completo a enviar:', request);
+
+    console.log('Request a enviar:', request);
+    if (this.entityId == 0)
+      {
       this.repairSearvice.save(request).subscribe({
         next: (response) => {
           this.isSubmitting = false;
           this.formService.close(response.data);
         },
-        error: (error) => {
+        error: (error) =>
+          {
           this.isSubmitting = false;
           this.formService.error(error.error);
         },
       });
-    }
+    } else
+      {
+        this.repairSearvice.update(this.entityId, request).subscribe({
+      next: (response) => {
+        this.isSubmitting = false;
+        this.formService.close(response.data);
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        this.formService.error(error.error);
+      },
+    });
+      }
     }
 
   getSupplierNameById(id: number): string {

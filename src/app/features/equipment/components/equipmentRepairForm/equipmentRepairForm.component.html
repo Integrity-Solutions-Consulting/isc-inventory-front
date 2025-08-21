@@ -40,12 +40,12 @@
       <div class="form-field">
       <label>Proveedor del servicio <span class="required-asterisk">*</span></label>
       <mat-form-field appearance="outline" class="w-100">
-        <mat-select formControlName="supplier" placeholder="Seleccione proveedor">
+        <mat-select formControlName="supplierId" placeholder="Seleccione proveedor">
           <mat-option *ngFor="let supplier of filteredSuppliers" [value]="supplier.id">
             {{ supplier.businessName }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="repairForm.get('supplier')?.hasError('required')">
+        <mat-error *ngIf="repairForm.get('supplierId')?.hasError('required')">
           El proveedor del servicio es obligatorio
         </mat-error>
       </mat-form-field>
