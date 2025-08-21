@@ -1,12 +1,30 @@
-version: '3.8'
-
 services:
-  angular_frontend:
-    image: inventory_front:latest
+  angular_frontend_dev:
+    image: inventory_front_dev:latest
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        AUTH_BASE_URL: http://147.93.181.146:9090/api/v1
+        API_BASE_URL: http://147.93.181.146:9091/api/v1
+    ports:
+      - "8081:80"
+    restart: always
+    container_name: inventory_front_dev
+    environment:
+      - ENV=development
+
+  angular_frontend_prod:
+    image: inventory_front_prod:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        AUTH_BASE_URL: https://auth.inventory.integritysolutions.com.ec/api/v1
+        API_BASE_URL: https://api.inventory.integritysolutions.com.ec/api/v1
     ports:
       - "8080:80"
     restart: always
-    container_name: inventory_front
+    container_name: inventory_front_prod
+    environment:
+      - ENV=production
