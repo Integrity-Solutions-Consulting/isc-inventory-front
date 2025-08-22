@@ -3,28 +3,46 @@
   padding: 2rem;
   max-width: 600px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  color: white;
 }
 
-.error-img {
-  width: 100%;
-  max-width: 300px;
-  margin-bottom: 1rem;
+/* Fondo con la imagen */
+:host {
+  display: block;
+  height: 100vh; /* ocupa toda la pantalla */
+  background: url("/assets/404.png") no-repeat center center;
+
+
+  background-size: cover; /* que la imagen se ajuste */
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 3rem;
   margin-bottom: 0.5rem;
 }
 
 p {
+  font-size: 10rem;
   margin-bottom: 1rem;
-  color: #666;
+  color: #f1f1f1; /* texto claro para que contraste */
+  margin-top: 22rem;
 }
 
 .back-link {
   text-decoration: none;
   color: white;
   background-color: #007bff;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.back-link:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
 }
