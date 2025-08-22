@@ -85,7 +85,7 @@ export class EquipmentRepairFormComponent implements OnInit {
     console.log('Formulario inicializado');
     console.log('Obteniendo proveedores de servicio...');
     forkJoin({
-          suppliers: this.suppliersService.getSuppliersIdType(1), // Obtener solo proveedores de servicio
+          suppliers: this.suppliersService.getSuppliersIdType(2), // proveedores de servicio profesionales
         }).subscribe({
           next: (resp) => {
             console.log('Suppliers response:', resp.suppliers);
@@ -121,11 +121,11 @@ export class EquipmentRepairFormComponent implements OnInit {
   initForm() {
     this.repairForm = this.fb.group({
       description: [null, Validators.required],
-      supplierId: [null, [Validators.required, Validators.min(1)]],  // Aseguramos que sea un número positivo
+      supplierId: [null, [Validators.required, Validators.min(1)]],
       cost: [null, [Validators.required]],
     });
 
-    // Observar cambios en supplierId para debug
+  
     this.repairForm.get('supplierId')?.valueChanges.subscribe(value => {
       console.log('Valor de supplierId cambiado a:', value);
     });

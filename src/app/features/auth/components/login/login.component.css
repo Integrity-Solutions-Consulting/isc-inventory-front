@@ -6,26 +6,33 @@
   width: 100%;
 }
 
+.form-row {
+  margin-bottom: -25px;  /* Reduce el espacio entre los campos */
+  align-items: center;
+}
+
 /* Opcional: para que el botón quede con un poco más de espacio arriba */
 button[type="submit"] {
   align-self: center;
   width: 100%;
+  margin-top: -1rem
 }
 
 .auth-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: -5px;
 
   .auth-logo {
-    width: 10rem;
-    margin-bottom: 10px;
+    width: 16rem;
+    margin-bottom: 20px;
   }
 
   .auth-title {
     font-size: 2rem;
     margin: 0;
     color: var(--itg-text);
-    text-align: start;
+    text-align: center;
+    margin-top: -2rem;
   }
 }
 
@@ -33,7 +40,7 @@ button[type="submit"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: -10px;
+  margin-top: -20px;
   margin-bottom: 20px;
 
   .forgot-password-btn {
