@@ -8,6 +8,7 @@
 
 .form-row {
   margin-bottom: -25px;  /* Reduce el espacio entre los campos */
+  align-items: center;
 }
 
 /* Opcional: para que el botón quede con un poco más de espacio arriba */
@@ -22,7 +23,7 @@ button[type="submit"] {
   margin-bottom: -5px;
 
   .auth-logo {
-    width: 23rem;
+    width: 16rem;
     margin-bottom: 20px;
   }
 
@@ -30,8 +31,8 @@ button[type="submit"] {
     font-size: 2rem;
     margin: 0;
     color: var(--itg-text);
-    text-align: start;
-    margin-top: -2rem
+    text-align: center;
+    margin-top: -2rem;
   }
 }
 
