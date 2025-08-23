@@ -1,0 +1,128 @@
+import { CommonModule } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { PasswordChangeRequestDTO } from '../../../../core/models/RequestDTO/PasswordChangeRequestDTO';
+import { finalize } from 'rxjs';
+import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageResponseDTO';
+import { ResponseDTO } from '../../../../core/models/ResponseDTO/ResponseDTO';
+import { MatIconModule } from "@angular/material/icon";
+import { AuthService } from '../../../auth/services/auth.service';
+import { UserService } from '../../services/user.service';
+
+@Component({
+  selector: 'app-change-password',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatIconModule
+],
+  templateUrl: './change-password.component.html',
+  styleUrls: ['./change-password.component.scss']
+})
+export class ChangePasswordComponent {
+  currentPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
+  loading: boolean = false;
+  errorMessage: string = '';
+
+  hideCurrentPassword = true;
+  hideNewPassword = true;
+  hideConfirmPassword = true;
+
+  constructor(
+    public dialogRef: MatDialogRef<ChangePasswordComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private userService: UserService,
+    private snackBar: MatSnackBar
+  ) {}
+
+  onCancel(): void {
+    this.dialogRef.close();
+  }
+
+  private isSuccessStatus(status: string | number | undefined): boolean {
+    if (!status) return false;
+    return Number(status) >= 200 && Number(status) < 300;
+  }
+
+  onChangePassword(): void {
+  if (this.newPassword.length < 8 || this.newPassword.length > 30) {
+    alert('La contraseña debe tener entre 8 y 30 caracteres');
+    return;
+  }
+
+  if (this.newPassword !== this.confirmPassword) {
+    alert('Las contraseñas no coinciden');
+    return;
+  }
+
+  const passwordRequest: PasswordChangeRequestDTO = {
+    actualPassword: this.currentPassword,
+    newPassword: this.newPassword,
+    confirmPassword: this.confirmPassword
+  };
+
+  this.loading = true;
+  this.errorMessage = '';
+
+  this.userService.changePassword(this.data.id, passwordRequest)
+    .pipe(finalize(() => this.loading = false))
+    .subscribe({
+      next: (response: ResponseDTO<MessageResponseDTO>) => {
+        console.log('Cambio de contraseña response:', response);
+        if (response.meta && this.isSuccessStatus(response.meta.status)) {
+          this.snackBar.open(response.meta.message || 'Contraseña cambiada exitosamente', 'Cerrar', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+          });
+          this.dialogRef.close({ success: true });
+        } else {
+          this.errorMessage = response.meta?.message || 'Error al cambiar la contraseña';
+        }
+      },
+      error: (error) => {
+        console.error('Error cambiando contraseña:', error);
+
+        if (error.error?.meta) {
+          this.errorMessage = error.error.meta.message || 'Error al cambiar la contraseña';
+        } else if (error.status === 400) {
+          this.errorMessage = 'Datos inválidos';
+        } else if (error.status === 401) {
+          this.errorMessage = 'Contraseña actual incorrecta';
+        } else if (error.status === 403) {
+          this.errorMessage = 'No tiene permisos para realizar esta acción';
+        } else {
+          this.errorMessage = 'Error de conexión. Intente nuevamente.';
+        }
+      }
+    });
+}
+
+
+  // Limpiar mensaje de error cuando el usuario empiece a escribir
+  clearError(): void {
+    this.errorMessage = '';
+  }
+
+  isFormValid(): boolean {
+    return this.currentPassword.length >= 1 && 
+           this.newPassword.length >= 6 && 
+           this.newPassword.length <= 20 &&
+           this.confirmPassword.length >= 1 &&
+           this.newPassword === this.confirmPassword;
+  }
+}

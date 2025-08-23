@@ -7,6 +7,7 @@ import { UserResponseDTO } from '../../../core/models/ResponseDTO/UserResponseDT
 import { UserRequestoDTO } from '../../../core/models/RequestDTO/UserRequestDTO';
 import { MessageResponseDTO } from '../../../core/models/ResponseDTO/MessageResponseDTO';
 import { UserDetailsResponseDTO } from '../../../core/models/ResponseDTO/UserDetailsResponseDTO';
+import { PasswordChangeRequestDTO } from '../../../core/models/RequestDTO/PasswordChangeRequestDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -61,6 +62,13 @@ export class UserService {
   public unsuspend(id: number): Observable<ResponseDTO<MessageResponseDTO[]>> {
     return this.httpClient.put<ResponseDTO<MessageResponseDTO[]>>(
       `${this.userGetUrl}/unsuspend/${id}`,null
+    );
+  }
+
+  public changePassword(id: number, request: PasswordChangeRequestDTO): Observable<ResponseDTO<MessageResponseDTO>> {
+    return this.httpClient.put<ResponseDTO<MessageResponseDTO>>(
+      `${this.userGetUrl}/changePassword/${id}`,
+      request
     );
   }
 }
