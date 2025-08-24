@@ -90,7 +90,7 @@ export class ProfileMenuComponent implements OnInit{
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result?.success) {
         console.log('Contraseña cambiada exitosamente');
       }
     });
