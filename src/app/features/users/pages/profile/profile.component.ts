@@ -64,11 +64,11 @@ export class ProfileMenuComponent implements OnInit{
       id: userSession.id || null,
       username: firstName,
       email: userSession.email || 'No disponible',
-      active: true, // Asumiendo que si está logueado está activo
+      active: true, // Si está logueado está activo
       suspended: false, // Valor por defecto
       lastConnection: new Date(), // Usar fecha actual
       lastModificationDate: new Date(), // Usar fecha actual
-      isLoggedIn: true, // Si está viendo el perfil, está logueado
+      isLoggedIn: true, // Si está logueado
       employee: {
         identificationType: {
           name: 'No definido' // Valor por defecto

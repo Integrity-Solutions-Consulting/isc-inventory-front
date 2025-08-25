@@ -13,7 +13,7 @@ import { MessageResponseDTO } from '../../../../core/models/ResponseDTO/MessageR
 import { ResponseDTO } from '../../../../core/models/ResponseDTO/ResponseDTO';
 import { MatIconModule } from "@angular/material/icon";
 import { UserService } from '../../services/user.service';
-import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service'; // ← Importar el servicio
+import { ModalDialogService } from '../../../../core/services/modals/modalDialog/modalDialog.service';
 
 @Component({
   selector: 'app-change-password',
