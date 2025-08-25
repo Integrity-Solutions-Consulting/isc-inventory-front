@@ -217,6 +217,17 @@ allowOnlyNumbers(event: KeyboardEvent): void {
   }
 }
 
+allowOnlyNumbersPhone(event: KeyboardEvent): void {
+  // Solo permitir números y algunos caracteres especiales para teléfono
+  const allowedChars = /[0-9+\-() ]/;  
+  // Permitir teclas de control (backspace, tab, etc.)
+  if (event.key === 'Backspace' || event.key === 'Tab' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    return;
+  }  
+  if (!allowedChars.test(event.key)) {
+    event.preventDefault();
+  }
+}
 
   onCancel(): void {
     this.formService.close();
