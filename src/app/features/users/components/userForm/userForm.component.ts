@@ -170,8 +170,50 @@ export class UserFormComponent implements OnInit, OnDestroy {
     );
   }
 
+  updatePrivilegesFromRoles(selectedRoleIds: number[]) {
+    if (!selectedRoleIds || selectedRoleIds.length === 0) {
+      this.userForm.patchValue({
+        privilegeIds: [],
+        menuIds: []
+      });
+      return;
+    }
 
-  ngOnDestroy() {
+    // Obtener todos los privilegios y menús únicos de los roles seleccionados
+    const selectedRoles = this.roles.filter(role => selectedRoleIds.includes(role.id));
+    const defaultPrivilegeIds = new Set<number>();
+    const defaultMenuIds = new Set<number>();
+
+    selectedRoles.forEach(role => {
+      // Agregar privilegios del rol
+      role.rolePrivileges?.forEach(privilege => {
+        if (privilege.id) {
+          defaultPrivilegeIds.add(privilege.id);
+        }
+      });
+
+      // Agregar menús del rol
+      role.menus?.forEach(menu => {
+        if (menu.id) {
+          defaultMenuIds.add(menu.id);
+        }
+      });
+    });
+
+    // Actualizar el control de privilegios con los privilegios predeterminados
+    const currentPrivilegeIds = this.userForm.get('privilegeIds')?.value || [];
+    const updatedPrivilegeIds = Array.from(new Set([...currentPrivilegeIds, ...defaultPrivilegeIds]));
+
+    // Actualizar el control de menús con los menús predeterminados
+    const currentMenuIds = this.userForm.get('menuIds')?.value || [];
+    const updatedMenuIds = Array.from(new Set([...currentMenuIds, ...defaultMenuIds]));
+
+    // Actualizar ambos controles
+    this.userForm.patchValue({
+      privilegeIds: updatedPrivilegeIds,
+      menuIds: updatedMenuIds
+    });
+  }  ngOnDestroy() {
     this._onDestroy.next();
     this._onDestroy.complete();
   }
@@ -185,6 +227,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
       privilegeIds: [[]], // Opcional y múltiple
       menuIds: [[]], // Opcional y múltiple
     });
+
+    // Observar cambios en roleIds
+    this.userForm.get('roleIds')?.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe((selectedRoleIds: number[]) => {
+        this.updatePrivilegesFromRoles(selectedRoleIds);
+      });
   }
 
   loadData() {
@@ -198,7 +247,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
         privilegeIds:
           userToEdit.privileges?.map((p: PrivilegeResponseDTO) => p.id) || [],
         menuIds: userToEdit.menus?.map((m: MenuResponseDTO) => m.id) || [],
-      });
+      },{ emitEvent: false });
 
      this.selectedEmployee = this.employees.find((emp) => emp.id === userToEdit.employeeId) || null;
 
