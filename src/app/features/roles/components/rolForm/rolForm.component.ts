@@ -51,6 +51,11 @@ export class RolFormComponent implements OnInit, OnDestroy {
   privileges: PrivilegeResponseDTO[] = [];
   privilegeFilterCtrl = new FormControl();
   filteredPrivileges: PrivilegeResponseDTO[] = [];
+  defaultPrivileges: number[] = [];  // Array para almacenar los IDs de los privilegios predeterminados
+  
+  isPrivilegeDefault(privilegeId: number): boolean {
+    return this.defaultPrivileges.includes(privilegeId);
+  }
 
 
   menus: MenuResponseDTO[] = [];
@@ -67,7 +72,7 @@ export class RolFormComponent implements OnInit, OnDestroy {
   entityId: number = 0;
 
   private _onDestroy = new Subject<void>();
-  
+
   constructor(
     private fb: FormBuilder,
     private menuService: MenuService,
@@ -130,13 +135,14 @@ export class RolFormComponent implements OnInit, OnDestroy {
   loadData() {
     const entityToEdit = this.formService.modalDataValue;
     if (entityToEdit) {
+      const defaultPrivilegeIds = entityToEdit.rolePrivileges?.map((p: PrivilegeResponseDTO) => p.id) || [];
+      this.defaultPrivileges = [...defaultPrivilegeIds];
+      
       this.roleForm.patchValue({
         name: entityToEdit.name,
         description: entityToEdit.description,
         applicationId: entityToEdit.applicationId,
-        privilegesId:
-          entityToEdit.rolePrivileges?.map((p: PrivilegeResponseDTO) => p.id) ||
-          [],
+        privilegesId: defaultPrivilegeIds,
         menusId: entityToEdit.menus?.map((m: MenuResponseDTO) => m.id) || [],
       });
       this.entityId = entityToEdit.id;
