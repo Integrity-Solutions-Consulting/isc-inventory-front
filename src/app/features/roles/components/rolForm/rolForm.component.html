@@ -52,6 +52,9 @@
             <mat-option
               *ngFor="let privilege of filteredPrivileges"
               [value]="privilege.id"
+              [disabled]="isPrivilegeDefault(privilege.id)"
+              [style.color]="isPrivilegeDefault(privilege.id) ? '#666666' : 'inherit'"
+              [style.background-color]="isPrivilegeDefault(privilege.id) ? '#f5f5f5' : 'inherit'"
             >
               {{ privilege.key }}
             </mat-option>
