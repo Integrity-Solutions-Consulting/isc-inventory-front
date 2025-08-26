@@ -105,15 +105,21 @@
 
 <div class="form-row address-row">
   <!-- Dirección -->
-  <div class="form-field">
-    <label>Dirección <span class="required-asterisk">*</span> </label>
-    <mat-form-field appearance="outline" class="w-100">
-      <input matInput formControlName="address" minlength="3" />
-      <mat-error *ngIf="supplierForm.get('address')?.hasError('required')">
-        La dirección es obligatoria
-      </mat-error>
-    </mat-form-field>
-  </div>
+<div class="form-field">
+  <label>Dirección <span class="required-asterisk">*</span> </label>
+  <mat-form-field appearance="outline" class="w-100">
+    <textarea
+      matInput
+      cdkTextareaAutosize
+      cdkAutosizeMinRows="2"
+      cdkAutosizeMaxRows="6"
+      formControlName="address"
+      minlength="3">
+    </textarea>
+    <mat-error *ngIf="supplierForm.get('address')?.hasError('required')">
+      La dirección es obligatoria
+    </mat-error>
+  </mat-form-field>
 </div>
 
 
