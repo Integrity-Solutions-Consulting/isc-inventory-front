@@ -243,7 +243,7 @@ openDismissalFormAndThenSetStatus(entity: EquipmentDetailResponseDTO): void {
 
   edit(entity: EquipmentDetailResponseDTO): void {
     this.formService.open(
-      'Editar Rol',
+      'Editar Equipo',
       'edit',
       EquipmentFormComponent,
       entity,

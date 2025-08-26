@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth/auth.guard';
 import { guestGuard } from './core/guards/guest/guest.guard';
-import { ProfileMenuComponent } from './features/profile/profile.component';
+import { ProfileMenuComponent } from './features/users/pages/profile/profile.component';
 
 export const routes: Routes = [
   {

@@ -18,6 +18,7 @@ export class SessionService {
 
   /** Retorna el usuario completo */
   getUserSession(): UserLoginResponseDTO | null {
+    
     const userJson = localStorage.getItem(this.USER_KEY);
     return userJson ? JSON.parse(userJson) : null;
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UserLoginResponseDTO } from '../../../core/models/ResponseDTO/UserLoginResponseDTO';
 import { ResponseDTO } from '../../../core/models/ResponseDTO/ResponseDTO';
@@ -10,6 +10,7 @@ import { UserRequestoDTO } from '../../../core/models/RequestDTO/UserRequestDTO'
 import { MessageResponseDTO } from '../../../core/models/ResponseDTO/MessageResponseDTO';
 import { TokenResponseDTO } from '../../../core/models/ResponseDTO/TokenResponseDTO';
 import { UserResponseDTO } from '../../../core/models/ResponseDTO/UserResponseDTO';
+import { SessionService } from '../../../core/services/session/session.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,9 @@ export class AuthService {
   private logoutUrl = `${this.baseUrl}/auth/logout`;
   private forgotPasswordUrl = `${this.baseUrl}/auth/forgotPassword`;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient,
+    private sessionService: SessionService
+  ) {}
 
   public login(
     loginRequest: LoginRequestDTO
@@ -30,7 +33,14 @@ export class AuthService {
     return this.httpClient.post<ResponseDTO<UserLoginResponseDTO>>(
       this.loginUrl,
       loginRequest
-    );
+    ).pipe(
+      tap(response => {
+        if (response?.data) {
+          // Guardar sesión completa con ID
+          this.sessionService.startSession(response.data);
+        }
+      })
+    );;
   }
 
 

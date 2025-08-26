@@ -5,7 +5,7 @@ import { RoleComponent } from '../../roles/pages/role/role.component';
 import { PrivilegeComponent } from '../../privilege/pages/privilege/privilege.component';
 import { MenuComponent } from '../../menu/pages/menu/menu.component';
 import { UserDetailsComponent } from '../../users/pages/userDetails/userDetails.component';
-import { ProfileMenuComponent } from '../../profile/profile.component';
+import { ProfileMenuComponent } from '../../users/pages/profile/profile.component';
 
 
 export const setting_routes: Routes = [
