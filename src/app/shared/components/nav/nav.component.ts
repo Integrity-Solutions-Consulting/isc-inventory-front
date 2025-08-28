@@ -8,6 +8,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { SessionService } from '../../../core/services/session/session.service';
 import { AuthService } from '../../../features/auth/services/auth.service';
 import { Router } from '@angular/router';
+import { ProfileComponent } from '../../../features/users/pages/profile/profile.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-nav',
@@ -37,7 +39,8 @@ export class NavComponent implements OnInit {
   constructor(
     private sessionService: SessionService,
     private authService: AuthService,
-    private route:Router
+    private route:Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -45,9 +48,14 @@ export class NavComponent implements OnInit {
   }
 
   goToProfile() {
-    this.route.navigate(['/profile']);
+    this.dialog.open(ProfileComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      panelClass: 'profile-modal'
+    });
   }
-  
+
   logout() {
     this.authService.logout().subscribe({
       next: (resp)=>{},

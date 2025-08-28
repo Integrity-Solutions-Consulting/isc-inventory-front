@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { SessionService } from '../../../../core/services/session/session.service';
 import { CommonModule, Location } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { UserLoginResponseDTO } from '../../../../core/models/ResponseDTO/UserLoginResponseDTO';
 import { ChangePasswordComponent } from '../../components/change-password/change-password.component';
 
 @Component({
-  selector: 'app-profile-menu',
+  selector: 'app-profile-modal',
   standalone: true,
   imports: [CommonModule,
     MatCardModule,
@@ -22,15 +22,17 @@ import { ChangePasswordComponent } from '../../components/change-password/change
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileMenuComponent implements OnInit{
+export class ProfileComponent implements OnInit{
   userData: any;
   loading: boolean = true;
 
   constructor(
     private sessionService: SessionService,
-    private location: Location,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dialogRef: MatDialogRef<ProfileComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
+
 
   ngOnInit() {
     const userSession = this.sessionService.getUserSession();
@@ -97,7 +99,7 @@ export class ProfileMenuComponent implements OnInit{
     });
   }
 
-  goBack(): void {
-    this.location.back();
+  close(): void {
+    this.dialogRef.close();
   }
 }
