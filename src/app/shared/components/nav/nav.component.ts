@@ -10,6 +10,7 @@ import { AuthService } from '../../../features/auth/services/auth.service';
 import { Router } from '@angular/router';
 import { ProfileComponent } from '../../../features/users/pages/profile/profile.component';
 import { MatDialog } from '@angular/material/dialog';
+import { LoadingService } from '../../../core/services/modals/loading/loading.service';
 
 @Component({
   selector: 'app-nav',
@@ -40,6 +41,7 @@ export class NavComponent implements OnInit {
     private sessionService: SessionService,
     private authService: AuthService,
     private route:Router,
+    private loading: LoadingService,
     private dialog: MatDialog
   ) {}
 
@@ -57,13 +59,20 @@ export class NavComponent implements OnInit {
   }
 
   logout() {
+    this.loading.show();
+
     this.authService.logout().subscribe({
       next: (resp)=>{},
-      error: (error)=>{console.error(error)},
+      error: (error)=>{
+        this.loading.hide();
+        console.error(error)},
       complete: ()=>{
-        this.sessionService.endSession();
-        this.route.navigate(['']);
-      }
+        setTimeout(() => {
+          this.sessionService.endSession();
+          this.route.navigate(['']);
+          this.loading.hide();
+        }, 800) ;
+      },
     });
   }
 }
