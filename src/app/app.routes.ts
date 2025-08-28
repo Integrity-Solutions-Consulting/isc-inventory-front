@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth/auth.guard';
 import { guestGuard } from './core/guards/guest/guest.guard';
-import { ProfileMenuComponent } from './features/users/pages/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -25,9 +24,6 @@ export const routes: Routes = [
         (m) => m.error_routes
       ),
   },
-
-        { path: 'profile', component: ProfileMenuComponent },
-
 
   {
     path: '',

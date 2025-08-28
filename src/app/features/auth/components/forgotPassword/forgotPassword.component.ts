@@ -95,14 +95,14 @@ export class ForgotPasswordComponent implements OnInit {
         this.authService.generateTokenForgotPassword(email).subscribe({
           next: (resp) => {
             console.log(resp);
-            this.loading.hide;
+            this.loading.hide();
           },
           error: (error) => {
-            this.loading.hide;
+            this.loading.hide();
             this.modalDialogService.open('error', 'Error', error.error.message);
           },
           complete: () => {
-            this.loading.hide;
+            this.loading.hide();
             this.modalDialogService.open(
               'success',
               '¡Solicitud realizada correctamente!',

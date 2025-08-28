@@ -1,36 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { SessionService } from '../../../../core/services/session/session.service';
 import { CommonModule, Location } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { UserLoginResponseDTO } from '../../../../core/models/ResponseDTO/UserLoginResponseDTO';
 import { ChangePasswordComponent } from '../../components/change-password/change-password.component';
 
 @Component({
-  selector: 'app-profile-menu',
+  selector: 'app-profile-modal',
   standalone: true,
   imports: [CommonModule,
     MatCardModule,
     MatIconModule,
-    MatProgressSpinnerModule, 
+    MatProgressSpinnerModule,
     MatButtonModule,
     MatDialogModule,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileMenuComponent implements OnInit{
+export class ProfileComponent implements OnInit{
   userData: any;
   loading: boolean = true;
 
   constructor(
     private sessionService: SessionService,
-    private location: Location,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dialogRef: MatDialogRef<ProfileComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
+
 
   ngOnInit() {
     const userSession = this.sessionService.getUserSession();
@@ -39,21 +41,21 @@ export class ProfileMenuComponent implements OnInit{
       // Mapear los datos de la sesión al formato esperado por la plantilla
       this.userData = this.mapUserSessionToUserData(userSession);
     }
-    
+
     this.loading = false;
   }
 
   private extractNameFromEmail(email: string): string {
     if (!email) return 'No disponible';
-    
+
     // Extraer la parte antes del @
-    const emailPrefix = email.split('@')[0];    
+    const emailPrefix = email.split('@')[0];
     // Reemplazar puntos y guiones con espacios y capitalizar
     const nameParts = emailPrefix.split(/[.-]/);
     const formattedName = nameParts
       .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
       .join(' ');
-    
+
     return formattedName;
   }
 
@@ -83,9 +85,10 @@ export class ProfileMenuComponent implements OnInit{
     console.error('ID de usuario no disponible, no se puede abrir el diálogo');
     return;
   }
-    
+
     const dialogRef = this.dialog.open(ChangePasswordComponent, {
-      width: '400px',
+      width: 'auto',
+      maxWidth: '95vw',
       data: { id: this.userData.id, email: this.userData.email }
     });
 
@@ -96,7 +99,7 @@ export class ProfileMenuComponent implements OnInit{
     });
   }
 
-  goBack(): void {
-    this.location.back();
+  close(): void {
+    this.dialogRef.close();
   }
 }

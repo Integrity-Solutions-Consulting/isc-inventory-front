@@ -44,6 +44,9 @@ export class ChangePasswordComponent {
   hideNewPassword = true;
   hideConfirmPassword = true;
 
+  passwordPattern: RegExp =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
+
   constructor(
     public dialogRef: MatDialogRef<ChangePasswordComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -61,12 +64,21 @@ export class ChangePasswordComponent {
     return statusNumber >= 200 && statusNumber < 300;
   }
 
+  isPasswordComplex(password: string): boolean {
+    return this.passwordPattern.test(password);
+  }
+
   onChangePassword(): void {
     this.errorMessage = '';
     this.successMessage = '';
-    
+
     if (this.newPassword.length < 8 || this.newPassword.length > 30) {
       this.errorMessage = 'La contraseña debe tener entre 8 y 30 caracteres';
+      return;
+    }
+
+    if (!this.isPasswordComplex(this.newPassword)) {
+      this.errorMessage = 'La contraseña debe tener letras minúsculas y mayúsculas, números y caracteres especiales';
       return;
     }
 
@@ -92,7 +104,7 @@ export class ChangePasswordComponent {
           console.log('Es success?:', this.isSuccessStatus(response?.meta?.status));
 
           const isSuccess = response && response.meta && (
-            this.isSuccessStatus(response.meta.status) || 
+            this.isSuccessStatus(response.meta.status) ||
             response.meta.message?.toLowerCase().includes('correctamente') ||
             response.meta.message?.toLowerCase().includes('exitosamente') ||
             response.meta.message?.toLowerCase().includes('actualizada')
@@ -130,7 +142,7 @@ export class ChangePasswordComponent {
           } else {
             this.errorMessage = 'Error de conexión. Intente nuevamente.';
           }
-          
+
           this.modalDialogService.open(
             'error',
             'Error',
@@ -146,8 +158,8 @@ export class ChangePasswordComponent {
   }
 
   isFormValid(): boolean {
-    return this.currentPassword.length >= 1 && 
-           this.newPassword.length >= 8 && 
+    return this.currentPassword.length >= 1 &&
+           this.newPassword.length >= 8 &&
            this.newPassword.length <= 30 &&
            this.confirmPassword.length >= 1 &&
            this.newPassword === this.confirmPassword;
