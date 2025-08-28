@@ -44,6 +44,9 @@ export class ChangePasswordComponent {
   hideNewPassword = true;
   hideConfirmPassword = true;
 
+  passwordPattern: RegExp =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
+
   constructor(
     public dialogRef: MatDialogRef<ChangePasswordComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -61,12 +64,21 @@ export class ChangePasswordComponent {
     return statusNumber >= 200 && statusNumber < 300;
   }
 
+  isPasswordComplex(password: string): boolean {
+    return this.passwordPattern.test(password);
+  }
+
   onChangePassword(): void {
     this.errorMessage = '';
     this.successMessage = '';
 
     if (this.newPassword.length < 8 || this.newPassword.length > 30) {
       this.errorMessage = 'La contraseña debe tener entre 8 y 30 caracteres';
+      return;
+    }
+
+    if (!this.isPasswordComplex(this.newPassword)) {
+      this.errorMessage = 'La contraseña debe tener letras minúsculas y mayúsculas, números y caracteres especiales';
       return;
     }
 
