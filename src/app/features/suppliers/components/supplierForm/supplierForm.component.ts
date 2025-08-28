@@ -73,7 +73,7 @@ export class SupplierFormComponent implements OnInit {
       address: ['', [Validators.required,
       Validators.minLength(3),
       Validators.maxLength(200),
-      Validators.pattern(/^[\p{L}\p{N}\s\.,\-#áéíóúÁÉÍÓÚñÑ]*$/u)]],
+      Validators.pattern(/^[\p{L}\p{N}\s\.,:\-#áéíóúÁÉÍÓÚñÑ]*$/u)]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]],
       ruc: ['', [Validators.required, rucValidator(() =>
         {
@@ -217,12 +217,13 @@ allowOnlyNumbers(event: KeyboardEvent): void {
   }
 }
 
+
 allowOnlyNumbersPhone(event: KeyboardEvent): void {
-  const allowedChars = /[0-9+\-() ]/;  
+  const allowedChars = /[0-9+\-() ]/;
   // Permitir teclas de control (backspace, tab, etc.)
   if (event.key === 'Backspace' || event.key === 'Tab' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     return;
-  }  
+  }
   if (!allowedChars.test(event.key)) {
     event.preventDefault();
   }
