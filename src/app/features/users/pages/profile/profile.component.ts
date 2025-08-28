@@ -15,7 +15,7 @@ import { ChangePasswordComponent } from '../../components/change-password/change
   imports: [CommonModule,
     MatCardModule,
     MatIconModule,
-    MatProgressSpinnerModule, 
+    MatProgressSpinnerModule,
     MatButtonModule,
     MatDialogModule,
   ],
@@ -39,21 +39,21 @@ export class ProfileMenuComponent implements OnInit{
       // Mapear los datos de la sesión al formato esperado por la plantilla
       this.userData = this.mapUserSessionToUserData(userSession);
     }
-    
+
     this.loading = false;
   }
 
   private extractNameFromEmail(email: string): string {
     if (!email) return 'No disponible';
-    
+
     // Extraer la parte antes del @
-    const emailPrefix = email.split('@')[0];    
+    const emailPrefix = email.split('@')[0];
     // Reemplazar puntos y guiones con espacios y capitalizar
     const nameParts = emailPrefix.split(/[.-]/);
     const formattedName = nameParts
       .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
       .join(' ');
-    
+
     return formattedName;
   }
 
@@ -83,9 +83,10 @@ export class ProfileMenuComponent implements OnInit{
     console.error('ID de usuario no disponible, no se puede abrir el diálogo');
     return;
   }
-    
+
     const dialogRef = this.dialog.open(ChangePasswordComponent, {
-      width: '400px',
+      width: 'auto',
+      maxWidth: '95vw',
       data: { id: this.userData.id, email: this.userData.email }
     });
 
