@@ -51,8 +51,9 @@ export class NavComponent implements OnInit {
 
   goToProfile() {
     this.dialog.open(ProfileComponent, {
-      width: '800px',
+      width: '900px',
       maxWidth: '95vw',
+      height: 'auto',
       maxHeight: '90vh',
       panelClass: 'profile-modal'
     });

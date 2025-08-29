@@ -1,8 +1,9 @@
 .user-detail-container {
-  padding: 1rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: -1rem;
+  height: 480px;
 }
 
 .user-header {
