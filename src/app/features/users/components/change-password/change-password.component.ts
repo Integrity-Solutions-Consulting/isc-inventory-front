@@ -87,6 +87,11 @@ export class ChangePasswordComponent {
       return;
     }
 
+    if (this.newPassword === this.currentPassword) {
+      this.errorMessage = 'La nueva contraseña no puede ser igual a la actual';
+      return;
+    }
+
     const passwordRequest: PasswordChangeRequestDTO = {
       actualPassword: this.currentPassword,
       newPassword: this.newPassword,
