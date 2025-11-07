@@ -30,7 +30,7 @@ import { ModalDialogService } from '../../../../core/services/modals/modalDialog
     MatIconModule
   ],
   templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.scss']
+  styleUrls: ['./change-password.component.css']
 })
 export class ChangePasswordComponent {
   currentPassword: string = '';

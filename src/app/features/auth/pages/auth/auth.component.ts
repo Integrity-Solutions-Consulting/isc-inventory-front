@@ -26,7 +26,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 export class AuthComponent implements OnInit {
   currentIndex = 0;
   private intervalId: any;
-  
+
   images = [
     { url: 'assets/fabrica.jpeg', alt: 'Imagen 1' },
     { url: 'assets/it.jpeg', alt: 'Imagen 2' },
@@ -34,7 +34,7 @@ export class AuthComponent implements OnInit {
   ];
 
   constructor() { }
-  
+
   startAutoPlay() {
     this.intervalId =setInterval(() => this.next(), 3000);
   }
