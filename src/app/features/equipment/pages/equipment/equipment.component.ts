@@ -25,12 +25,16 @@ import { EquipmentService } from '../../services/equipment/equipment.service';
 import { EquipmentFormComponent } from '../../components/equipmentForm/equipmentForm.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import * as XLSX from 'xlsx-js-style';
+import { saveAs } from 'file-saver';
 import { WarrantyTypeFormComponent } from '../../components/warranty-type-form/warranty-type-form.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EquipmentRepairFormComponent } from '../../components/equipmentRepairForm/equipmentRepairForm.component';
 import { EquipmentRepairDetailResponseDTO } from '../../../../core/models/ResponseDTO/inventory/EquipmentRepairDetailResponseDTO';
 import { EquipmentDismissalFormComponent } from '../../components/equipmentDismissalForm/equipmentDismissalForm.component';
 import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/RequestDTO/inventory/EquipmentRepairStatusChangeRequestDTO';
+import { MatOptionModule } from "@angular/material/core";
+import { MatSelectModule } from "@angular/material/select";
 
 @Component({
   selector: 'app-equipment',
@@ -47,7 +51,9 @@ import { EquipmentRepairStatusChangeRequestDTO } from '../../../../core/models/R
     CommonModule,
     LayoutModule,
     MatCardModule,
-    MatMenuModule
+    MatMenuModule,
+    MatOptionModule,
+    MatSelectModule
 ],
   templateUrl: './equipment.component.html',
   styleUrls: ['./equipment.component.css'],
@@ -64,8 +70,13 @@ export class EquipmentComponent implements OnInit {
     'actions',
   ];
   dataSource = new MatTableDataSource<EquipmentDetailResponseDTO>();
+  originalData: EquipmentDetailResponseDTO[] = [];
   public searchTerm: string = '';
   total = 0;
+  selectedStatus: string[] = [];
+  selectedCondition: string[] = [];
+  filter: any = {};
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   isSmallScreen: boolean = false;
@@ -94,12 +105,24 @@ export class EquipmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTable();
-
     this.breakpointObserver
       .observe([Breakpoints.Handset, '(max-width: 920px)'])
       .subscribe((result) => {
         this.isSmallScreen = result.matches;
       });
+  }
+
+  applyFilters(valor: string, campo: string){
+    const fieldMap: any = {
+      estado: 'equipmentStatusName',
+      condicion: 'equipmentConditionName'
+    };
+
+    // Convertimos 'estado' → 'equipmentStatusName', etc.
+    const realField = fieldMap[campo] || campo;
+    this.filter[realField] = valor;
+    
+    this.dataSource.filter = this.searchTerm.trim().toLowerCase();
   }
 
   loadTable(): void {
@@ -111,12 +134,18 @@ export class EquipmentComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          this.dataSource.data = response.data;
+          this.originalData = response.data;
+          this.dataSource.data = [...this.originalData];
           this.total = this.dataSource.data.length;
           this.dataSource.paginator = this.paginator;
-          this.dataSource.filterPredicate = (data, filter) => {
+
+          this.selectedStatus = [...new Set(this.dataSource.data.map((item: any) => item.equipmentStatusName))];
+          this.selectedCondition = [...new Set(this.dataSource.data.map((item: any) => item.equipmentConditionName))];
+
+          this.dataSource.filterPredicate = (data: any, filter: string) => {
           const term = filter.trim().toLowerCase();
-          return (
+          const matchesSearch =
+            !term ||
             data.categoryName?.toLowerCase().includes(term) ||
             data.brand?.toLowerCase().includes(term) ||
             data.model?.toLowerCase().includes(term) ||
@@ -124,8 +153,15 @@ export class EquipmentComponent implements OnInit {
             data.itemCode?.toLowerCase().includes(term) ||
             data.companyName?.toLowerCase().includes(term) ||
             data.equipmentStatusName?.toLowerCase().includes(term) ||
-            data.equipmentConditionName?.toLowerCase().includes(term)
-          );
+            data.equipmentConditionName?.toLowerCase().includes(term);
+
+          const matchesFilters =
+            (!this.filter.equipmentStatusName ||
+              data.equipmentStatusName === this.filter.equipmentStatusName) &&
+            (!this.filter.equipmentConditionName ||
+              data.equipmentConditionName === this.filter.equipmentConditionName);
+
+          return matchesSearch && matchesFilters;
         };
         },
         error: (err) => {
@@ -137,6 +173,56 @@ export class EquipmentComponent implements OnInit {
         },
       });
   }
+
+  downloadExcel(): void{
+     const filteredData = this.dataSource.filteredData || this.dataSource.data;
+     if (!filteredData.length) {
+        this.modalDialogService.open('error', 'Sin datos', 'No hay datos para exportar.');
+        return;
+      }
+
+      const exportData = filteredData.map((item) => ({
+        'Equipo': item.categoryName,
+        'Marca': item.brand,
+        'Modelo': item.model,
+        'Serie': item.serialNumber,
+        'Código': item.itemCode,
+        'Estado': item.equipmentStatusName,
+        'Condición': item.equipmentConditionName,
+        'Factura': item.invoice || 'No asignada',
+        'Oficina': item.companyName,
+        'Creado': new Date(item.creationDate).toLocaleDateString(),
+      }));
+
+      // Convierte los datos a hoja de Excel
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+      const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Equipos');
+
+      // Obtener rango de celdas
+      const range = XLSX.utils.decode_range(worksheet['!ref']!);
+
+      // Aplicar color
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C }); // Fila 0 = encabezado
+        const cell = worksheet[cellAddress];
+        if (cell) {
+          cell.s = {
+            fill: { fgColor: { rgb: '2685BF' } }, // Fondo azul
+            font: { color: { rgb: 'FFFFFF' }, bold: true }, // Letras blancas y negritas
+            alignment: { horizontal: 'center', vertical: 'center' }, // Centrado
+          };
+        }
+      }
+
+      // Ajustar ancho de columnas
+      const columnWidths = Object.keys(exportData[0]).map((key) => ({ wch: key.length + 12 }));
+      worksheet['!cols'] = columnWidths;
+
+      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array', cellStyles: true });
+      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      saveAs(blob, `Equipos_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    }
 
   // Método para confirmar y marcar equipo como fuera de servicio
   confirmOutOfService(equipment: EquipmentDetailResponseDTO): void {
@@ -288,12 +374,12 @@ openDismissalFormAndThenSetStatus(entity: EquipmentDetailResponseDTO): void {
     equipment: entity.id,
     description: '',                // Initialize empty or with default values
     serviceProvider: '',           // User should fill this in the form
-    cost: 0.00,                      
-    revoke: false 
+    cost: 0.00,
+    revoke: false
   };
 
   console.log('Datos enviados al formulario:', repairData);
-    
+
     this.formService.open(
       'Reparar Equipo',
       'engineering',
@@ -317,7 +403,7 @@ openDismissalFormAndThenSetStatus(entity: EquipmentDetailResponseDTO): void {
             'Equipo enviado a reparación',
             'El equipo fue registrado correctamente.'
           );
-        } 
+        }
       },
       (error) => {
         console.error('Ocurrió un error al guardar', error);
@@ -427,7 +513,8 @@ openDismissalFormAndThenSetStatus(entity: EquipmentDetailResponseDTO): void {
         return 'dot-inactive out-of-service';
     }
   }
+
   search(): void {
-  this.dataSource.filter = this.searchTerm.trim().toLowerCase();
-}
+    this.dataSource.filter = this.searchTerm.trim().toLowerCase();
+  }
 }

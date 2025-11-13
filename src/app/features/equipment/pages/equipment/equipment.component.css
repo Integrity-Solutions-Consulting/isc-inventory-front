@@ -221,3 +221,37 @@ button.mat-flat-button {
 .row-deleted .mat-icon {
   color: #999; /* íconos grises */
 }
+
+.header-with-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.excel-filter-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0 2px;
+  color: #6c757d;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.excel-filter-btn:hover {
+  color: #0d6efd;
+  background-color: #e9ecef;
+  border-radius: 3px;
+}
+
+.excel-filter-btn mat-icon {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+th.mat-header-cell {
+  vertical-align: middle !important;
+  text-align: center !important;
+}
+
+
