@@ -17,6 +17,11 @@
       </button>
     </mat-form-field>
     <span class="spacer"></span>
+    <button mat-flat-button (click)="downloadExcel()">
+      <mat-icon>download</mat-icon>
+      EXCEL
+    </button>
+
     <button mat-flat-button (click)="create()">
       <mat-icon>add</mat-icon>
       Nuevo
@@ -43,7 +48,23 @@
 
         <!-- Estado -->
         <ng-container matColumnDef="estado">
-          <th mat-header-cell *matHeaderCellDef class="text-center">Estado</th>
+          <th mat-header-cell *matHeaderCellDef class="text-center">
+            <div class="header-with-filter">
+              <th>Estado</th>
+              <button class="excel-filter-btn" [matMenuTriggerFor]="estadoMenu">
+                <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+            </div>
+
+            <!-- Menú del filtro -->
+            <mat-menu #estadoMenu="matMenu">
+              <button mat-menu-item (click)="applyFilters('', 'estado')">Todos</button>
+              <button mat-menu-item *ngFor="let estado of selectedStatus"
+                (click)="applyFilters(estado, 'estado')">
+                {{ estado }}
+              </button>
+            </mat-menu>
+          </th>
           <td mat-cell *matCellDef="let item" class="text-center">
             <span class="status-container" [ngClass]="getStatusClasses(item.equipmentStatusName)">
               <span class="status-dot"></span>
@@ -55,7 +76,22 @@
 
          <!-- Condicion -->
         <ng-container matColumnDef="condicion">
-         <th mat-header-cell *matHeaderCellDef class="text-center">Condición</th>
+         <th mat-header-cell *matHeaderCellDef class="text-center">
+          <div class="header-with-filter">
+            <th>Condición</th>
+            <button class="excel-filter-btn" [matMenuTriggerFor]="condicionMenu">
+              <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+          </div>
+
+          <mat-menu #condicionMenu="matMenu">
+            <button mat-menu-item (click)="applyFilters('', 'condicion')">Todas</button>
+            <button mat-menu-item *ngFor="let cond of selectedCondition"
+              (click)="applyFilters(cond, 'condicion')">
+              {{ cond }}
+            </button>
+          </mat-menu>
+         </th>
           <td mat-cell *matCellDef="let item" class="text-center">
             <span class="status-container" [ngClass]="getConditions(item.equipmentConditionName)">
               <span class="status-dot"></span>
