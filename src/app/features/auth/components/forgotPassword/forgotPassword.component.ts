@@ -41,6 +41,9 @@ export class ForgotPasswordComponent implements OnInit {
   hidePassword = true;
   hideConfirmPassword = true;
 
+  passwordPattern: RegExp =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -139,9 +142,10 @@ export class ForgotPasswordComponent implements OnInit {
       });
 
       this.resetForm = this.fb.group({
-        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        newPassword: ['', [Validators.required, Validators.minLength(8),
+          Validators.maxLength(30), Validators.pattern(this.passwordPattern),]],
         confirmPassword: ['', Validators.required],
-      });
+      }, { validators: this.passwordsMatchValidator });
     } else {
       this.loading.hide();
       this.recoveryForm = this.fb.group({
@@ -154,4 +158,10 @@ export class ForgotPasswordComponent implements OnInit {
     // Valida que tenga 3 partes separadas por puntos (estructura JWT)
     return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(token);
   }
+
+  passwordsMatchValidator(form: FormGroup) {
+  const pass = form.get('newPassword')?.value;
+  const confirm = form.get('confirmPassword')?.value;
+  return pass === confirm ? null : { passwordsMismatch: true };
+}
 }

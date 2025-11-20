@@ -120,9 +120,9 @@ export class EquipmentComponent implements OnInit {
 
     // Convertimos 'estado' → 'equipmentStatusName', etc.
     const realField = fieldMap[campo] || campo;
-    this.filter[realField] = valor;
-    
-    this.dataSource.filter = this.searchTerm.trim().toLowerCase();
+    this.filter[realField] = valor === '' ? '' : valor;
+
+    this.search();
   }
 
   loadTable(): void {
@@ -143,7 +143,7 @@ export class EquipmentComponent implements OnInit {
           this.selectedCondition = [...new Set(this.dataSource.data.map((item: any) => item.equipmentConditionName))];
 
           this.dataSource.filterPredicate = (data: any, filter: string) => {
-          const term = filter.trim().toLowerCase();
+          const term = this.searchTerm.trim().toLowerCase();
           const matchesSearch =
             !term ||
             data.categoryName?.toLowerCase().includes(term) ||
@@ -515,6 +515,6 @@ openDismissalFormAndThenSetStatus(entity: EquipmentDetailResponseDTO): void {
   }
 
   search(): void {
-    this.dataSource.filter = this.searchTerm.trim().toLowerCase();
+    this.dataSource.filter = 'trigger';
   }
 }
