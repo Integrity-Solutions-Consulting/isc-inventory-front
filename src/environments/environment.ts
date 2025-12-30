@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  authBaseUrl: 'http://localhost:8080/api/v1',
-  apiBaseUrl: 'http://localhost:9090/api/v1'
+  authBaseUrl: 'https://auth.inv.dokploy.integritysolutions.com.ec/api/v1',
+  apiBaseUrl: 'https://api.inv.dokploy.integritysolutions.com.ec/api/v1'
 };

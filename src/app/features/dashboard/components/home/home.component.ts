@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
 
   // Ejemplo de parámetros, cámbialos según contexto real
   selectedCategoryId = 1;
-  
+
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -58,9 +58,5 @@ export class HomeComponent implements OnInit {
         console.error('Error fetching bar chart data:', error);
       },
     });
-
-
-
-
   }
 }
