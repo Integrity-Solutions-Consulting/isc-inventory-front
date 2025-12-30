@@ -23,7 +23,7 @@ export class FormComponent implements OnInit {
     this.title = this.formService.modalTitle;
     this.icon = this.formService.modalIcon;
     this.content = this.formService.modalContent;
-    
+
   }
   ngOnInit() {}
 

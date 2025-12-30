@@ -42,7 +42,7 @@
         <label>Privilegios</label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="privilegesId" multiple>
-            <mat-option> 
+            <mat-option>
             <ngx-mat-select-search
               [formControl]="privilegeFilterCtrl"
               placeholderLabel="Buscar privilegio"
@@ -52,9 +52,7 @@
             <mat-option
               *ngFor="let privilege of filteredPrivileges"
               [value]="privilege.id"
-              [disabled]="isPrivilegeDefault(privilege.id)"
-              [style.color]="isPrivilegeDefault(privilege.id) ? '#666666' : 'inherit'"
-              [style.background-color]="isPrivilegeDefault(privilege.id) ? '#f5f5f5' : 'inherit'"
+
             >
               {{ privilege.key }}
             </mat-option>
@@ -67,7 +65,7 @@
         <label>Menús</label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="menusId" multiple>
-           <mat-option> 
+           <mat-option>
             <ngx-mat-select-search
               [formControl]="menuFilterCtrl"
               placeholderLabel="Buscar menú"

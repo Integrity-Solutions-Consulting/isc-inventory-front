@@ -37,7 +37,7 @@
   </div>
 </div>
 
-    <div class="form-row">  
+    <div class="form-row">
 <!-- Teléfono -->
       <div class="form-field">
         <label>Teléfono <span class="required-asterisk">*</span> </label>
@@ -51,7 +51,7 @@
           </mat-error>
         </mat-form-field>
       </div>
-    
+
 
       <!-- RUC -->
     <div class="form-field">
@@ -115,7 +115,8 @@
       cdkAutosizeMinRows="2"
       cdkAutosizeMaxRows="6"
       formControlName="address"
-      minlength="3">
+      minlength="3"
+     >
     </textarea>
     <mat-error *ngIf="supplierForm.get('address')?.hasError('required')">
       La dirección es obligatoria
