@@ -25,7 +25,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideMomentDateAdapter(),
     {
@@ -33,9 +32,17 @@ export const appConfig: ApplicationConfig = {
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
-    { provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT },
-    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: DATE_FORMAT },
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'es-ES'
+    },
+    {
+      provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+      useValue: { useUtc: true }
+    },
     {
       provide: MatPaginatorIntl,
       useFactory: getSpanishPaginatorIntl,
